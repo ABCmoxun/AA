@@ -1,0 +1,159 @@
+
+
+
+
+
+
+
+
+day6
+pool.apply_async() 
+功能 ： 异步方式将事件放入进程池执行
+参数 ： func ： 要执行的事件函数
+        args ： 同Process中args 给函数传参
+		kwds ： 同Process中kwargs 给函数传参
+返回值 ： 返回一个对象 该对象可以通过get()方法得到         func函数的返回值
+ex:res=p.apply_async(func,args,kwargs) 
+   结果：res.get()
+
+pool.apply_async() 
+功能 ： 异步方式将事件放入进程池执行
+参数 ： func ： 要执行的事件函数
+        args ： 同Process中args 给函数传参
+		kwds ： 同Process中kwargs 给函数传参
+返回值 ： 返回一个对象 该对象可以通过get()方法得到           func函数的返回值
+
+pool.map(func,iter)
+功能 ： 类似于内建函数map 将第二个参数的迭代数传递个第一个参数的函数执行。同时兼容了使用进程池执行
+返回值： 返回func的返回值列表
+ex:r = pool.map(fun,list1)
+
+
+
+
+day7
+同步和互斥
+目的 ： 对共有资源的操作会产生争夺，同步互斥是一种解决争夺的方案
+临界资源 ： 多个进程或者线程都可以操作的资源
+临界区 ： 操作临界资源的代码段
+
+同步 ： 同步是一种合作关系，为完成某个任务多进程或者多线程之间形成一种协调 ，按照条件次序执行，传递告知资源情况。 这种协调可能是因为阻塞关系达成的
+互斥 ：互斥是一种制约关系，但一个进程或线程进入到临界区会进行加锁操作，此时其他进程（线程）在企图操作临界资源就会阻塞。只有当资源被释放才能进行操作
+
+
+
+
+
+
+
+
+
+
+
+
+day8
+并发 ： 同时处理多个请求，但是内核采用轮询时间片的方式逐个访问，某一时间点实际只处理一个任务。
+比如 ：IO多路复用   协程   循环服务器。单线程
+
+并行 ： 使用多个内核，同时执行多个任务
+比如 ： 多进程  多线程
+
+
+
+
+day9
+threading并发服务器
+相比多进程服务器的优缺点：
+缺点： 1. 需要用到同步互斥
+      2. 可能受到GIL的影响，但是网络IO线程并发还是可以的
+优点： 资源消耗比较少
+
+
+项目
+安装软件  pip3  install  Package
+升级    pip3 install --upgrade  Package
+卸载   pip3 uninstall  Package    
+ex:pip3 install requests
+
+协程  
+并发变成  ： 多进程   多线程  IO多路复用
+定义：纤程 微线程，协程本质实际只有一个线程在运行
+功能原理 ： 通过应用层记录程序的上下文栈区，实现程序运行中的跳跃。进而实现选择代码段执行
+优点 ： 
+无需多线程切换的开销
+资源消耗非常少
+无需进行同步互斥操作
+对IO并发性极好\
+
+缺点：
+无法利用计算机多核资源
+如果程序阻塞会阻塞整个进程运行
+
+yield  -->  实现Python协程的基本原理
+python中的协程：greenlet和gevent
+sudo pip3 install greenlet
+from greenlet import greenlet 
+g1 = greenlet(test1)
+g1.switch()   ##跳转至协程g1
+
+greenlet可以实现协程，不过每一次都要人为的去指向下一个该执行的协程，显得太过麻烦。python还有一个比greenlet更强大的并且能够自动切换任务的模块gevent
+
+
+
+常用只有(#)
+import gevent
+gevent.spawn（func，argv）
+功能 ： 将func变为协程事件并启动
+参数 ： func  事件函数
+        argv  多项， 为func的参数
+返回值 ： 协程对象 
+ ex:f = gevent.spawn(foo,1)
+
+gevent.join()
+功能 ： 回收协程
+参数 ： 要回收的协程对象
+ex:gevent.join(f)
+gevent.joinall()
+功能 ： 回收协程
+参数 ： 列表，里面可有多个协程对象
+ex:gevent.joinall([f,b])
+
+gevent.sleep()
+功能: 模拟IO阻塞的情况
+参数 ： n  睡眠几秒
+
+import gevent
+f = gevent.spawn(foo,1)
+b = gevent.spawn(bar)
+#回收协成
+gevent.joinall([f,b])
+
+from  gevent  import monkey
+monkey.patch_all()  
+功能 : 在导入 socket模块前使用 可将将socket模块IO设置为非阻塞
+
+
+在re模块中 re.finall(pattern,string,flags=0)
+flags:
+re.I  忽略正则表达是的大小写
+re.M  正则表达式中的^操作符能给定字符串的每一行当做匹配开始
+re.S  正则表达式中的.操作符能够匹配所有字符，默认匹配除行外的所有字符;这里可以匹配换行符
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

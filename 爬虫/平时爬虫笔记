@@ -1,0 +1,202 @@
+/	从根节点选取。
+//	从匹配选择的当前节点选择文档中的节点，而不考虑它们的位置。
+.	选取当前节点。
+..	选取当前节点的父节点。
+@	选取属性。
+
+bookstore	选取 bookstore 元素的所有子节点。
+/bookstore	
+选取根元素 bookstore。
+
+注释：假如路径起始于正斜杠( / )，则此路径始终代表到某元素的绝对路径！
+
+bookstore/book	选取属于 bookstore 的子元素的所有 book 元素。
+//book	选取所有 book 子元素，而不管它们在文档中的位置。
+bookstore//book	选择属于 bookstore 元素的后代的所有 book 元素，而不管它们位于 bookstore 之下的什么位置。
+//@lang	选取名为 lang 的所有属性。
+
+/bookstore/book[1]	选取属于 bookstore 子元素的第一个 book 元素。
+/bookstore/book[last()]	选取属于 bookstore 子元素的最后一个 book 元素。
+/bookstore/book[last()-1]	选取属于 bookstore 子元素的倒数第二个 book 元素。
+/bookstore/book[position()<3]	选取最前面的两个属于 bookstore 元素的子元素的 book 元素。
+//title[@lang]	选取所有拥有名为 lang 的属性的 title 元素。
+//title[@lang='eng']	选取所有 title 元素，且这些元素拥有值为 eng 的 lang 属性。
+/bookstore/book[price>35.00]	选取 bookstore 元素的所有 book 元素，且其中的 price 元素的值须大于 35.00。
+/bookstore/book[price>35.00]/title	选取 bookstore 元素中的 book 元素的所有 title 元素，且其中的 price 元素的值须大于 35.00。
+
+*	匹配任何元素节点。
+@*	匹配任何属性节点。
+node()	匹配任何类型的节点。
+
+/bookstore/*	选取 bookstore 元素的所有子元素。
+//*	选取文档中的所有元素。
+//title[@*]	选取所有带有属性的 title 元素。
+
+//book/title | //book/price	选取 book 元素的所有 title 和 price 元素。
+//title | //price	选取文档中的所有 title 和 price 元素。
+/bookstore/book/title | //price	选取属于 bookstore 元素的 book 元素的所有 title 元素，以及文档中所有的 price 元素。
+
+选取第一个 book 的 title
+下面的例子选取 bookstore 元素下面的第一个 book 节点的 title：
+
+/bookstore/book[1]/title
+
+------------------------
+保存文件
+with open("xxx.txt",'a',encoding="utf-8") as f:
+	for dict1 in list1:
+f.write(json.dumps(dict1, ensure_ascii=False)+'\n')
+#!!!f.write(str)
+
+中文对齐
+"{:^10}\t{:^x1}\t{:^x2}".format(str1,str2,str3) #x1,x2为int
+"{:4}\t{:8}\t{:16}".format(str1,str2,str3)
+
+万能的匹配：[\s\S]*?
+string.strip()字符串的除去空格和换行符
+----------------------------
+div/text()   选取文本信息  #?列表
+//title[@*]	 选取所有带有属性的 title 元素   #?列表
+//title[@class1]          #?列表
+//title[@class='class1']   #?列表
+
+
+ex:
+  name = node.xpath('./h3/text()').extract()
+  title = node.xpath('./h4/text()').extract()
+  info = node.xpath('./p/text()').extract()
+  extract后会把selector对象转换成list类型了
+  item['name'] = name[0]
+//tag1 | //tag2	匹配这两个中的任意一个
+/tag[@*]	 选取所有带有属性的 title 的元素   #?列表字典
+/tag[@class='class1']   #?列表 
+
+
+
+--------------------------------------------
+xpath--#requests---xpath
+两次xpath匹配
+第一次后使用循环，第二次直接匹配内容，##??列表
+
+
+import json
+from lxml import etree
+
+html=etree.HTML(resp.text)
+tags=html.xpath('//*[@id="app"]/div/div/div')    #??可以list
+
+！！！！！！
+tag/text()   #标签文本信息        #??可以list
+tag/@attr1   #得到标签属性信息 		#??可以list含元组
+ex:tag/@class   ; tag/@id
+
+多对象匹配的循环
+for x in range(len(list)):
+	
+
+#??在scrapy中使用
+tags=html.xpath('//*[@id="app"]/div/div/text()').extract()
+#匹配到的对象转换成列表，
+索引--字典--列表--文件或数据库
+
+
+import re
+from bs4 import BeautifulSoup
+url='http://'
+resp=resquests.get(url)
+resp.status_code
+resp.encoding=resp.apparent_encoding  #响应的编码
+
+resp.raise_for_status()   #如果不是200，产生异常 resquests.HTTPError(使用在try..except中)
+demo=resp.text      #响应是文本文件
+demo=resp.content   #响应是图片或视屏
+soup.prettify()  #美化soup(换行)  对象可以是soup，tag
+soup=BeautifulSoup(demo,'html.parser')
+soup.tag  :得到tag标签(列表)
+tag.sting :标签的内容
+tag.name  
+tag.attrs  :标签的属性(字典)
+tag.comment :标签的注释内容
+tag.attrs['class']  
+soup.find()
+#.contents    子节点列表
+#.children   子节点的迭代类型     .parent/.parents
+#.descendants 子孙节点迭代类型
+
+模式  taglist=requests--beautifulsoup--find_all
+for i in taglist--变为字典，在加入列表，写入文档或存在数据库中 
+
+万能的匹配  
+tag.find_all(name,attrs [,recursive,string,**kwargs])
+
+recursive:是否对子孙全部索引，默认True
+string:tag中的字符串的检索字符串
+
+soup.find_all(tag)(列表)
+soup.find_all(tag,class_='class1')
+soup.find_all("a", attrs={"class": "class1"})
+soup.find_all("a", attrs={"class": "class1",'id':'id1'})
+soup.find_all("a", text="Elsie")
+soup.find_all(text=["Tillie", "Elsie", "Lacie"])
+
+
+网页不存在，是我们搜寻的内容
+kw={'wd':'python'}
+r=requests.get(url+'/s',params=kv)
+from  urllib  import parse
+wd = {"wd":keyword}
+wd=parse.urlencode(wd)  #url encode 编码
+fullurl = url+wd
+网页已存在，我们查找的内容：
+url = url+str
+
+
+
+在re模块中 re.finall(pattern,string,flags=0)
+flags:
+re.I  忽略正则表达是的大小写
+re.M  正则表达式中的^操作符能给定字符串的每一行当做匹配开始
+re.S  正则表达式中的.操作符能够匹配所有字符，默认匹配除行外的所有字符
+
+request--re(urllib--re)
+html=resp.text
+list1=re.findall(regex,html)   #直接匹配所要的内容，分小组
+
+有道爬去内容
+
+ex:方法urllib的post,formdata 为字典
+data=bytes(parse.urlencode(formdata),encoding='utf-8')
+resp = request.Request(url,data,headers,method='POST')
+
+使用requests库
+r=requests.post(url,data,headers)
+
+cookiejar
+from http import cookiejar
+from urllib import request
+from urllib import parse
+
+ssl
+urllib--ssl
+ssl 认证
+import urllib
+import ssl
+context = ssl._create_unverified_context()
+headers = {}
+req= request.Request(url,headers=headers)
+response=request.urlopen(req,context=context)
+
+
+requests---ssl
+r=requests.get(url,verify=False)
+
+代理设置
+requests.get(url, proxies=proxies)
+
+
+
+
+
+
+
+

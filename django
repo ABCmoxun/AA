@@ -1,0 +1,101 @@
+
+
+!!!?? 版本控制器 snv ,git
+  api接口
+
+day1
+2、安装
+ 1、在线安装 - 使用 pip / pip3
+	sudo pip3 install django
+2、离线安装
+	1、下载所需Django安装包
+	2、在环境中解压Django包
+	tar -xvf Django-1.11.8.tar.gz
+	3、进入到 Django-1.11.8 中
+	4、安装 sudo python3 setup.py install
+使用Django
+  1、创建Django项目
+	使用 django-admin 指令，创建Django项目
+	django-admin startproject 项目名
+ex：django-admin startproject XX
+cd 
+将manage.py中的python改为python3
+
+创建应用
+1、命令./manage.py startapp 应用名称
+ ex:  ./manage.py startapp news
+在views.py中可以引进
+from django.shortcuts import render
+from django.http import HttpResponse
+ def func(request):
+ return 
+在主文件中的urls.py中可以添加
+ url(r'^',func)
+在app中的urls.py中也可以添加
+url(r'^$',func) #作为首页页面
+
+在app文件加下添加
+templates文件夹存放xx.html文件(在html文件中使用)
+(1)、static文件夹，存静态资源，在settings里设置，最后static后面加
+   STATICFILES_DIRS=(BASE_DIR,'static')
+
+STATICFILES_DIRS=(BASE_DIR,路径目录名)
+	允许在项目中以及所有的应用中都创建对应名称得到目录
+	STATICIFILES_DIRS=(BASE_DIR,static)(元组或列表)
+	在项目的 static 目录中以及所有应用中的 static 目录中 存放的都是静态文件
+
+(2)！！！model中模块中使用，实在主目录中的static中。。。。
+
+
+
+
+在模板中显示变量：{{变量名}}
+  return render(request,'xxx.html',dic)
+  一般用：return render(request,'xxx.html',locals())
+传递参数到xx.html文件中
+列表，字典，元组，字符串索引用：
+ L.0;d.a;t.1
+在xx.html文件中使用
+{{ L.0}};{{d.a}};{{t.1}}
+
+标签
+  允许将服务器端的一些功能嵌入到模板中
+  {% 标签内容 %}
+     {% for 变量 in 列表|元组|字典 %}
+     {% endfor %}
+    ex:{% if 条件1 %}
+	  {% elif 条件2 %}  #满足条件2运行的内容
+	  {% else %}     #以上条件都不满足的时候运行的内容
+	 {% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

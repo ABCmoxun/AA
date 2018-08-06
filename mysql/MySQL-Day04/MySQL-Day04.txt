@@ -1,0 +1,376 @@
+MySQL-Day03回顾
+1、索引
+	1、普通索引 index
+	2、唯一索引(UNI,字段值不允许重复,但可以为NULL)
+		1、创建
+			1、字段名 数据类型 unique
+			2、unique(字段名),
+			   unique(字段名)...
+			3、create unique index 索引名 on 表名(字段名);
+		2、删除(只能一个一个删)
+			show index from 表名;
+			drop index 索引名 on 表名;
+	3、主键索引&自增长属性(PRI,字段值不允许重复且不能为NULL)
+		1、注意：一个表中只能有一个字段为主键字段
+		2、创建
+			1、id int primary key auto_increment,
+			2、primary key(字段名)
+			3、alter table 表名 add primary key(字段名)
+		3、删除
+			1、先删除自增长属性
+				alter table 表名 modify 字段名 数据类型;
+			2、删除主键
+				alter table 表名 drop primary key;
+		4、已有表添加自增长属性
+			alter table 表名 modify 字段名 数据类型 auto_increment;
+	4、外键索引
+		1、作用：让当前表字段值在另一个表字段的范围内去选择
+		2、创建
+			1、foreign key(参考字段名) 
+			   references 被参考表名(被参考字段名)
+				 on delete 级联动作
+				 on update 级联动作
+			2、alter table 表名 add foreign key(...)...
+				## 会受到表中原有数据的限制 ##
+		3、级联动作
+			1、cascade
+			2、restrict(默认)
+			3、set null
+			4、no action
+		4、使用规则
+			1、两张表被参考字段和参考字段数据类型要一致
+			2、被参考字段必须是 主键 
+		5、删除外键
+			1、查看外键名
+				show create table 表名;
+			2、删除外键
+				alter table 表名 drop foreign key 外键名;
+2、数据导入
+	1、load data infile "/var/lib/mysql-files/文件名"
+	   into table 表名
+		 fields terminated by "分隔符"
+		 lines terminated by "\n"
+	2、步骤
+		1、在数据库中创建对应的表
+		2、查看数据库的搜索路径
+			show variables like "secure_file_priv";
+		3、将文件拷贝到搜索路径中
+			sudo cp 文件 /var/lib/mysql-files/
+		4、执行数据导入语句
+3、数据导出
+	1、select ... from 表名
+	   into outfile "/var/lib/mysql-files/文件名"
+		 fields terminated by "分隔符"
+		 lines terminated by "\n";
+	2、注意
+		1、导出内容完全由select查询语句决定
+		2、路径必须指定数据库搜索路径
+4、表复制
+	1、create table 表名 select 查询语句 [where false];
+	2、复制表不会把原表的 key 属性复制过来
+5、嵌套查询(子查询)
+6、多表查询
+	1、笛卡尔积
+		select 字段名列表 from 表名列表;
+	2、加 where 条件 == inner join 
+7、连接查询
+	1、內连接(只显示匹配到的记录)
+	2、外连接
+		1、左连接(以左表为主去显示查询结果)
+		2、右连接
+	3、select 字段名列表 from 表1 left join 表2 on 条件;
+
+
+
+MySQL-Day04笔记
+1、MySQL用户账户管理
+	1、开启MySQL远程连接
+		1、获取root权限
+			sudo -i
+		2、cd到配置文件所在路径
+			cd /etc/mysql/mysql.conf.d/
+		3、vi mysqld.cnf
+			#bind-address = 127.0.0.1
+			浏览模式 -> a(插入模式) 
+			-> esc(浏览模式) -> 
+			shift + :(命令行模式) ->
+			:wq(保存并退出)
+		4、重启mysql服务
+			/etc/init.d/mysql restart
+	2、添加授权用户
+		1、使用root用户连接到服务器
+			mysql -uroot -p123456
+		2、添加新的授权用户
+	sql语句：create user "用户名"@"IP地址" identified by "密码";
+			create user "tiger"@"%" identified by "123456";
+			IP地址的表示方式：
+				1、% 表示用户可以从任何地址连接到服务器
+				2、localhost 用户只能从本地连接
+				3、指定一个IP 表示用户只能从此IP连接到服务器
+	3、给用户授权
+		grant 权限列表 on 库.表 to "用户名"@"IP地址" with grant option;
+
+		 ex:grant all privileges on *.* to "tiger"@"%" with grant option;
+		权限列表：select,update,delete,insert,alter,drop,create,...
+		库.表： *.* 表示所有库的所有表
+
+		### 写入到 库mysql下的user表, user、host两个字段
+	4、练习
+		添加一个授权用户 monkey ,所有人都可以连接,只对 db1库有查询权限
+		1、添加授权用户 monkey
+			create user "monkey"@"%" identifited by "123456";
+		2、给 monkey 用户授权
+			grant select on db1.* to "monkey"@"%" with grant option;
+		3、验证：mysql -hIP地址 -umonkey -p
+	5、删除授权用户
+		drop user "用户名"@"IP地址";
+		drop user "tiger"@"%";
+2、数据备份(mysqldump,在Linux终端中操作)
+	1、命令格式
+		mysqldump -uroot -p 源库名 > 路径/xxx.sql
+	2、示例
+		1、备份db2库
+	linux语句: mysqldump -uroot -p db2 > /home/tarena/db2.sql
+	3、源库名的表示方式
+		--all-databases   备份所有库
+		库名               备份单个库
+		-B 库1 库2 ...     备份多个库
+		库名 表1 表2 ...   备份指定库的指定表
+	4、练习
+		1、备份所有库 all_mysql.sql,放到用户主目录下的 mydata 目录中
+			mysqldump -uroot -p --all-databases  >  ~/mydata/all_mysql.sql
+		2、备份 db2 库中的sheng、city、xian三张表 db2scx.sql
+			mysqldump -uroot -p db2 sheng city xian  >  ~/mydata/db2scx.sql
+		3、备份 MOSHOU 和 db2 库,MSdb2.sql
+			mysqldump -uroot -p -B MOSHOU db2  >  ~/mydata/MSdb2.sql
+3、数据恢复
+	1、命令格式
+		mysql -u用户名 -p 目标库名  <  路径/数据库(表).sql
+		mysql -u用户名 -p 目标库名  <  路径/xxx.sql
+	2、示例
+		1、先备份库
+			mysqldump -uroot -p db2 > db2.sql
+		2、删除库
+			drop database db2;
+		3、先创建空库
+			create database db2 default charset=utf8;
+		4、恢复命令
+			mysql -uroot -p db2  < db2.sql
+
+	3、备份分为 完全备份 和 增量备份
+		 完全备份：mysqldump
+		 增量备份：binlog日志、xbackup工具
+	4、从所有库的备份文件中恢复某一个库(--one-database)
+		mysql -u用户名 -p --one-database 目标库名  <  路径文件
+
+		ex: 复制的是数据库：mysql -uroot -p --one-database db2 <  ~/all_mysql.sql
+		ex: 复制的是数据库中的表：mysql –uroot –p --one-database school < ~/xx/school.sql
+
+		注意：
+			1、恢复库时库中新增的表不会删除
+			2、恢复时必须先创建空库
+
+
+4、事务和事务回滚
+	1、定义
+		一件事从开始发生到结束的整个过程
+	2、作用
+		确保数据的一致性
+	3、事务和事务回滚的应用
+		1、mysql中默认sql语句会自动commit到数据库
+			show variables like "autocommit";
+		2、事务应用
+			1、开启事务
+				mysql> start transaction;
+				mysql> ... SQL命令
+				## 此时autocommit被禁用,SQL命令不会对数据库中数据做修改
+			2、终止事务
+				mysql> commit;
+				或者 
+				mysql> rollback;
+			3、注意
+				1、事务回滚rollback只针对于对表记录的操作,增、删、改,对创建库、创建表的操作无效
+		3、案例
+			1、背景
+				你：建行卡
+				你朋友：工商卡
+				你在建行的自动提款机给你朋友工商卡转5000元
+			2、过程
+				1、转账中...
+					1、先到建行的数据库把你的余额 -5000
+					2、再到工行的数据库把你朋友的余额 +5000
+					3、commit; 转账成功
+						 rollback; 回滚,转账失败
+				2、过程
+					表1、CCB
+						create table CCB(
+						name varchar(20),
+						money int
+						);
+						insert into CCB values("Zhuanqian",10000);
+					表2、ICBC
+						create table ICBC(
+						name varchar(20),
+						money int
+						);
+						insert into ICBC values("Shouqian",4000);
+					开始转账
+						mysql>start transaction;
+						mysql>update CCB set money=5000 where name="Zhuanqian";
+						mysql>update ICBC set money= 断电了,宕机了..;
+						mysql>start transaction;
+
+5、存储引擎
+	1、定义
+		是用来处理表的处理器
+	2、存储引擎基本操作
+		1、查看已有表的存储引擎
+			show create table 表名;  # engine=...
+		2、创建表时指定存储引擎
+			create table 表名(...)engine=myisam;
+		3、查看所有的存储引擎
+			mysql >  show engines;
+	3、工作中使用的存储引擎
+		innodb  myisam
+	4、常用存储引擎特点
+		1、innodb特点
+			1、共享表空间
+				表名.frm	表结构
+				表名.ibd	表记录&索引信息
+			2、支持行级锁
+		2、myisam特点
+			1、独享表空间
+				表名.frm 表结构
+				表名.myd 表记录
+				表名.myi 索引信息
+			2、支持表级锁
+	5、锁
+		1、加锁的目的
+			解决客户端并发访问的冲突问题
+		2、锁类型
+			读锁(select)共享锁
+				加读锁之后不能更改表中内容,但可以进行查询
+			写锁(insert,update,delete)互斥锁、排他锁
+		   死锁：两个线程同时需要两个表的内容，线程1先拿到A表，线程2先拿到了B表的数据，
+		此时会出现死锁，可以设置timeout;我们可以规定先取到A表，再取到B表。
+		3、锁粒度
+			表级锁
+			行级锁
+			####操作完成后会自动释放锁
+
+	6、如何决定使用哪种存储引擎
+		1、执行查询操作多的表使用myisam存储引擎(使用innodb浪费资源)
+		2、执行写操作比较多的表使用innodb存储引擎
+	7、如何更改表的默认存储引擎
+		1、sudo -i
+		2、cd /etc/mysql/mysql.conf.d/
+		3、vi mysqld.cnf
+		   [mysqld]
+			 defalut-storage-engine = myisam
+		4、/etc/init.d/mysql restart
+	8、memory存储引擎
+		memory: 表记录存储在内存中
+			表名.frm 表结构
+			## 服务重启之后表结构在,表记录都消失
+6、MySQL调优
+	1、选择合适的存储引擎
+		1、经常用来读的表使用myisam存储引擎
+		2、其余的表都用innodb存储引擎
+	2、SQL语句调优(尽量避免全表扫描)
+		1、在select where order by常涉及到的字段上建立索引
+		2、where子句中不使用 !=,否则将放弃使用索引进行全表扫描
+		3、尽量避免用NULL值判断,否则会全表扫描
+			示例：
+				select id from t1 where number is null;
+			优化：
+				在number字段设置默认值0
+		4、尽量避免 or 来连接条件,导致全表扫描
+			示例(优化前)：
+				select id from t1 where id=10 or id=20;
+			优化后：
+				select id from t1 where id=10
+				union all
+				select id from t1 where id=20;
+		5、模糊查询尽量避免使用前置 %,导致全表扫描
+			select id from t1 where name like "a%";
+		6、尽量避免 in 和 not in,导致全表扫描
+			select id from t1 where id in(1,2,3);
+			select id from t1 where id between 1 and 3;
+		7、尽量避免使用 select * ...,要用具体的字段列表代替 *,不要返回用不到的任何字段
+
+7、Python数据库编程
+	1、python数据库接口(Python DB-API)
+		1、为开发人员提供的数据库应用编程接口
+		2、支持的数据库服务软件
+			mysql、Oracle、SQL_Server、mongodb...
+		3、python提供的操作mysql模块
+			python3: pymysql
+			python2: MySQLdb
+		4、pymsql模块使用流程
+			1、建立数据库连接
+			2、创建游标对象
+			3、使用游标对象的方法操作数据库
+			4、提交commit
+			5、关闭游标对象
+			6、关闭数据库连接
+		5、建立数据库连接
+			1、语法格式
+				对象名 = pymysql.connect("主机地址","用户名","密码","库名",charset="utf8")
+			2、connect连接对象支持的方法
+				1、cursor() 创建一个游标对象db.cursor()
+				2、commit() 提交到数据库执行(表记录增删改)
+				3、rollback() 回滚
+				4、close() 关闭数据库连接
+			3、游标对象支持的方法
+				1、execute("SQL命令") 执行SQL命令
+				2、fetchone() 取得结果集的第一条记录  #元组，可索引
+				3、fetchmany(n) 取得结果集的 n 条记录  #元组中含元组;
+				  # 若是第二次取，接着上次的后面的开始取(拿走一条少一条)
+				4、fetchall() 取得结果集的所有记录  #元组
+				5、close() 关闭游标对象  
+				ex:cur.close()		#关闭游标对象;	 
+				   db.close() 		#关闭数据库对象
+		try:  
+			xxx;   			      	 #增删改
+    		db.commit()
+		except xxx:
+    		db.rollback()
+
+8、Mysql workbench(图形化界面管理工具)
+9、ER模型&ER图
+	1、定义
+		ER模型即 实体 -关系  模型
+		ER图即 实体关系图
+	2、三个概念
+		1、实体
+		2、属性
+		3、关系
+			1、定义 ：实体之间的关系
+			2、分类
+				一对一关系(1:1) : 班级和班长
+				一对多关系(1:n) : 公司和职工、班级和学生
+				多对多关系(m:n) : 学生和课程
+		4、ER图的绘制
+			1、矩形框代表实体,菱形框代表关系,椭圆形代表属性
+			2、见 ER图.png
+
+				
+				
+			
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

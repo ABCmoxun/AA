@@ -1,0 +1,93 @@
+
+
+exception(例外，异常)和BaseException(所有异常的基类)
+
+sys.exit([arg]) 	退出程序，正常退出时sys.exit(0)
+os._exit()
+sys.path 	模块搜索路径 path[0] 是当前脚本程序的路径名，否则为 '';
+sys.path : 是一个列表，可以添加路径。该列表中的路径，对python下的所有环境可见
+__import__() : 参数为一个目录， 等同于import 导入  
+ex:  m = __import__(路径文件夹)   #路径文件是string
+
+sys.argv : 自动收集命令行内容为一个列表
+(运行程序，python3 xxx 后面的参数)
+
+
+linux命令：pwd  #查看当前路径
+
+os.path  ##
+os.path.exists(路径文件夹)
+功能 ： 判断一个文件是否存在
+参数 ： 一个路径文件
+ex:os.path.exists('/home/tarena/AA')   #好像必须是绝对路径
+
+os.unlink('xx')   or   os.remove('xx')  #绝对路径
+功能:删除某个文件
+参数 ： 一个路径文件
+
+os.listdir(path)
+获取该文件夹下所有文件，形成一个列表
+ex:os.listdir('/home/tarena/AA')    #列表(#好像必须是绝对路径)
+
+os.path.isfile(path)
+os.path.isdir(path)
+判断一个文件是否是普通文件/文件夹 
+  ex:os.path.isfile(“xxx”)    #填绝对路径
+
+
+cookie和session的设置
+<form action='' method=''>
+{% csrf_token %}
+设置cookie
+响应对象.set_cookie(key,value,expires)
+			key:cookie的名字
+			value:cookie的值
+			expires:cookie的保存时间，以s为单位
+  ex:resp.set_cookie(key,value,expires)
+
+session：
+设置session
+  request.session['key'] = 值;
+  获取session的值
+	request.session[key] 或 request.session.get(key)
+	ex:id=request.session['id']
+  删除 session 的值
+	del request.session['key']				ex:request.session.get('')
+	ex:del request.session['id']
+
+
+1、设置session的过期时间(可以不设置时间)
+	request.session.set_expiry(time)
+	time 就是以秒为单位的一个时间
+
+ 2、在 settings.py中，有关session的设置
+	1、SESSION_COOKIE_AGE
+		作用：设置sessionID在cookies中的存活时间(单位：s)
+		ex:
+			SESSION_COOKIE_AGE=60*10		#sessionID在cookie中保留10分钟
+
+	2、SESSION_EXPIRE_AT_BROWSER_CLOSE
+		作用：设置在浏览器关闭时同时清除服务器上对应的session空间
+		ex:
+			SESSION_EXPIRE_AT_BROWSER_CLOSE=True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

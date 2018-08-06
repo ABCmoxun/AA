@@ -1,0 +1,413 @@
+MySQL-Day02回顾
+1、表记录的管理
+	1、删除表记录
+		1、delete from 表名 where 条件;
+			## 不加where条件全部删除
+	2、更新表记录
+		1、update 表名 set 字段名=值1,... where 条件;
+			## 不加where条件表中所有记录全部更改
+2、运算符
+	1、数值比较&字符比较
+		1、数值比较：=  !=  >  >=  <  <= 
+		2、字符比较：=  !=
+	2、逻辑比较
+		and   or
+	3、范围内比较
+		1、between  值1  and  值2
+		2、in(值1,值2,...)
+		3、not in(值1,值2,...)
+	4、匹配空、非空
+		is null
+		is not null
+		null:空值,必须用 is 或者 is not 去匹配
+		""  :空字符串,用 = 或者 != 去匹配
+	5、模糊比较
+		_ : 匹配单个字符
+		% : 匹配0到多个字符
+	6、正则匹配
+		1、select ... where 字段名 regexp "正则表达式";
+		2、正则表达式符号
+			"" : 包含""中的所有内容
+					 regexp "abc" 匹配包含 abc 的记录
+			[] : 包含其中任意一个字符就可以
+					 regexp "[abc]" 包含a、b、c中的任意一个或多个
+			^  : ^a 表示以a开头
+			$  : a$ 表是以a结尾
+			.  : 表示任意一个字符
+			*  : 匹配 0个或者多个前面的实例
+					 "x*" :匹配任意数量的 x 字符
+					 "司马*" :匹配 司+(0个或者多个 马)
+			mysql 5.7.21版本中,正则表达式中 . 匹配的是字节
+			mysql 8.0...版本中,正则表达式中 . 匹配的是字符
+
+			5.7  ^...$  "aaa" "貂"  "666"
+			8.0  ^...$  "司马懿"  "aaa"
+3、SQL查询
+	1、order by
+		1、order by 字段名 ASC/DESC
+	2、limit
+		1、永远放在SQL命令的最后一个写
+		limit m
+		limit m,n
+	3、聚合函数
+		avg(...) sum(...) max(...) min(...) 
+		count(字段名) ## 字段值NULL不会被统计
+	4、group by(分组)
+		1、注意
+			1、group by后的字段名必须为select后的字段名
+			2、如果select后的字段名在group by之后没有,则必须要对该字段进行聚合处理
+	5、having(对查询结果进一步筛选)
+		1、注意
+			1、having与group by语句联合使用,用来过滤由group by语句返回的记录集
+			2、where只能操作表中实际存在的字段,having则可以操作聚合函数生成的显示列
+	6、distinct(不显示字段的重复值)
+	7、查询表记录时做数学运算
+	8、总结
+		3、select ...聚合函数 from ...
+		1、where ...
+		2、group by ...
+		4、having ...
+		5、order by ...
+		6、limit ...
+4、索引
+	1、BTree
+	2、优点：可以加快数据的检索速度
+	3、缺点：
+		1、需要动态维护,降低了数据的维护速度
+		2、索引占用物理空间
+	4、索引性能分析
+		1、开启性能分析：set profiling = 1
+		2、执行SQL命令：
+		3、查看性能分析结果：show profiles;
+		4、创建索引字段：create index 索引名 on 表名(字段名);
+		5、执行SQL命令：
+		6、查看性能分析结果：show profiles;
+
+MySQL-Day03笔记
+1、索引分类
+	1、普通索引
+	2、唯一索引
+	3、主键索引
+	4、外键索引
+2、普通索引(index)
+	1、使用规则
+		1、一个表中可以有多个index字段
+		2、字段的值可以有重复,也可以为NULL值
+		3、经常把做查询条件的字段设置为index字段
+		4、index字段的key标志为: MUL
+	2、创建
+		1、创建表时创建index
+			create table t1(
+			... ...,
+			... ...,
+			index(id),
+			index(name));
+		2、在已有表中添加索引字段
+			1、语法格式
+				create index 索引名 on 表名(字段名);
+				# 索引名一般和字段名一样
+  				ex:create index name on studentinfo(name);
+	3、查看
+		1、desc 表名;  ->查看KEY标志为 MUL
+		2、show index from 表名\G;
+	4、删除
+		drop index 索引名 on 表名;
+		注意：
+			删除普通索引只能一个一个删除
+3、唯一索引(unique)
+	1、使用规则
+		1、一个表中可以有多个 unique 字段
+		2、unique字段的值不允许重复,可以为空值NULL
+		3、unique的KEY标志是 UNI
+	2、创建(基本等同index创建)
+		1、创建表时创建
+		create table t1(
+			... ...,
+			... ...,
+			unique(字段名),
+			unique(字段名))
+		2、已有表中创建
+			create unique index 索引名 on 表名(字段名);
+		3、查看、删除唯一索引
+			desc 表名;
+			show index from 表名;
+		   删除：drop  index 索引名 on 表名;
+4、主键索引(primary key) && 自增长属性(auto_increment)
+	1、使用规则
+		1、一个表中只能有一个主键字段
+		2、对应字段的值不允许重复 且 不能为空值NULL
+		3、主键字段的KEY标志为 PRI
+		4、把表中能够唯一标识一条记录的字段设置为主键,通常把表中记录编号的字段设置为主键
+	2、创建主键(PRI)
+		1、创建表时创建
+			1、字段名 数据类型 primary key auto_increment,
+			2、
+				id int auto_increment,
+				... ...,				# 设置自增长起始值
+				primary key(id))auto_increment=10000;
+		2、在已有表中添加主键
+			alter table 表名 add primary key(字段名);
+		3、删除主键
+			1、先删除自增长属性(modify)
+				alter table 表名 modify id int;
+			2、删除主键
+				alter table 表名 drop primary key;
+
+5、外键
+	1、定义 
+		让当前表字段的值在另一个表的范围内选择
+	2、语法格式
+		foreign key(参考字段名) references 被参考表名(被参考字段名)
+		on delete 级联动作
+		on update 级联动作
+	ex:     foreign key(stu_id) references jftab(id)
+			on delete cascade
+			on update cascade
+
+	3、案例
+		表1、缴费信息表(财务)
+			学号  姓名    班级   缴费金额
+				1   唐伯虎  AID01   28000
+				2   点秋香  AID01   20000
+		
+		表2、学生信息表(班主任)
+			学号  姓名   缴费金额
+			 1   唐伯虎  28000
+			 2   点秋香  20000
+
+		1、创建缴费信息表
+			create table jftab(
+			id int primary key,
+			name char(15),
+			class char(5),
+			money int
+			)default charset=utf8;
+
+			insert into jftab values
+			(1,"唐伯虎","AID01",28000),
+			(2,"点秋香","AID01",20000),
+			(3,"祝枝山","AID01",22000);
+		2、创建学生信息表(从表)
+			create table bjtab(
+			stu_id int,
+			name char(15),
+			money int,
+			foreign key(stu_id) references jftab(id)
+			on delete cascade
+			on update cascade
+			);
+	4、级联动作
+		1、cascade ：数据级联更新
+			当主表删除记录 或者 更新被参考字段的值时,从表会级联更新
+		2、restrict 默认
+			1、当删除主表记录时,如果从表中有相关联记录则不允许主表删除
+			2、更新同理
+		3、set null
+			1、当主表删除记录时,从表中相关联记录的参考字段值自动设置为NULL
+			2、更新同理
+		4、no action
+			on delete no action on update no action
+			同 restrict,都是立即检查外键限制			
+	5、删除外键
+		alter table 表名 drop foreign key 外键名;
+		1、外键名的查看方式
+			show create table 表名;
+	6、已有表中添加外键
+		## 会受到表中原有数据的限制
+		alter table 表名 add foreign key(参考字段名)
+		references 被参考表名(被参考字段名)
+		on delete 级联动作
+		on update 级联动作;
+	7、外键使用规则
+		1、两张表被参考字段和参考字段数据类型要一致
+		2、被参考字段必须是 key 的一种,通常是 primary key
+
+
+
+6、数据导入
+	1、作用：把文件系统的内容导入到数据库中
+	2、语法
+		load data infile "文件名"
+		into table 表名
+		fields terminated by "分隔符"   #分隔符
+		lines terminated by "\n"   #换行符
+	3、示例
+		把 /etc/passwd 文件中的内容导入到db2库下的userinfo表
+		tarena :  x  :  1000 : 1000 :
+		用户名  密码    UID号  GID号
+		tarena,,, : /home/tarena : /bin/bash
+		用户描述    用户主目录     登录权限
+		  /bin/false
+		  /usr/sbin/nologin
+
+	4、操作步骤
+		1、在数据库中创建对应的表
+			create table userinfo(
+			username char(20),
+			password char(1),
+			uid int,
+			gid int,
+			comment varchar(50),
+			homedir varchar(50),
+			shell varchar(50)
+			);
+		2、将要导入的文件拷贝到数据库的默认搜索路径中
+			1、查看数据库的默认搜索路径
+			sql语句:  show variables like "secure_file_priv";
+				   /var/lib/mysql-files
+			2、Linux命令行输入：
+				sudo  cp 路径文件  /var/lib/mysql-files/
+				ex:  cp /home/tarena/AID1709.csv  /var/lib/mysql-flies/
+
+		3、执行数据导入语句
+			load data infile "/var/lib/mysql-files/passwd"
+			into table userinfo
+			fields terminated by ":"
+			lines terminated by "\n";
+
+	5、练习：将AID1709.csv文件导入到数据库中
+		# csv文件单元格之间以 , 分隔
+	
+		/var/lib/mysql-files/AID1709.csv
+		ls -l AID1709.csv
+		rw-------
+		chmod 666 AID1709.csv
+
+		1、在数据库中创建对应的表
+			id  姓名  成绩  手机号  班级
+			create table scoretab(
+			id int,
+			name varchar(20),
+			score float(5,2),
+			phone char(11),
+			class char(7)
+			)default charset=utf8;
+		2、把导入的文件复制到数据库的默认搜索路径中
+			cp   源文件   目标路径
+			cp  /home/tarena/AID1709.csv  /var/lib/mysql-flies/
+			######## 用 TAB 键 补齐路径 #######
+		3、执行数据导入语句
+  linux语句：load data infile "/var/lib/mysql-files/AID1709.csv"
+			into table scoretab
+			fields terminated by ","
+			lines terminated by "\n";
+
+			# 修改文件权限 chmod 666 AID1709.csv
+7、数据导出
+	1、作用
+		将数据库表中的记录保存到系统文件里
+	2、语法格式
+		select ... from 表名
+		into outfile "文件名"
+		fields terminated by "分隔符"
+		lines terminated by "\n";
+
+	3、把userinfo表中的username、password和uid导出到文件user.txt
+       linux语句：select username,password,uid from userinfo
+		into outfile "/var/lib/mysql-files/user.txt"
+		fields terminated by ","
+		lines terminated by "\n";
+		
+		1、sudo -i
+		2、cd /var/lib/mysql-files/
+		3、cat user.txt
+	4、注意
+		1、导出的内容由SQL查询语句决定
+		2、执行导出命令时路径必须指定对应的数据库搜索路径
+
+8、表的复制
+	1、语法格式
+		create table 表名 select 查询命令;
+	2、示例
+		1、复制userinfo表中的全部记录,userinfo2
+			create table userinfo2 select * from userinfo;
+		2、复制userinfo表中username,password,uid三个字段的第2-10条记录,userinfo3
+			create table userinfo3 select username,password,uid from userinfo limit 1,9;
+	3、复制表结构
+		create table 表名 select 查询命令 where false;
+		??!ex: create table 表名 select 字段名 where false;
+
+	4、注意
+		复制表的时候不会把原有表的 key 属性复制过来
+
+
+9、嵌套查询(子查询)
+	1、定义
+		把内层的查询结果作为外层的查询条件
+	2、示例
+		1、把uid的值小于 uid 平均值的用户名和uid号显示出来
+			select username,uid from userinfo
+			where uid < (select avg(uid) from userinfo);
+
+
+10、连接查询
+	1、内连接
+		1、定义
+			从表中删除与其他被连接的表中没有匹配到的行
+		2、语法格式
+			select 字段名列表 from 表1 
+			inner join 表2 on 条件 [inner join 表3 on 条件];
+			{一次一表查询也可以取别名，方便后续查询联合去查询.在join后加笛卡尔积表需要加别名.
+				笛卡尔积表：多表查询生成的新表,若还需用查询后的表需去别名()name1;}
+
+
+		3、示例
+			1、显示省市的详细信息
+				select sheng.s_name,city.c_name from sheng
+				inner join city on sheng.s_id=city.cfather_id;
+			2、显示省市县详细信息
+				select sheng.s_name,city.c_name,xian.x_name from sheng
+				inner join city on sheng.s_id=city.cfather_id
+				inner join xian on city.c_id=xian.xfather_id;		
+	2、外连接
+		1、左连接
+			1、定义
+				以左表为主显示查询结果
+			2、语法格式
+				select 字段名列表 from 表1
+				left join 表2 on 条件;
+				主表中所有信息要显示出来
+			3、示例
+				1、以省表为主显示省市详细信息
+					select sheng.s_name,city.c_name from sheng
+					left join city on sheng.s_id=city.cfather_id;
+				2、显示省市区详细信息,要求县全部显示
+					select sheng.s_name,city.c_name,xian.x_name from sheng left join city 
+					on sheng.s_id=city.cfather_id
+					right join xian on city.c_id=xian.xfather_id;
+				3、显示省市区详细信息,要求 市 全部显示
+					select sheng.s_name,city.c_name,xian.x_name from sheng
+					right join city on sheng.s_id=city.cfather_id
+					left join xian on city.c_id=xian.xfather_id;
+				   #### 结果集 ####
+		2、右连接
+			用法同左连接,以右表为主显示查询结果
+11、多表查询
+	1、select 字段名列表 from 表名列表;  # 笛卡尔积
+	2、select 字段名列表 from 表名列表 where 条件;
+	   等同于 内连接 inner join
+
+
+
+
+
+
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

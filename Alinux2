@@ -1,0 +1,120 @@
+
+day11
+lambda 表达式(又名匿名函数表达式)
+    创建一个匿名函数对象
+    lambda [形参1, 形参2, ...] : 表达式
+    myadd = lambda x, y: x + y  #可以不给函数命名，直接使用
+   myadd(100, 200)
+  eval函数:
+    把一个字符串当成一个表达式执行，返回表达式执行后的结果
+  exec函数:
+     把一个字符串当成程序来执行(#一个字符串整体)
+ python内置(builtins)的高阶函数:
+   map, filter, sorted
+   map(func, *iterables)
+   filter(func, iterable)
+  sorted 函数:
+   将原可迭代对象的数据进行排序，生成排序后的列表
+   sorted(iterable, key=None, reverse=False)
+    iterable 可迭代对象
+    key 绑定函数，此函数用来提供一个排序的依据
+    reverse 标志用来设置是否降序排序(默认从大到小)
+  
+    递归
+  由基例和推导式
+
+day12
+闭包 
+  将内嵌函数的语句和这些语句的执行环境打包在一起后，得到的函数对象称为闭包(closure)
+ 闭包必须满足以下三个条件:
+   1. 必须有一个内嵌函数
+   2. 内嵌函数必须引用外部函数中的变量
+   3. 外部函数返回值必须是内嵌函数
+
+装饰器 decorators(专业提高篇)
+  装饰器是一个函数，这个函数的主要作用是包装另一个函数或类 
+  ！！包装的目的是在不改变原函数名的情况下改变被包装对象的行为 
+  #在装饰器函数需要调用外部函数，外部函数才会执行
+def mydeco(fn):  # fn为被装饰函数
+    def fx():
+        print("++++")
+        fn()     #必须被调用装饰器函数调用此函数，才会去执行。
+        print('------------')
+    return fx
+@mydeco
+def hello():   # <<== 被装饰函数
+    print("hello tarena!")
+
+hello() 
+
+
+day14
+异常(基础)  exception
+BaseException 	所有异常的基类
+try语句的两种语法:
+  try-except 语句
+  else:
+    未发生异常的语句
+  try-finally 语句
+ raise 语句:
+    触发一个错误，让程序进入异常状态
+	ex:raise ValueError()
+
+  assert 语句(断言语句)
+   当真值表达式为False时，用错误数据创建一个AssertionError类型的错误，并进入异常状态
+   assert 真值表达式, 错误数据(通常是字符串)
+  ex: assert a >= 0, "不可能出现负数!!!"
+
+day15
+ 迭代器 Iterator 
+  生成器 Generator
+
+day16
+字节流
+
+
+day17-18
+class
+继承 inheritance 和 派生 derived
+    继承是从已有类中派生出新类，新类具有原类的数据属性和行为,并能扩展新的能力
+    派生就是从一个已有的类衍生出新类，在新的类上添加新的属性和行为
+
+
+
+day19
+面向对象编程语言的特征:
+   封装；继承；多态
+封装 enclosure
+  封装是指隐藏类的实现细节．让使用者不关心这些细节;
+  封装的目的是让使用者通过尽可能少的使用实例变量名(属性)操作对象
+
+多态　
+　　多态是指在有继承/派生关系的类中，调用基类对象的方法，实际能调用子类的覆盖方法的现象叫多态
+
+函数重写-day20   overwrite
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,146 @@
+去重的操作：
+	已爬队列，当前这个页面处理时需要在已爬队列中
+做一次去重；
+	待爬队列，为了保证队列里url的唯一性，这里需要
+在待爬队列中去重；
+
+    # 队列的方式来模拟广度优先遍历
+    crawl_queue = []   #待爬队列
+    crawled_queue = [] #已爬队列
+    for itemUrl in itemUrls:
+        # 在已爬队列中做去重处理
+        if itemUrl not in crawled_queue:
+            # 在已爬队列中没有的话，则插入待爬队列中
+            crawl_queue.append(itemUrl)
+    # 在待爬队列中再做一次去重
+    crawl_queue = list(set(crawl_queue))
+        
+    # 抓取队列中的信息为空，则退出循环
+    while crawl_queue:
+        url = crawl_queue.pop(0)
+        # 用进程池中的进程来处理这个URL
+        pool.apply_async(func=CrawlInfo, args=(url, q))
+        
+        # 处理完之后，需要把这个url放入已爬队列中
+        url = q.get()
+        crawled_queue.append(url)
+说明：
+1）待爬队列则既需要append，也需要pop；
+已爬队列中只有append操作；
+2）爬虫开始于向待爬队列中append一个seedUrl；
+结束于待爬队列为空时；
+3）在做去重的比较时，可以比较HASH之后的结果；
+如果数据量巨大的话，可以使用多次HASH来避免碰撞；
+3次HASH；
+     
+在生产环境中，
+	一般使用Redis数据库来做去重操作；
+Redis是一种内存数据库，URL，URL哈希值，及
+抓取到的数据等保存在其中；
+在数据量大的时候，使用这种数据库的解决方案效率会
+高很多；缺点是还有硬件的限制，数据还是需要考虑
+在内存中的时效性和安全性；
+
+安装Scrapy：
+	conda install scrapy
+制作一个Scrapy爬虫项目的步骤：
+1.创建项目：
+	scrapy startproject tencentSpider
+2.进到下一层目录：
+    cd 	tencentSpider
+3.创建爬虫:
+生成一个具体的爬虫
+	scrapy genspider tencent hr.tencent.com
+	ex:scrapy genspider demo   python123.io
+	#demo 爬虫名字  Python123.io是网址http://python123.io
+
+运行爬虫：scrapy crawl tencent
+
+要让我们的爬虫程序能够正式的抓取数据，
+我们需要修改：
+            setttings.py 设置
+				1）注释掉Robots协议；
+				2）打开Headers选项，添加UA；
+				3）打开PIPELINES，准备保存数据；
+			items.py     保存item的映射
+			    添加将来要抓取数据的信息：
+				positionName = scrapy.Field() #名称
+				positionLink = scrapy.Field() #详情链接
+				positionType = scrapy.Field() #类别
+			pipelines.py 保存的逻辑
+				完善process_item保存数据的方法；
+			tecent.py,抓取页面信息和继续跳转的逻辑
+			/html/body/div[3]/div[1]/table/tbody/tr[2]
+			/html/body/div[3]/div[1]/table/tbody/tr[2]/td[1]/a
+	        /html/body/div[3]/div[1]/table/tbody/tr[2]/td[2]
+	https://hr.tencent.com/position.php?keywords=python&start=0#a
+	https://hr.tencent.com/position.php?keywords=python&start=10#a
+	https://hr.tencent.com/position.php?keywords=python&start=20#a
+
+补充说明：
+	1)如果需要在Scrapy框架中去做proxy，
+可以在Downloadermiddler中对process_request方法
+做扩充：
+        # 如果想要添加代理服务器的功能，可以在这里来扩充
+        # proxy = random.choice(proyPool) #proyPool可以从setting.py中取出来
+        # if proxy["user_passord"] is not None:
+        #     proxy["user_passord"]=base64.baseEncode(proxy["user_passord"])
+        # 在这里参见我们使用代理服务器的代码去调用代理服务器的方法去完成请求
+注意： 别忘了打开setting.py中downloader中间件的设置：
+DOWNLOADER_MIDDLEWARES = {
+    'tencentSpider.middlewares.TencentspiderDownloaderMiddleware': 543,
+}
+2) 生成一个具体的爬虫时，可以使用：
+scrapy genspider -t crawl tencent2 hr.tencent.com
+#Created spider 'tencent2' using template 'crawl' in module:
+#  tencentSpider2.spiders.tencent2
+CrawlSpider是Spider的派生类，Spider类的设计原则
+是只爬取strat_urls列表中的网页，而CrawlSpider定义
+了一些rule(规范)来提供link获取机制，从而
+更方便的抓取新的link的信息，具体的使用参见：
+LinkExtractor的实现；
+	allow=(), 
+	deny=(), 
+	allow_domains=(), 
+	deny_domains=(), 
+	restrict_xpaths=()
+
+Scrapy-Redis:
+    Scrapy是一个爬虫框架；
+Scrapy-Redis能够很方便的实现Scrapy的分布式爬虫框架；
+提供了以Redis为基础的组件。
+	
+		
+学框架：
+	优点：帮助我们快速的搭建一个系统，把一些繁琐的有一定
+模式的事情已经替我们做完了，提高开发效率；
+    缺点：学习成本有时比较高，框架自身固有的缺陷
+需要我们自己想办法解决，所以需要找一些靠谱
+的开源框架学习，这样收益更大；
+
+面试题：
+	百度公司有3万名员工，
+请按照员工的年龄给员工排序。
+    ages = {}
+	ages[i]:
+	   i: 14-100, value -> 0
+	25 -> ages[25] += 1
+	28 -> ages[28] += 1
+	...
+	O(N)
+思考题：有个论坛系统，这个论坛系统有个“灌水王”。
+他发的帖子超过了半数，请设计一个算法，
+快速的将其ID找出。
+	
+1）作业：完善tencentSpider，把六种数据全部获取到；
+
+
+
+
+
+
+
+
+
+
+

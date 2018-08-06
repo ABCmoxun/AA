@@ -1,0 +1,92 @@
+
+
+
+
+
+scrapy爬虫提取信息的方法：
+BeautifullSoup;lxml;re;xpath;css selector
+<html>.css('a::attr(href)').extract()  #生成列表
+.get('src')
+[attribute=value]
+获取文本：css('title::text').extract()
+后去属性：css('base::attr(href)').extract()
+
+1.创建项目：
+	scrapy startproject tencentSpider
+2.进到下一层目录：
+    cd 	tencentSpider
+3.创建爬虫:
+生成一个具体的爬虫
+	scrapy genspider tencent hr.tencent.com
+	ex:scrapy genspider demo   python123.io
+	#demo 爬虫名字  Python123.io是网址http://python123.io
+
+
+settings.py
+#scrapy爬虫的配置文件
+setttings.py 设置
+   1、注释掉Robots协议；
+   2、打开Headers选项，添加UA；
+   3、打开PIPELINES，准备保存数据；(分保存在数据和文件中)
+   4、有时候也配置数据库相关信息
+
+items.py
+设置索引需要要字段名：
+class XXScrapyItem：
+positionName = scrapy.Field() #名称
+positionLink = scrapy.Field() #详情链接
+positionType = scrapy.Field()#类别
+#positionName,positionLink,positionType 字段名
+与爬虫文件.py中所需要字段名相同
+ex:demo.py
+	from tencentSpider.items import TencentspiderItem
+	item = TencentspiderItem()
+    item['positionName'] = each.xpath('./td[1]/a/text()').extract()[0]
+    item['positionLink'] = each.xpath('./td[1]/a/@href').extract()[0]
+    item['positionType'] = each.xpath('./td[2]/text()').extract()[0]
+
+pipelines.py文件
+ 保存文件，保存在文件或数据库中
+from twisted.enterprise import adbapi
+#第三方库异步插入
+数据库连接
+
+middlewares.py ---里面有class XXSpiderMiddleware(object)和class XXDownloaderMiddleware(object)
+#？？不知道怎么配置的;好像暂时没有修改
+
+!!!demo.py    #最重要
+class Demospider(scrapy.spider):
+  start_urls=[]      #开始查找的网页
+	##循环爬取的网页，也可以写在parse方法下面，
+	#也可以定义方法，不过定义后还需在settings里设置,看到的多半写在下面parse方法里的
+	ex:urls=[x,x]
+	   for url in urls:
+		yield scrapy.Request(url=url,callback=self.parse)
+
+	def parse(self,response):  #解析方法
+		#取所需要的信息
+		##网页可以设置，这里设置爬取的网页
+ 		ex: if self.offset <n:
+            self.offset +=x
+            nextPageUrl = self.url+str(self.offset)+"#a"
+        # 对下一页发起request请求，指定一个回调方法
+        yield scrapy.Request(nextPageUrl, callback=self.parse)
+
+
+Scrapy-Redis:
+    Scrapy是一个爬虫框架；
+Scrapy-Redis能够很方便的实现Scrapy的分布式爬虫框架；
+提供了以Redis为基础的组件。
+
+补充说明：
+	1)如果需要在Scrapy框架中去做proxy，
+可以在Downloadermiddler中对process_request方法
+做扩充：
+        # 如果想要添加代理服务器的功能，可以在这里来扩充
+        # proxy = random.choice(proyPool) #proyPool可以从setting.py中取出来
+        # if proxy["user_passord"] is not None:
+        #     proxy["user_passord"]=base64.baseEncode(proxy["user_passord"])
+        # 在这里参见我们使用代理服务器的代码去调用代理服务器的方法去完成请求
+注意： 别忘了打开setting.py中downloader中间件的设置：
+DOWNLOADER_MIDDLEWARES = {
+    'tencentSpider.middlewares.TencentspiderDownloaderMiddleware': 543,}

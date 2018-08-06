@@ -1,0 +1,102 @@
+
+
+#若虚拟机出问题了,删除ubantu文件下的所有的xxx.lck文件或文件夹
+
+cookie 就是浏览器储存在用户电脑上的一小段文本文件。
+cookie:服务器写入到浏览器中的一些键值对．这些键值对会在下次访问服务器时，被浏览器自动提交上来．
+session:session相关信息存储在服务器，然后向浏览器中写入一个键值对，
+该键值对就是下一次访问服务器时，找到存储信息的一个＂凭证＂．＂凭证＂要尽量做到不重复．
+
+用redis存储session
+!!!ajax的同步:在ajax的参数中增加一个async: false参数可以发送同步ajax请求。
+
+ex:s1 = "{} is {}".format('zhang','12')
+  s2 = "{1} is {0}".format('zhang','12')
+
+字符串的一个函数：(去掉字符串的前后换行)
+ex: str.strip()
+l=list()
+str1=''join(itrable) #必须是可迭代的对象，若是列表里的必须元素是字符串
+
+爬虫
+保存：
+content_list=[{},{}]
+在写入文件时使用：
+with open("xxx.txt",'a',encoding="utf-8") as f:
+for content in content_list:
+f.write(json.dumps(content, ensure_ascii=False)+'\n')
+也可以用生成器
+	yield{dict}(yield必须在函数中使用)
+
+闭包必须满足以下三个条件:
+   1. 必须有一个内嵌函数
+   2. 内嵌函数必须引用外部函数中的变量
+   3. 外部函数返回值必须是内嵌函数
+
+什么是装饰器:
+  装饰器是一个函数，这个函数的主要作用是包装另一个函数或类 
+  包装的目的是在不改变原函数名的情况下改变被包装对象的行为
+def mydeco(fn):  # fn为被装饰函数
+    def fx():
+        print("++++")
+        fn()     #必须被调用装饰器函数调用此函数，才会去执行。
+        print('------------')
+    return fx
+@mydeco
+def hello():   # <<== 被装饰函数
+    print("hello tarena!")
+hello() 
+
+map(func, iterables)
+filter(func, iterable)
+
+sorted(iterable, key=None, reverse=False)默认从大到小
+#三者对生成列表对象
+函数的__doc__属性
+模块的属性(一个函数也可以是模块)
+__file__属性：用来绑定模块对应的文件路径名
+模块的 __all__列表：用来存放可导出属性的字符串列表
+模块的 __name__ 属性:用来记录模块自身的名字
+
+迭代器和生成器在：day15中
+什么是迭代器:
+  迭代器是访问可迭代对象的一种方式,用迭代器可以访问可迭代对象
+  迭代器是指iter(可迭代对象) 返回的对象
+  迭代器可以用next(it) 函数获取可迭代对象的数据(try..except)
+生成器是能够动态提供数据的对象,生成器对象也是可迭代对象
+生成器函数定义:
+  含有yield语句的函数是生成器函数，此函数被调用将返回一个生成器对象
+
+
+bytes(字符串, encoding='utf-8')  用字符串的转换编码生成一个字节串
+ b = str.encode('utf-8')
+ s = b.decode(encoding='utf-8')
+#encoding  编码 是
+将指点转换成json格式的字符串
+json.dumps(dict1, ensure_ascii=False)
+将json格式转换成字典
+dict1=json.loads(json_str)
+
+JSON.stringify(obj)     将JSON对象转为字符串。
+JSON.parse(string)      将字符串转为JSON对象格式。
+
+
+tonado项目的文件结构
+xx.py		#主文件
+static      #静态文件加，ex:mystatic,存css,imag,js等文件
+template   #存放html文件
+需要在app里设置
+app = Application(handlers=[(),()..],
+            template_path='mytemplate',
+            static_path='mystatics')
+
+
+
+
+
+
+
+
+
+
+ 
