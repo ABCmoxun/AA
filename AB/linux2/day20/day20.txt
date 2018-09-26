@@ -1,0 +1,274 @@
+day19回顾
+  面向对象
+    类
+      用来描述对象，创建对象
+      
+    对象(实例 )
+      属性
+        实例变量
+      行为
+        实列方法
+    class 类名(超类名1, 超类名2, ...):
+        类变量
+        实例方法
+        类方法
+        静态方法
+        文档字符串
+
+覆盖
+
+  mro 方法解决次序
+
+super函数
+
+面向对象语方的特征
+  封装
+  继承
+  多态 (静态/动态)
+
+多继承:
+  MRO (Method Resolution order)
+
+函数重写
+  repr   __repr__
+  str    __str__
+  len    __len__
+  bool   __bool__
+  ...
+
+迭代器
+  next(it)   ---> __next__(self)
+
+可迭代对象:
+  iter(obj)  ---> __iter__(self)
+    用于返回迭代器
+
+迭代器协议
+  没有数据时触发StopIteration异常
+
+day20笔记:
+属性管理函数
+  getattr(obj, name[, default])   从一个对象得到对象的属性；getattr(x, 'y') 等同于x.y; 当属性不存在时,如果给出default参数,则返回default,如果没有给出default 则产生一个AttributeError错误
+    
+  hasattr(obj, name)  用给定的name返回对象obj是否有此属性,此种做法可以避免在getattr(obj, name)时引发错误
+    
+  setattr(obj, name, value)   给对象obj的名为name的属性设置相应的值value, set(x, 'y', v) 等同于 x.y = v
+    
+  delattr(obj, name)  删除对象obj中的name属性, delattr(x, 'y') 等同于 del x.y    
+
+
+异常(高级)
+with语句
+  语法：
+    with 表达式1 [as 变量名1], 表达式2 [as 变量名2], ...
+
+  作用:
+    用于对资源访问的场合，确保使用过程中不管是否发生异常，都会执行必要有"清理"操作，并释放资源.
+    如:
+      文件打开后自动关闭，线程中锁的自动获取和释放(线程后面会讲)
+  说明:
+    with语句与try-finally相似，并不会必变异常状态
+    as 子句用于绑定表达式创建的对象
+
+示例见:
+  with.py
+
+环境管理器:
+  1. 类内有__enter__ 和 __exit__方法的类被称为环境管理器
+  2. 能够用with进行管理的对象必须是环境管理器
+  3. __enter__ 将在进入with语句时被调用，并返回由as变量管 理的对象
+  4. __exit__ 将在离开with语句时被调用，且可以用参数来判断离开with语句时是否出现异常并做出相应的处理
+
+示例:
+  见FileWrite.py
+
+练习：
+  实现文件的复制(建议使用二进制方式进行操作)
+  $ python3 mycp.py
+    请输入源文件: /etc/passwd
+    请输入目标文件: ./mypass.txt
+    提示: '文件复制成功' 或 '文件复制失败'
+    (建议使用with语句打开文件)
+
+
+
+运算符重载:
+  什么是运算符重载
+    让自定义的类生成的对象（实例）能够使用运算符进行操作
+  作用：
+    让实例象数学表达式一样进行运算操作
+    让程序简洁易读
+  说明:
+    运算符重载方法的参数已经有固定的含义，不建议改变原有的含义
+
+算术运算符:
+     方法名       运算符
+  __add__        加法 +
+  __sub__        减法 -
+  __mul__        乘法 *
+  __truediv__    除法 /
+  __floordiv__   地板除 //
+  __mod__        取模(求余) %
+  __pow__        幂 **
+二元运算符重载方法格式:
+    def __xxx__(self, other):
+       ....
+
+示例:
+  01_mynumber.py
+  
+练习：
+  实现两个自定义表的相加
+  class MyList:
+      def __init__(self, iterable):
+          self.data = [x for x in iterable]
+      ...  # 类内以下的部分自己实现
+
+  L1 = MyList([1,2,3])
+  L2 = MyList(range(4, 7))
+  L3 = L1 + L2
+  print("L3 =", L3)  # MyList([1,2,3,4,5,6])
+  L4 = L1 * 2  # 实现乘法运算
+  print('L4 =', L4)  # MyList([1,2,3,1,2,3])
+
+
+
+反向算术运算符:
+    方法名       运算符
+  __radd__        加法 +
+  __rsub__        减法 -
+  __rmul__        乘法 *
+  __rtruediv__    除法 /
+  __rfloordiv__   地板除 //
+  __rmod__        取模(求余) %
+  __rpow__        幂 **
+
+示例见:
+   02_mylist.py
+
+复合赋值运算符重载:
+    方法名       运算符
+  __iadd__        加法 +=
+  __isub__        减法 -=
+  __imul__        乘法 *=
+  __itruediv__    除法 /=
+  __ifloordiv__   地板除 //=
+  __imod__        取模(求余) %=
+  __ipow__        幂 **=
+
+示例见:
+  03_mylist.py
+
+
+问题:
+  # 算法1
+  a = [100]
+  def test(x):
+      x = x + x
+      print(x)
+  test(a)
+  print(a)
+
+  # 解法2
+  a = [100]
+  def test(x):
+      x += x  # 此处与上题不同。结果也会不同
+      print(x)
+  test(a)
+  print(a)
+
+
+比较的运算符的重载
+  __lt__    < 小于 
+  __le__    <= 小于等于 
+  __gt__    > 大于 
+  __ge__    >= 大于等于
+  __eq__    == 等于
+  __ne__    != 不等于
+
+注:
+  比较运算符通常返回True或False
+
+位运算符重载
+  __inert__  ~ 取反(一元运算符)
+  __and__    & 位与(交集)
+  __or__     | 位或(并集)
+  __xor__    ^ 位异或(对称补集)
+  __lshift__ << 左移
+  __rshift__ >> 右移
+
+反向位运算符重载:
+  同算术运算符相同
+  __rand__    & 位与(交集)
+  __ror__     | 位或(并集)
+  __rxor__    ^ 位异或(对称补集)
+  __rlshift__ << 左移
+  __rrshift__ >> 右移
+
+复合赋值运算符重载:
+  __iand__    &= 位与(交集)
+  __ior__     |= 位或(并集)
+  __ixor__    ^= 位异或(对称补集)
+  __ilshift__ <<= 左移
+  __irshift__ >>= 右移
+
+
+一元运算符的重载:
+  __neg__     - 负号
+  __pos__     + 正号
+  __invert__  ~ 按位取反
+
+格式:
+  def __xxx__(self):
+      ....
+示例见:
+  04_mylist.py
+
+
+in / not in运算符的重载
+格式:
+  def __contains__(self, e):  # e代表元素
+      ...
+
+说明:
+  not in 相当于 in取反，所有只需要重载in 即可
+示例见:
+  05_in_not_in.py
+
+索引和切片运算符的重载:
+  重载方法:
+    __getitem__(self, i)   用于索引/切片取值
+    __setitem__(self, i)   用于索引/切片赋值
+    __delitem__(self, i)   用于del语句删除索引操作
+  作用：
+    让自定义的类型的对象能够支持索引和切片操作
+  示例见:
+    06_index.py
+
+
+练习：
+  实现有序集合类 OrderSet(), 能实现两个集合的交集 &, 并集 |
+  补集 -, 对称补集 ^, ==, != 等操作(写集合相同)
+  要求:
+    集合内部用list存储
+    class OrderSet:
+        def __init__(self, iterable):
+            self.data = [x for x in iterable]
+        ...
+  测试用例:
+    s1 = OrderSet([1,2,3,4])
+    s2 = OrderSet([3,4,5])
+    print(s1 & s2)  # OrderSet([3,4])
+    print(s1 | s2)  # OrderSet([1,2,3,4,5])
+    print(s1 ^ s2)  # OrderSet([1,2,5])
+    if OrderSet([1,2,3]) != OrderSet([1,2,3,4]):
+        print("不相同")
+    其它自己测试....
+
+
+
+
+
+
+
+

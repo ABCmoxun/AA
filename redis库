@@ -1,0 +1,394 @@
+
+在python中链接redis
+import redis
+#最新版本语法
+r=redis.StrictRedis(host='localhost',port=6379,db=0)
+#兼容老版本语法
+r=redis.Redis(host='localhost',port=6379,db=0)  #db是那个数据库，默认16个：0-15
+
+user=r.get('')
+#单个插入
+r.set('a','b')
+#多个插入
+pipe=r.pipeline()
+pipe.set('a','b')
+pipe.get('xx')
+pipe.execute()
+
+可以定义class
+string
+import redis
+class TestString(object):
+	def __init__(serf):
+		self.r=redis.StrictRedis(host='localhost',port=6379,db=0)
+	def test_set(self,)
+		rest=self.r.set('user2','xx')
+
+	def test_get(self,)
+		rest=self.r.set('user2')
+	def test_mset(self):
+		d={}
+		rest=self.r.mset(d)
+	def test_mget(self):
+		l=[]
+		rest=self.r.mget(d)
+	def test_del(self):
+		rest=self.r.delete('')
+
+class TestList(object):
+	def __init__(serf):
+		self.r=redis.StrictRedis(host='localhost',port=6379,db=0)
+	def test_pust(self):
+		t=[]
+		self.r.lpush('l_eat',t)
+
+----------------------------------------
+redis库
+五种数据类型
+字符串；哈希；字符串列表；字符集合；有序字符集合
+﻿
+string,has,list,set,zset
+string的使用
+
+设置
+set key value,返回值为ok
+ex:set name xx;set age 12
+获取值
+ get key
+ex:get name
+
+setnx
+设置key对应的值为string类型的value，如果key已经存在，返回0（不修改），nx是not exist的意思。如果不存在就插入，如果存在就不更新
+setnx name xxa
+
+setex
+设置key对应的值为string类型的value，并指出此键值对应的有效期（时间单位为秒）
+
+set key time value
+ex:set haircolor 10 red
+
+setrange
+设置已存在的value值，在start位置开始替换；指定可以的value值得子字符串（若设置字符串没有原字符，某位置长，则部分替换）
+
+setrange key strart value
+
+一次设置多个值，设置成功返回1，否则返回0，
+
+mset key1 value1 key2 value2
+
+msetnx类似
+
+getset
+设置key的值，并返回key的旧值
+
+getrange
+获取key的value值得子字符串
+getrange key start end
+ex: getrange name 0,3
+
+mget
+批量返回
+incr
+递增，对key的值做加1操作，并返回新值
+incr key3
+
+incrby
+同incr类似，加指定的值，key不存在时会设置key，并认为原来value是0，
+
+incrby key number
+ex：incr id 6
+
+decr
+自减
+
+decrby key value
+这里的value可以为正，负数。
+为正，这减，为负，就加
+
+append
+给定key的字符串追加value，返回新字符串值得长度。
+append key val
+
+strlen
+查看key的value的长度
+
+hashes
+设置hset
+hset myhashes key value
+ex:hset user:001 name xx
+
+hget
+
+获取key的value
+设置hset
+hget myhashes key 
+ex: hget user:001 name
+
+hsetnx不存在就设置，存在不修改。
+
+hmset同时设置hash的对个field
+hmset myhash key1 value1 key2 value2..
+
+hmget
+返回多个key的value值
+
+hincrby同incrby类似
+hdecrby
+
+hexists
+测试指定的filed是否存在
+hexists key
+ex：hexists user:001 name
+
+hlen 
+获取对象的key 的个数。
+hlen myhash
+ex: hlen user:003
+
+hdel
+删除指定hash 的field。
+hdel myhash key2
+ex：hdel user:005 age
+
+hkeys 
+返回hash的所有field
+hkeys myhash 
+ex: hkeys user:003
+
+hvals
+返回hash的所有values
+
+hgetall
+获取某个hash中全部的field及 value。
+hgetall myhash
+ex: hgetall user:006
+
+
+list
+push,pop
+栈，队列
+栈：先进后出
+队列：先进先出
+ex: lpush rpush lpop rpop
+
+lpush list value
+ex:lpush list1 'hello';lpush list1 'word'
+获取(正向获取)
+lrange list start end
+ex：lrange list1 0 -1
+
+linsert 
+插入元素
+linsert list before value1 value
+ex:linsert list1 before 'two' '1.5'
+
+lset
+修改值
+lset list index newvalue
+ex: lset list1 0 'zero'
+
+lrem
+从key对应的list中删除n个和value相同的元素。（n<0从尾删,n=0全部删除）
+lrem list number value
+ex：lrem list1 1 ‘hello’
+
+ltrim 
+保留指定key的值范围内的数据
+ltrim list indexstart indexend
+ex: ltrim list1 1 -1
+
+lpop,rpop
+lpop 从list的头部删除一个元素，并返回删除的元素
+lpop list
+ex:lpop list1
+
+rpoplpush
+从第一个list的尾部移除元素并添加到第二个list的头部
+
+rpoplpush list1 list2
+
+lindex
+返回名称为key 的list中index位置的元素
+
+lindex list index
+ex：lindex list3 0
+
+llen
+返回list的格式
+llen list
+
+
+set类型
+set是集合,它是string类型的无序集合。
+sadd
+向集合中添加一个值
+sadd set value
+ex:sadd myset1‘hello’
+查看集合里的元素
+smembers set
+ex:smembers myset1
+
+srem
+删除set中的value值
+srem myset2 one
+
+spop
+从集合中随机弹出元素。
+spop set
+ex：spop myset1
+
+sdiff
+两个集合的差集
+sdiff set1 set2
+ex：sdiff myset1 myset2
+把差集存储起来（存在set3中）
+sdiffstore set3 set1 set2
+
+sinter
+返回集合的交集
+sinter set1 set2
+把交集存储起来（存在set3中）
+sinterstore set3 set1 set2
+并集
+sunion set1 set2
+ex：
+
+并集存储起来
+sunionstore set3 set1 set2
+
+smove
+从第一个集合中移除member并添加到第二个集合中。
+smove set1 set2 value
+
+scard
+返回集合元素个数
+scard set1
+
+sismember
+测试member是否是集合中的元素
+sismember set1 value
+ex:
+
+srandmember
+随机返回集合中的一个元素，但不删除元素。
+srandmember set1
+
+有序集合
+zset
+zadd
+向有序集合中添加一个元素，如果该元素存在，则更新其顺序。
+ex： zadd set1 index value
+查询集合元素
+zrange set1 start end  [withscores]
+ex:zrange set1 0 -1 
+
+zrem
+删除集合中的一个元素
+zrem zset1 value
+
+zincrby
+集合中存在value值，则元素的顺序number（可以为正负）增加，否则向集合中添加该元素，
+zincrby zset1 number value
+
+zrank
+返回该值的的顺序号（索引值）
+zank zset1 value
+
+zrevrank
+返回集合中value的顺序号（从大到小排序）
+zrevrank zset value
+
+zrevrange
+返回集合中的value（按从大到小的顺序）
+
+zrangbyscore
+返回一定范围的值
+zrangbyscore zset start end [withscores]
+
+zcount
+返回集合中给定的区间的数量
+zcount zset start end
+
+zcard
+返回集合中元素个数
+zcard zset
+
+zremrangebyrank
+删除集合中顺序在给定区间的元素
+zremrangerank zset start end
+
+zremrangebyscore
+删除集合中是从热在给定区间的元素
+rangebyscore zset start end 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

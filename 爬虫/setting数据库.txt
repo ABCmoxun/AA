@@ -18,7 +18,7 @@ MYSQL_PORT = 3306               #数据库端口，在dbhelper中使用
 
 ``` stylus
 ITEM_PIPELINES = {
-    'webCrawler_scrapy.pipelines.WebcrawlerScrapyPipeline': 300,#保存到mysql数据库
+    'webCrawler_scrapy.pipelines.WebcrawlerScrapyPipeline': 301,#保存到mysql数据库
     'webCrawler_scrapy.pipelines.JsonWithEncodingPipeline': 300,#保存到文件中
 }
 ```
@@ -221,3 +221,8 @@ class JsonWithEncodingPipeline(object):
 
   [1]: ./images/testDBHelper.gif "testDBHelper.gif"
   [2]: ./images/testCrawl.gif "testCrawl.gif"
+
+
+
+
+

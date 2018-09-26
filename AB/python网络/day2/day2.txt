@@ -1,0 +1,229 @@
+前情回顾
+
+七层模型
+三次握手和四次挥手
+
+tcp 和 udp 
+tcp ： 面向连接的，有三次握手和四次挥手过程，消息的传输是可靠的
+udp ： 面向无连接，提供不可靠的服务
+
+tcp 服务端
+
+创建套接字socket  
+绑定ip  bind   
+监听listen
+等待连接accept
+收发 recv  send 
+关闭close
+***********************************************
+
+# 关于recv和send 
+
+发送接收缓冲区
+
+* 发送和接收消息均先放到缓存区再进行处理
+* recv接收消息当一次接收不完的时候会下次会继续接收
+* 当recv阻塞时，如果客户端断开，则recv立即返回空字符串
+
+# TCP粘包处理
+
+tcp中数据以数据流的方式发送接收，每次发送的数据间没有边界，在接收时可能造成数据的粘连即为粘包
+
+粘包如何处理：
+1.每次发送消息结束位置加标志
+2.发送的消息添加结构描述
+3.当连续发送时每次发送有一个短暂延迟 sleep(0.1)
+
+udp通信
+
+1.创建数据报套接字
+sockfd = socket(AF_INET,SOCK_DGRAM)
+2. 绑定服务端地址
+ADDR = ('192.168.1.2',8888)
+sockfd.bind(ADDR)
+3.收发消息
+data,addr = recvfrom(buffersize)
+功能 ： 接收数据报套接字消息
+参数 ： 每次最多接收消息的大小  字节
+返回值 ： data ： 接收到的消息
+          addr ： 消息发送者的地址
+
+*revefrom 一次接收一个数据包，如果数据包一次没有接受完则会丢失没接受的内容
+
+sendto(data,addr)
+功能：发送消息
+参数： data 要发送的消息
+       addr  发送给某个主机的地址
+返回值 ： 发送消息的字节数
+
+4.关闭套接字
+close()
+
+cookie：
+sys.argv : 自动收集命令行内容为一个列表
+
+tcp 和 udp的区别
+1. tcp传输数据使用字节流的方式传输，udp是数据包
+2. tcp会产生粘包现象，udp不会
+3. tcp对网络条件要求高，udp更适合实时传输
+4. tcp编程可以保证传输的可靠性，udp则不保证
+5. tcp使用listen accept，udp不需要
+6. 收发消息tcp使用recv  send   sendall 
+         udp使用recvfrom sendto
+
+补充 ： sendall()  用法同send() 
+    发送成功返回None，失败产生异常
+
+
+
+套接字属性
+s = socket()
+
+s.fileno()
+功能： 获取套接字的描述符
+*描述符 ： 每一个IO操作系统都会分配一个不同的整数与之对应，该正数即为此IO操作的描述符
+s.type ： 获得套接字类型
+s.getsockname()
+功能： 获取套接字绑定的地址
+s.getpeername()
+功能 ： 使用accept生成的套接字调用，获取该套接字对应的客户端的地址
+s.setsockopt(level，optname，value)
+功能 ： 设置套接字选项
+参数 ： level ：要定义的选项类型
+				可选值 --->IPPROTO_TCP ;IPPROTP_IP ;SOL_SOCKET
+				optname：根据level确定的自选项
+				value ： 根绝选项设置的值
+eg:  s.setsockopt(SOL_SOCKET,SO_REUSEADDR,1)
+
+s.getsockopt(level，optname)
+功能 ： 获取套接字选项
+参数 ： 同setsockopt
+返回值 ： 返回相应选项的值
+
+
+udp应用之广播
+要将套接字设置为允许接收广播
+
+将消息发送给局域网所有终端
+172.60.50.255
+
+广播风暴 ： 在一个网络中大量发送广播会占用大量带宽
+
+
+cookie
+format
+
+In [10]: s = "{} is {}".format('zhang','12')
+
+In [11]: s
+Out[11]: 'zhang is 12'
+
+In [12]: s = "{1} is {0}".format('zhang','12')
+
+In [13]: s
+Out[13]: '12 is zhang'
+
+In [14]: s = "{name} is {age}".format(name='zhang',age='12')
+
+In [15]: s
+Out[15]: 'zhang is 12'
+
+
+tcp应用之 http传输
+
+HTTP协议 （超文本传输协议）
+
+网站访问流程
+1.客户端（浏览器）发起http请求
+2.传输层使用tcp协议建立连接，层层打包将请求内容发送给服务器
+3.web服务器解包后解析http请求，交后端应用程序处理
+4.后端应用得到结果，通过web服务器回发个前端
+
+用途: 网站中网页的传输和数据传输
+   也可用作基于http协议的编程传输数据
+
+特点:  应用层协议，传输层使用tcp连接
+      简单，灵活，接口使用方便
+	  几乎支持所有的数据类型
+	  是无状态的
+	  http1.1  持续连接
+
+请求（request）
+格式: 
+请求行     确定具体的请求类型
+请求头     对请求内容的信息描述
+空行
+请求正文   具体请求参数
+
+请求行:  GET       /index.html   HTTP/1.1
+          请求方法  请求资源      协议版本
+
+请求方法:  GET     获取网络资源
+          POST    提交一定的附加数据，得到返回结果
+		  HEAD    获取响应的头信息
+		  PUT     获取服务器资源
+		  DELETE  删除服务器资源
+		  TRACE   用于测试
+		  CONNECT  保留方法
+		  OPTIONS  请求获取服务器性能和信息
+
+请求头：
+选项: 值
+
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.9
+Connection: keep-alive
+Cookie: BAIDUID=8A4DA4339C1B8A74DD251F7D9F834C76:FG=1; BIDUPSID=8A4DA4339C1B8A74DD251F7D9F834C76; PSTM=1508468466; LOCALGX=%u5317%u4EAC%7C%30%7C%u5317%u4EAC%7C%30; Hm_lvt_e9e114d958ea263de46e080563e254c4=1525941959,1525943966; FP_UID=f384d9df1f5cac6baf3efa25f3a454af; H_PS_PSSID=1468_21089_20928
+Host: news.baidu.com
+Referer: https://www.baidu.com/
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36
+
+请求体：
+get请求---->get参数  &a=1&b=2
+post请求----> post提交的内容
+
+
+响应（response）
+格式：
+响应行     反馈响应的情况
+响应头     对响应的具体描述
+空行
+响应体     具体返回给用户的内容
+
+响应行 ：  HTTP/1.1   200     OK
+           协议版本   响应码  信息
+
+1xx   提示信息，表示请求已经接收，正在处理
+2xx   请求响应成功
+3xx   重定向，完成任务需要其他操作
+4xx   客户端错误
+5xx   服务端错误
+
+200  成功
+400  客户端请求语法有误，服务器不理解
+401  没有访问权限
+403  服务器收到请求,但是拒绝提供服务
+404  资源不存在
+500  服务器发生未知错误
+503  服务器暂时无法执行
+
+响应头 格式同请求头
+响应体: 文件，图片。。。。
+
+
+要求:  能够简述访问一个网站的流程
+      知道什么是http协议及基本特点
+	  知道http请求种类，及每种请求的功能
+	  知道http响应种类及常见的响应码
+	  知道get请求和post请求的功能和区别
+
+
+作业:  描述问题自己总结
+	通过tcp套接字发送一个文件
+	http协议进一步了解
+
+
+
+

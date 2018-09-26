@@ -1,0 +1,268 @@
+day14回顾
+异常 exception
+  作用:
+    用作通知
+
+try-except 语句:
+  作用：
+    捕获错误通知，可以将异常状态转为正常状态
+  
+
+try-finally语句
+  作用：
+    处理异常发生时一定要做的事
+  try:
+      ...
+  finally:
+      ...
+
+raise 语句:
+  作用：
+    抛出错误，触发异常
+  raise 错误对象
+  raise 错误类型
+
+
+assert 语句(断言语句)
+   assert 真值表达式, 错误数据
+
+
+
+day15 笔记:
+  迭代器 Iterator 和 生成器 Generator
+
+什么是迭代器:
+  迭代器是访问可迭代对象的一种方式,用迭代器可以访问可迭代对象
+  迭代器是指iter(可迭代对象) 返回的对象
+  迭代器可以用next(it) 函数获取可迭代对象的数据
+
+迭代器函数iter和next
+  iter(iterable)  从可迭代对象中返回一个迭代器，iterable必须是能提供一个迭代器的对象
+  next(iterator)  从迭代器iterator中获取下一个记录。如果无法获取下一条记录，则触发StopIterator异常
+
+迭代器说明：
+  迭代器只能往前取值，不会后退
+  用iter函数可以返回一个可迭代对象的迭代器
+
+示例:
+  L = [2, 3, 5, 7]
+  it = iter(L)  # 用iter返回一个迭代器用it 绑定
+  next(it)  # 2 # 用next(it) 用迭代器来获取L中的元素
+  next(it)  # 3
+  next(it)  # 5
+  next(it)  # 7
+  next(it)  # StopIteration  #通知next调用者，已无数据
+  # 用迭代器获取 range对象的数据
+  it = iter(range(1, 10, 3))
+  next(it)  # 1
+  next(it)  # 4
+  next(it)  # 7
+  next(it)  # StopIteration
+
+示例见:
+   iterator.py
+
+练习:
+  已知有一个集合:
+    s = {"工商银行", "建设银行", "中国银行", "农业银行"}
+    1. 用for 语句遍历集合中的元素并打印
+    2. 将上面的for 语句改写为while语句实现上面同样的功能
+       提示: 用iter和next 函数实现
+
+生成器 generator (python 2.5及之后版本)
+什么是生成器:
+  生成器是能够动态提供数据的对象,生成器对象也是可迭代对象
+
+生成器有两种：
+  生成器函数
+  生成器表达式
+
+生成器函数定义:
+  含有yield语句的函数是生成器函数，此函数被调用将返回一个生成器对象
+  yield 翻译为(产生或生成)
+
+yield语句
+  语法:
+    yield 表达式
+  说明：
+  　　yield 用于def函数中，目的是将此函数作为生成器函数使用
+    yield 用来生成数据，供next(it)函数使用
+
+示例见:
+  myyield.py
+  myyield2.py
+
+示例:
+  # 写一个生成器函数my_integer(n)生成 1 到 n的整数:
+  def my_integer(n):
+      i = 1  # 先初始化变量i将其设置为起始数
+      while i < n:#循环判断是否已到终止点，如果未到则生成
+           yield i  # 生成整数
+           i += 1  # 控制循环条件
+
+  for x in my_integer(5):
+      print(x)  # 1  2  3  4
+
+
+练习：
+  写入一个生成器函数, myodd(start, stop) 用于生成start开始到stop结束(不包含stop)的所有奇数
+
+
+  L = [x for x in myodd(1, 10)]
+  print(L)  # [1,3,5,7,9]
+  for x in myodd(10, 20):
+      print(x)  # 11, 13, 15, 17, 19
+
+生成器表达式:
+  语法:
+    (表达式 for 变量 in 可迭代对象 [if 真值表达式])
+  注: [] 内的if部分可以省略
+
+  作用：
+    用推导式形式生成一个新的生成器
+  示例:
+    gen = (x**2 for x in range(1, 5))
+    it = iter(gen)
+    next(it)  # 1
+    next(it)  # 4
+    next(it)  # 9
+    next(it)  # 16
+    next(it)  # StopIteration
+
+迭代工具函数:
+  迭代工具函数的作用是生成一个个性化的可迭代对象
+
+zip(iter1[, iter2, ...]) 返回一个zip对象，此对象用于生成一个元组，此元组的个数是由最小的可迭代对象决定,元组内容是可迭代对象iter1和iter2中元素的组合
+
+enumerate(iterable[,start]) 生成带索引的枚举对象，返回的迭代类型为索引-值对(index-value)对，默认索引从零开始,也可以用start指定
+
+示例见:
+  zip.py
+  myzip.py
+  zip2.py
+  enumerate.py
+
+练习：
+  写一个程序，读入任意行的文字数据，当输入空行时结束输入
+  打印带有行号的输入结果:
+  如:
+  请输入: hello<回车>
+  请输入: tarena<回车>
+  请输入: bye<回车>
+  请输入: <回车>
+  输出如下:
+  第1行: hello
+  第2行: tarena
+  第3行: bye
+
+
+
+字节串和字节数组:
+
+字节串(也叫字节序列) bytes
+  作用：
+    存储以字节为单位的数据
+  说明:
+    字节串是不可改变的序列
+    字节是 0~255之间的整数
+
+创建空的字节串的字面值
+    b''
+    b""
+    b''''''
+    b""""""
+
+创建非空的字节串的字面值:
+   B = b'hello'
+   B = b"Hello"
+   B = b'''abcd'''
+   B = b"""abcd"""
+   B = b'abc\n123'
+   B = b'\x41\x42'
+   b'\x16\x0d\x0d\x0a'
+
+字节串的构造函数 bytes
+  bytes()  生成一个空的字节串 等同于b''
+  bytes(整数可迭代对象) 用可迭代对象初始化一个字节串
+  bytes(整数n)   生成n个值为0的字节串
+  bytes(字符串, encoding='utf-8')  用字符串的转换编码生成一个字节串
+
+
+bytes 的运算:
+   + +=  * *=
+   < <= > >= == !=
+   in / not in
+   索引和切片
+
+in / not in 示例:
+   B = b'ABCDE'
+   0x41 in B   # True
+
+
+用于序列的函数:
+  len, max, min, sum, any, all  都可用于字节串
+
+序列的方法：
+  详见: 
+    >>> help(bytes)
+
+bytes与 str的区别:
+  bytes 存储字节(0~255)
+  str   存储字符(Unicode值)
+
+bytes 与 str转换
+         编码(encode)
+    str    ---->   bytes
+         b = s.encode(encoding='utf-8')
+
+         解码(decode)
+    bytes  ---->   str
+         s = b.decode(encoding='utf-8')
+例:
+    b = "你好".encode('utf-8')
+    print(b)
+    s = b.decode('utf-8')
+    print(s)
+
+字节数组 bytearray
+  可变的字节序列
+
+创建函数 bytearray
+  bytearray()  创建空的字节串
+  bytearray(整数)
+  bytearray(整型可迭代对象)
+  bytearray(字符串, encode='utf-8')
+
+操作:
+  + += * *=
+  < <= > >= == !=
+  in / not in 
+  索引 index / 切片 slice
+    (字节数组可以索引和切片赋值，赋值规则同列表的索引和切片赋值相同)
+  例:
+    ba = bytearray(b'abcdefg')
+    ba[0] = 0x41  # ba = bytearray(b'Abcdefg')
+    ba[1::2] = bytearray(b'BDF')  # 修改bdf为大写
+
+
+练习：
+  1. 用生成器函数生成斐波那契数列的前n个数:
+    1 1 2 3 5 8 13 ....
+
+      def fibonacci(n):
+          ...
+          yield ..
+      1) 输出前 20 个数
+      2) 求前 30 个数的和
+
+  2. 写程序打印杨辉三角(只打印6层)
+        1
+       1 1
+      1 2 1
+     1 3 3 1
+    1 4 6 4 1
+   1 5 10 10 5 1
+  
+
+
+

@@ -1,0 +1,72 @@
+Tornado龙卷风
+Flask
+
+孙伟  bjsunwei@tedu.cn 工作
+     piglite@vip.sina.com　私人
+     blog.csdn.net/piglite 博客
+
+day1
+程序开发工具：PyCharm
+1. 基本九行代码实现Tornado服务器程序：
+class IndexHandler(RequestHandler):
+    def get(self, *args, **kwargs):
+        self.write('Hello Tornado')
+    def post(self, *args, **kwargs):
+        pass
+app = Application(handlers=[('/',IndexHandler)])
+server = HTTPServer(app)
+server.listen(8888)
+IOLoop.current().start()
+
+２．将端口号写到配置文件中
+将端口号写入配置文件需要３步：
+２.１．定义端口号在配置文件中的名称，类型，默认值
+define('名称',type=int,default=8888)
+2.２．解析配置文件
+parse_config_file('配置文件路径')
+2.３．读取配置文件中的内容
+options.名称
+
+3.　利用路径的变化请求不同的资源．
+　　　/java/day3/css
+   /java/day4
+   服务器利用正则表达式获取不同路径的内容
+   生成不同的响应内容
+   /java/(day[0-9]+)
+   /java/(day[0-9]+)/([a-z0-9]+)
+
+４．利用参数的变化请求不同的资源．
+    以GET方式提交参数
+    /python?day=day3&subject=css
+    /python?day=day4
+    服务器会调用RequestHandler中的相关方法获取请求参数，再根据不同的请求参数进行不同的响应．
+    self.get_query_argument('参数名称',默认值)
+    提供默认值防止用户没有提供该参数时，产生４００错误．
+    self.get_query_arguments('参数名称')
+    以列表的形式返回参数值（们），即使用户没有提供该参数，
+    也不会产生400错误，只会得到一个空列表．
+
+    以POST方式提交参数
+    用表单进行提交．
+    服务器会调用RequestHandler中的相关方法获取请求参数，再根据不同的请求参数进行不同的响应．
+    self.get_body_argument('参数名称',默认值)
+    提供默认值防止用户没有提供该参数时，产生400错误．
+    self.get_body_arguments('参数名称')
+    以列表的形式返回参数值（们），即使用户没有提供该参数，
+    也不会产生400错误，只会得到一个空列表．
+
+    RequestHandler中还有一个
+    get_argument()
+    get_arguments()
+    函数使用效果就是
+    get_query_argument()+get_body_argument()
+    get_query_arguments()+get_body_arguments()
+
+5. 课堂练习题：
+利用目前所学的知识，在首页面呈现一个登录表单收集用户名和密码．如果用户输入的用户名为＂abc＂，密码为"123"，在控制台上打印"用户信息正确"，否则打印"用户名或密码错误"
+
+６．从一个页面跳转到另一个页面：
+　　　self.redirect('/路径')
+   redirect跳转时采用的是get方式发起访问
+
+

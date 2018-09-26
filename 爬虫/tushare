@@ -1,0 +1,14 @@
+
+
+tushare包
+链接：http://tushare.org/trading.html#id2
+安装：pip3 install tushare
+版本升级：pip3 install tushare --upgrade
+
+import tushare as ts
+#得到沪深前300的数据
+result=ts.get_hs300s()
+codes=result['code'].tolist()
+
+code：股票代码，即6位数字代码，或者指数代码（sh=上证指数 sz=深圳成指 hs300=沪深300指数 sz50=上证50 zxb=中小板 cyb=创业板）
+

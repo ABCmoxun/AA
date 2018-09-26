@@ -1,0 +1,214 @@
+1、数组
+	1、进出栈操作
+		栈式操作：提供了快速操作数组头部和尾部元素的方法
+		1、push()
+			入栈，压栈，向数组尾部增加新元素，并返回新数组的长度
+				arr[arr.length] = "张三丰";
+				arr.push("张三丰");
+		2、pop()
+			出栈，弹栈，删除并返回数组尾部的元素
+		3、unshift()
+			向数组的头部添加新元素并返回数组的长度
+		4、shift()
+			删除并返回数组头部的元素
+	2、二维数组
+		1、什么是二维数组
+			数组中的每个元素又是一个数组
+		2、声明二维数组
+			var books = [
+				["西游记","三国演义","水浒传","红楼梦"],
+				["老人与海","雾都孤儿","海底两万里"]
+			];
+			
+			获取 "三国演义"
+			books[0][1]
+2、字符串 - string
+	1、声明字符串
+		var str1 = "字符串1";
+		var str2 = String("字符串2");
+		var str3 = new String("字符串3");
+	2、length 属性
+		作用：返回当前字符串中字符的个数
+	3、常用函数 - String API
+		1、大小写转换函数
+			1、toUpperCase()
+				返回当前字符串的完全大写形式
+			2、toLowerCase()
+				返回当前字符串的完全小写形式
+			练习：
+				1、创建一个数组，并初始化若干数据(由英文大小写以及数组0-9组成)
+				2、生成一个四位随机验证码
+					Math.random()
+				3、将生成四位随机验证码通过prompt提示给用户去看并接收用户的数据
+				4、比较用户输入的数据与生成的随机验证码是否一致并给出提示(忽略大小写)
+		2、获取指定位置的字符 或 字符的 Unicode码
+			1、获取指定位置的字符
+				函数：str.charAt(index)
+				ex:
+					var str = "Hello World";
+					var s = str.charAt(3);
+					console.log(s); // l
+					console.log(str.charAt(6)); //W
+			2、获取指定位置的字符的Unicode码
+				函数：str.charCodeAt(index)
+				ex:
+					var str = "Hello World";
+					var r = str.charCodeAt(3);
+					console.log(r); // l的Unicode码(十进制)
+		3、检索字符串
+			1、indexOf(value,fromIndex)
+				value:要查找的子字符串
+				fromIndex:从哪个下标位置处开始查找，如果省略，则从第一个字符处开始查找
+				返回值：返回value第一次出现的下标，如果没有查询到子字符串的话，则返回-1
+			2、lastIndexOf(value,fromIndex)
+				作用：查找value最后一次出现的下标
+
+			练习：
+				判断一个字符串是否满足邮箱的格式
+				1、字符串中必须包含@符号
+				2、字符串中必须包含.符号
+				3、最后一个.必须在 @ 之后
+				zsf@163.com
+				sanfeng.zhang@163.com
+		4、截取子字符串
+			函数：substring(start,end)
+			作用：返回从start到end-1之间的字符串，如果省略end的话，则截取到整个字符串的尾部。
+			练习：
+				1、从指定邮箱中截取用户名
+					sanfeng.zhang@163.com
+				2、从指定邮箱中提取服务商名称
+					sanfeng.zhang@163.com
+				3、从身份证号码中提取生日
+					220102196008012216
+					生日：1960年08月01日
+		5、分割字符串
+			作用：将一个由指定连接符的字符串，按照连接符给拆开，拆分成一个字符串数组
+			函数：split(seperator)
+
+			ex:
+				zsf_zwj_zcs_yss_zm
+
+				练习：
+					1045_5&10221_8&73569_6
+
+					共买了3类商品
+					编号：1045
+					数量：5
+					编号：10221
+					数量：8
+					编号：73569
+					数量：6
+		6、模式匹配
+			1、作用
+				配合着 正则表达式 完成字符串的查找和替换
+			2、正则表达式
+				语法： /正则格式/修饰符
+					修饰符：
+						i:ignorcase(忽略大小写)
+						g:global(全局匹配)
+						m:multiple(允许多行匹配)
+					ex:
+						1、/\d{2,6}/g
+						2、/垃圾/g
+			3、函数
+				1、replace(substr/regexp,replacement)
+					作用：在一个字符串中，将substr或满足regexp格式的字符串替换成replacement
+				2、match(substr/regexp)
+					按照指定的子字符串或正则表达式进行匹配，并返回满足格式的子字符串(数组)
+				练习：
+					Microsoft is a big company,microsoft's color is red and has MICROSOFT logo like microsoft
+					1、将所有的 microsoft(大小写) 都替换成"微软"
+					2、输出 共替换了多少处
+3、其他内置对象
+	1、JS中对象分类
+		1、内置对象 - ES提供
+		2、外部对象
+			1、window(BOM)
+			2、document(DOM)
+		3、自定义对象 - function
+
+		对象：包含属性 和 方法(函数)
+			对象.属性
+			对象.方法()
+	2、RegExp 对象
+		RegExp - Regular Expression 
+		1、创建RegExp对象
+			1、var regExp = /匹配模式/修饰符;
+				var reg = /垃圾/igm
+			2、var regExp = new RegExp("匹配模式","修饰符");
+				var reg = new RegExp("垃圾","g");
+		2、RegExp 对象的方法
+			1、test(string)
+				string:要验证的字符串
+				作用：验证string是否满足当前正则表达式对象的格式。如果string满足正则表达式的话，则返回true，否则返回false
+	3、Math 对象
+		1、作用
+			执行与数学相关的运算和数据
+		2、属性
+			Math.PI : 表示π
+			Math.E : 表示自然对数
+		3、方法
+			1、三角函数
+				Math.sin()
+				Math.cos()
+				Math.tan()
+			2、计算函数
+				Math.sqrt(x) : 开平方
+				Math.log(x) : 求对数
+				Math.pow(x,y) : 求x的y次方
+			3、数值函数
+				Math.abs(x) : 求x的绝对值
+				Math.max(a,b,c,d) : 求一组数据中的最大值
+				Math.min(a,b,c,d) : 求一组数据中的最小值
+				Math.random() : 生成 0-1 之间的随机数
+				Math.round(x) : 将x四舍五入到整数
+	4、Date对象
+		1、作用
+			获取客户端的日期时间
+		2、创建Date对象
+			1、获取当前日期时间
+				var now = new Date();
+			2、初始化自定义日期时间对象
+				var date = new Date("2018/06/13 17:20:20");
+		3、方法
+			1、读取或设置当前时间的毫秒数
+				1、getTime()
+					返回自1970-1-1 00:00:00 到 date 对象所经过的毫秒数
+				2、setTime(毫秒数)
+					根据给定的毫秒数，结合1970-1-1 计算日期
+			2、读取时间分量
+				1、getFullYear()
+					获取当前日期对象的四位年份数
+				2、getYear()
+					返回自1900年以来，到当前日期对象所经过的年数
+				3、getMonth()
+					返回0-11的数字来表示1-12月
+					需要得到当前月份的值，需+1
+				4、getDate()
+					返回当前日期对象的日
+				5、getDay()
+					返回当前日期对象的星期?
+					返回0-6表示星期日-星期六
+				6、获取时间
+					getHours() : 获取小时
+					getMinutes() : 获取分
+					getSeconds() : 获取秒
+					getMilliseconds() : 获取毫秒
+				7、转换为字符串
+					1、toString()
+					2、toLocaleString()
+					3、toLocaleTimeString()
+					4、toLocaleDateString()
+
+				练习：
+					1、获取当前系统日期时间
+					2、按照以下格式输出
+						xxxx年xx月xx日 xx时xx分xx秒 星期三
+						2018年06月13日 17时50分01秒 星期三
+
+
+
+
+10455
+102215
+

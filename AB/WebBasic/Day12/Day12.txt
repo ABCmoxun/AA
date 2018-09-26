@@ -1,0 +1,230 @@
+1、外部对象
+	1、BOM 和 DOM
+		BOM : Browser Object Model
+			浏览器对象模型
+			将浏览器比喻成一个对象 - window(网页初始化时会自动创建)，可以通过该对象灵活的操作浏览器
+		DOM : Document Object Model
+			文档对象模型
+			将HTML文档比喻成一个对象 - document，可以灵活的操作网页上的内容，该对象属于window的属性之一，使用时不用声明
+	2、window对象(BOM模型)
+		1、作用
+			在JS中表示浏览器窗口
+			window下的属性和方法在使用的过程中，可以省略window. 而直接使用属性和方法
+				window.alert() -> alert()
+				window.document -> document
+				window.histor -> history
+		2、window中的对话框
+			1、警告框
+				window.alert() / alert()
+			2、输入框
+				window.prompt() / prompt()
+			3、确认框
+				window.confirm("") / confirm("")
+				点击"确定"按钮的话，返回 true
+				其余的所有的操作，返回 false
+				练习：
+					1、创建网页02-confirm.html
+					2、创建一个按钮
+					3、点击按钮时，显示确认框
+						点击确定：您点击了确定
+						否则：您点击了取消
+		3、window中的定时器
+			1、周期性定时器
+				1、特点
+					每间隔一段时间后，就执行一遍程序，反复执行
+				2、声明定时器
+					var ret = setInterval(fun,duration)
+						fun:要周期性执行的操作，可以是匿名函数
+						duration:要间隔的时间周期，以ms为单位
+						ret:返回创建好的定时器对象(清除定时器时使用)
+				3、清除定时器
+					clearInterval(timer)
+					timer:要清除的定时器对象
+				练习：
+					1、创建两个按钮(开始，暂停)
+					2、点击开始时
+						在控制台上打印打印当前的系统日期时间(年月日时分秒)，每隔一秒钟打印一次
+					3、点击暂停时
+						暂停打印
+			2、一次性定时器
+				1、特点
+					在指定的时间间隔后，只执行一次操作
+				2、声明一次性定时器
+					var ret = setTimeout(fun,time)
+						fun:等待一定时间后执行的操作
+						time:要等待的时长
+						ret:已启动的定时器对象
+				3、清除定时器
+					clearTimeout(timer);
+				练习：
+					1、网页中创建一个按钮
+					2、点击按钮时，弹出一个确认对话框
+						询问用户是否要关闭网页
+					3、如果点击确定，5s之后，关闭网页
+						window.close(); /*关闭网页*/
+		4、window中的属性
+			1、screen属性
+				作用：获取客户端显示器的相关信息
+				属性：
+					1、width / height
+					2、availWidth / availHeight
+			2、history属性
+				1、作用
+					包含当前窗口所访问过的url地址们
+				2、属性 & 方法
+					1、属性
+						length：所访问过的url的数量
+					2、方法
+						1、back() : 后退
+						2、forward() : 前进
+						3、go(num)
+							在当前网页的基础上前进或后退几步
+							num：取值为正数，前进
+							num：取值为负数，后退
+			3、location属性
+				1、作用
+					表示浏览器上地址栏的信息
+				2、属性 & 方法
+					1、属性：href
+						表示当前窗口中正在浏览的网页的地址
+						如果为href赋值，相当于实现网页跳转功能
+					2、方法：reload()
+						重新加载当前网页，相当于刷新
+					练习：
+						点击按钮时，能够通过JS跳转到http://www.tmooc.cn
+			4、navigator属性
+				1、作用
+					包含浏览器的相关信息
+				2、属性
+					userAgent : 显示信息
+	3、document对象(DOM模型)
+		1、document的概述
+			document对象，是DOM模型中的顶层对象，封装了所有和HTML元素相关的属性、方法以及事件
+
+			网页在加载的时候，会在内存中生成一颗节点树(DOM树)。DOM树会封装网页上所有的内容。网页上的每一个元素，每一个属性，每一段文本(包括注释)，都会被封装成DOM树上的一个单独的节点。
+
+			节点分为以下类型：
+				1、元素节点 - 表示网页中的一个元素
+				2、属性节点 - 表示元素中的一个属性
+				3、文本节点 - 表示元素中的文本内容
+				4、注释节点 - 表示网页中的注释内容
+				5、文档节点 - 表示整个HTML文档
+			DOM中所提供的操作：
+				1、查找节点
+				2、读取节点信息
+				3、修改节点信息
+				4、删除节点
+				5、创建节点
+		2、查找节点
+			1、通过元素id查找节点
+				前提：元素一定要具备id属性，否则无法查找
+
+				var elem=document.getElementById("元素ID");
+					elem：对应ID的元素在JS中表现 - DOM对象/DOM元素
+				DOM属性：
+					1、innerHTML
+						修改/获取/设置当前DOM对象的HTML文本
+					2、innerText
+						修改/获取/设置当前DOM对象的普通文本
+					3、value
+						该属性只针对表单控件，允许获取或设置表单控件的值
+					练习：
+						1、创建网页
+							一个文本框，一个div，一个按钮
+						2、点击按钮的时候
+							将文本框中的文字，以一级标题的形式显示在div中
+		3、读取节点信息
+			1、节点的类型
+				属性：nodeType
+				值：
+					返回1：元素节点
+					返回2：属性节点
+					返回3：文本节点
+					返回8：注释节点
+					返回9：文档节点
+			2、节点的名称
+				属性：nodeName
+					元素节点 & 属性节点：元素名 或 属性名
+					文本节点：返回 #text
+					文档节点：返回 #document
+					注释节点：返回 #comment
+		4、获取 或 设置 元素节点的 属性值
+			1、getAttribute(attrName)
+				作用：获取指定属性的值
+				返回值：attrName属性对应的值
+			2、setAttribute(attrName,attrValue)
+				作用：修改或设置指定属性的值
+				attrName:要修改或设置的属性名
+				attrValue:要修改或设置的值
+			3、removeAttribute(attrName)
+				作用：将attrName属性从节点中移除出去
+			4、通过 dom对象.属性名 获取或设置属性值
+				注意：class属性不适用于该方式
+
+			练习：
+				1、创建一个网页 ...
+				2、创建一个a标记，链接到百度
+				3、创建一个按钮，文本为修改
+				4、点击按钮，将a标记更改为：
+					1、超链接地址：http://www.tmooc.cn
+					2、超链接的文本：TMOOC
+		5、元素的样式（css）
+			1、使用 setAttribute 设置 class 属性的值
+				elem.setAttribute("class","类选择器");
+			2、使用元素的className属性修改class值
+				var div = $("container");
+				div.className = "red";
+				注意：
+					不能使用 elem.class="类选择器名称"
+			3、使用内联方式设置属性值
+				elem.style.css属性名=值;
+				elem.style.color="red";
+
+				注意：
+					如果css属性名中包含"-",那么"-"要取消，并且后面单词的第一个字符变大写
+					1、font-size
+						elem.style.fontSize="12px";
+					2、border-right-color
+						elem.style.borderRightColor="red";
+2、DOM - 查询节点
+	1、根据ID查询节点
+		document.getElementById()
+	2、根据层级节点结构查询
+		1、parentNode
+			根据当前的节点的层级结构，返回父元素节点
+		2、childNodes
+			根据当前的节点的层级结构，返回当前元素的所有子元素数组
+			注意：能够获取所有的文本节点和元素节点
+		3、children
+			根据当前的节点的层级结构，返回当前元素的所有子元素节点数组
+		4、nextSibling
+			获取当前节点的下一个兄弟节点
+		5、nextElementSibling
+			获取当前节点的下一个元素兄弟节点
+		6、previousSibling
+			获取当前节点的上一个兄弟节点
+		7、previousElementSibling
+			获取当前节点的上一个元素兄弟节点
+	3、通过标签名称获取页面元素
+		语法：document|elem.getElementsByTagName("标签名")
+		返回值：返回包含指定标记的元素数组们
+	4、通过元素的name属性值获取元素
+		语法：document.getElementsByName("name");
+		返回值：包含指定name属性值的元素的数组
+	5、通过元素的class属性值获取元素
+		语法：document|elem.getElementsByClassName("class")
+		返回值：返回包含指定class属性值的所有元素
+
+
+
+<input type="text" name="">
+
+var div = document.getElementById("container");
+div.class = "red"; //错误
+
+<div style="color:red;">
+
+
+
+
+

@@ -1,0 +1,217 @@
+day18回顾:
+面向对象:
+  对象
+    属性  ---> 实例变量
+    行为  ---> 实例方法
+
+  类
+    属性　　---> 类变量
+    行为  ---> 类方法　
+
+类变量
+类方法
+静态方法
+__slots__ 属性 
+
+继承/派生
+
+类里的 __base__ 属性
+
+覆盖 override
+
+
+super函数
+　　super(B, b)
+  super()  # 无参的只是能方法里用
+
+
+
+day19笔记:
+
+issubclass 函数
+   issubclass(cls, class_or_tuple)  判断一个类是否是继承自其它的类，如果此类cls 是class 或tuple中的一个派生子类，则返回True, 否则返回False
+
+示例:
+class A:
+  pass
+
+class B(A):
+  pass
+
+class C(B):
+  pass
+
+class D(B):
+  pass
+
+issubclass(B, A)  # True
+issubclass(C, B)  # True
+issubclass(D, C)  # False
+issubclass(C, (int, str)) False
+
+封装 enclosure
+  封装是指隐藏类的实现细节．让使用者不关心这些细节;
+  封装的目的是让使用者通过尽可能少的使用实例变量名(属性)操作对象
+
+私有属性和方法
+　　python类中以双下划线('__')开头，不以双下划线结尾的标识符为私有成员
+　　　　私有成员只能被方法调用，不能在子类或其它地方使用
+  私有成员有两种:
+    私有属性
+    私有方法
+
+示例:
+  class A:
+      def __init__(self):
+          self.__p1 = 100  # 创建私有属性
+      def __m1(self):
+          print("A类的私有方法被调用!")
+      def test(self):
+          print(self.__p1)  # 可以访问
+          self.__m1()  # 可以访问!
+
+　　a = A()
+  # print(a.__p1)  #　　出错，不可以访问
+  # a.__m1()  # 出错，在类外部不能调用类的私有方法
+  a.test()  # 用方法来操作私有属性和私有方法
+
+
+
+多态　 polymorphic
+　　字面意思：多种状态
+　　多态是指在有继承／派生关系的类中，调用基类对象的方法，实际能调用子类的覆盖方法的现象叫多态
+
+多态说明:
+  多态调用方法与对象相关，不与类相关
+  python的全部对象只有"运行时状态(动态)", 没有"C++/Java"里的"编译时状态（静态）"
+
+多态示例:
+  见: poly.py
+
+
+面向对象编程语言的特征:
+   封装
+   继承
+   多态
+
+面向对象的语言: C++/Java/Python/Swift/C#
+
+多继承 multiple inheritance
+  多继承是指一个子类继承自两个或两个以上的基类
+
+语法:
+  class 类名(超类名1, 超类名2, ...):
+      pass
+
+示例:
+   见: mul_inherit.py
+
+
+多继承的问题（缺陷）
+  标识符(名字空间)冲突的问题
+     要谨慎使用多继承
+示例:
+    # 小张写了一个类A
+    class A:
+        def m(self):
+            print("A.m()被调用")
+
+    # 小李写了一个类B:
+    class B:
+        def m(self):
+            print("B.m() 被调用")
+    # 小王感觉小张和小李写的两个类自己可以用
+    class AB(A, B):
+         pass
+    ab = AB()
+    ab.m()  # 请问调用谁？
+
+
+多继承的 MRO (Method Resolution Order)问题
+    MRO 方法搜索顺序问题
+    python 3 广度优先
+    python 2 深度优先
+
+
+函数重写 overwrite
+  什么是函数重写
+    在自定义的类中，通过添加特定的方法，让自定义的类生成的对象(实例) 能象内建对象一样进行内建函数操作
+
+对象转字符串函数重写
+  repr(obj) 返回一个能代表此对象的字符串,通常:
+      eval(repr(obj)) == obj
+  str(obj)  通过给定的对象返回一个字符串(这个字符串通常是给人阅读的)
+    换句话说:
+       repr(obj) 返回的字符串是给python用的
+       str(obj) 返回字符串是给人看的
+
+重写方法
+  repr(obj) 函数的重写方法  def __repr__(self)
+  str(obj) 函数的重写方法 def __str__(self)
+  当对象没有 __str__方法时，则返回__repr__(self)的值
+
+
+内建函数重写
+  obj.__abs__()       方法对应  abs(obj)
+  obj.__len__()       方法对应  len(obj)
+  obj.__reversed__()  方法对应  reversed(obj)
+  obj.__round__()     方法对应  round(obj)
+
+示例见:
+  02_myinteger.py
+
+数值转换函数重写
+  obj.__complex__()    对应  complex(obj) 
+  obj.__int__()        对应  int(obj) 
+  obj.__float__()      对应  float(obj) 
+  obj.__bool__()       对应  bool(obj) 
+
+布尔测试函数的重写
+  格式:
+    def __bool__(self):
+        ...
+  作用：
+    1. 用于bool(obj)函数取值
+    2. 用于if语句真值表达式中
+    3. 用于while语句真值表达式中
+  说明:
+    布测试式方法的查找顺序是 __bool__方法，其次是__len__方法
+    如果没有以上方法则返回True
+  示例见: 
+    04_bool.py
+
+
+迭代器(高级)
+  什么是迭代器
+    可以通过 next(obj) 函数取值的对象，就是迭代器
+  
+  迭代器协议:
+    迭代器议是指对象能够使用next函数获取下一项数据，在没有下一项数据时触发一个StopIteration异常来终止迭代的约定
+  迭代器协议的实现方法:
+    在类内需要定义 __next__(self)方法来实现迭代器协议
+  语法形式:
+    class MyIterator:
+        def __next__(self):
+            迭代器协议
+            return 数据
+
+什么是可迭代对象
+  是指能用iter(obj)函数返回迭代器的对象(实例)
+  可迭代对象的内部要定义 __iter__(self)方法来返回迭代器对象
+
+
+练习：
+  1. 完善学生管理系统读取学生信息的功能
+  2. 看懂类的封装的用意,及功能的划分(如:save_to_file(self)方法等)
+
+  3. 写一个实现迭代器协议的类 Primes 让此类可以生成从b开始的n个不素数
+  class Primes:
+      def __init__(self, b, n):
+         ....
+      ....
+  for x in Primes(10, 4):
+      print(x)  # 11 13 17 19
+  
+  4.扩展学生信息管理程序，试想能否在不改变原Student类的基础上，为每个学生添加一个家庭住址的信息
+  (提示，用继承/派生机制创建一个新的类)
+  5. 11) 添加修改家庭住址的功能

@@ -1,0 +1,101 @@
+
+安装软件:		pip3  install  Package
+升级:	pip3 install --upgrade  Package
+卸载:	pip3 uninstall  Package
+
+
+协程  
+定义:  纤程 微线程，协程本质实际只有一个线程在运行
+功能原理:  通过应用层记录程序的上下文栈区，实现程序运行中的跳跃。进而实现选择代码段执行
+
+优点 ： 
+无需多线程切换的开销
+资源消耗非常少
+无需进行同步互斥操作
+对IO并发性极好
+
+缺点：
+无法利用计算机多核资源
+如果程序阻塞会阻塞整个进程运行
+
+
+协程函数	
+函数1
+sudo pip3 install greenlet
+import gevent 
+from gevent import monkey
+＃多用此函数
+#将事件加入协程 
+obj = gevent.spawn(fun1,1)
+
+gevent.join()
+功能 ： 回收协程
+参数 ： 要回收的协程对象
+gevent.joinall()
+功能 ： 回收协程
+参数 ： 列表，里面可有多个协程对象
+
+方程流程
+import gevent 
+f = gevent.spawn(fun1,1)
+b = gevent.spawn(fun2)
+#回收协成
+gevent.join(f)和gevent.join(b)
+或		gevent.joinall([f,b])
+
+
+函数2
+from greenlet import greenlet 
+#生成协程对象
+gr1 = greenlet(test1)
+gr2 = greenlet(test2)
+＃启动协程，???没有学回收协程
+gr1.switch()
+
+
+线程
+* 线程也是所任务编程的一种方法，可以使用计算机多核资源。是计算机核心分配的最小单位
+* 线程又称为轻量级的进程，在创建和删除时消耗的计算机资源小
+
+线程和进程关系
+* 一个进程中可以包含多个线程
+* 进程中的所有线程共享进程的空间资源 （空间，全局变量，分配的内存等）
+
+t.daemon 属性
+默认 为False 主线程执行完毕不会影响分支线程的执行
+    如果设置为True 则主线执行完毕其他线程也会终止
+t.isDaemon() : 判断 daemon属性是True or False 
+设置方法：
+t.daemon = True 	或   	t.setDaemon(True)
+		
+函数
+import threading 
+obj=threading.Thread( target = fun,args = ())
+t.start()  		#启动线程
+t.join(timeout)   #回收线程
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

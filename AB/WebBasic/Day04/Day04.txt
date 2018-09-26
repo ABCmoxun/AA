@@ -1,0 +1,303 @@
+1、尺寸 和 边框
+	1、尺寸属性
+		1、作用
+			改变元素的宽度和高度
+		2、属性
+			1、宽度
+				属性：width
+				取值：以px或%为单位的数值
+			2、高度
+				属性：height
+				取值：以px或%为单位的数值
+
+			所有块级元素的尺寸：
+				宽度：占父元素100%的宽
+				高度：以内容为准
+
+			所有行内元素的尺寸：
+				宽度：以内容为准
+				高度：以内容为准
+
+			注意：
+				html 和 css 中，除img以外的所有行内元素的尺寸是不允许修改的
+		3、溢出处理
+			1、什么是溢出
+				当使用尺寸属性限制元素尺寸时，如果内容所需要的空间大于元素的尺寸的话，则产生溢出的效果
+			2、溢出处理的属性
+				属性：overflow
+				取值：
+					1、visible
+						可见的，默认值
+					2、hidden
+						溢出的内容会隐藏
+					3、scroll
+						显示滚动条，溢出时滚动条可用
+					4、auto
+						自动，溢出时产生滚动条并可用
+	2、边框属性
+		1、边框实现
+			1、边框的简写方式
+				通过一个属性完成四个方向边框的所有效果设置(宽度，样式，颜色)
+				属性：border
+				取值：width style color
+					width:边框的宽度，以px为单位的数值
+					style:边框的样式
+						solid:实线
+						dotted:虚线(点)
+						dashed:虚线(线)
+					color:边框的颜色
+						取值为合法的颜色值
+						可以取值为 transparent(透明)
+				特殊用法：
+					border:none;
+			2、单边定义
+				定义某一条边框的宽度，样式，颜色
+				属性：border-方向:width style color;
+				方向：top / bottom / left / right
+				ex:
+					上边框3px 实线 蓝色
+					border-top:3px solid blue;
+			3、单属性定义
+				设置四个方向边框的某一个属性值
+				语法：border-属性:值;
+				属性：width / style / color
+				ex:
+					1、设置四个方向的边框尺寸为 5px
+						border-width:5px;
+					2、设置四个方向的边框颜色为 pink 色
+						broder-color:pink;
+			4、单边单属性定义
+				设置某一方向边框的某一属性值
+				属性：border-方向-属性:值;
+					方向：top / bottom / left / right
+					属性：width / style / color
+				ex:
+					1、下边框的样式为虚线(点)
+						border-bottom-style:dotted;
+					2、右边框的宽度为 3px
+						border-right-width:3px;
+					3、左边框的颜色为 红色
+						border-left-color:red;
+		2、轮廓
+			outline:none;
+		3、边框倒角
+			1、作用
+				将边框的四个直角变为圆角
+			2、语法
+				属性:border-radius
+				取值:
+					1、以 px 为单位的数值
+					2、以 % 为单位的数值 - 50%
+		4、边框阴影
+			属性：
+				box-shadow:h-shadow v-shadow blur spread color;
+					h-shadow:阴影的水平偏移距离
+						取值为数字
+						取值为正，阴影向右偏移
+						取值为负，阴影向左偏移
+					v-shadow:阴影的垂直偏移距离
+						取值为数字
+						取值为正，阴影向下偏移
+						取值为负，阴影向上偏移
+					blur:阴影的模糊大小
+						取值为数字
+						数字越大越模糊
+					spread:阴影的大小
+						取值为数字
+					color:阴影的颜色
+					ex:1px 1px 1px 1px red;
+
+2、框模型 - Box Model
+	1、什么是框模型
+		框：页面元素皆为框
+		框模型：定义元素的尺寸和距离的一种计算方式
+			Box Model ：盒模型，方框属性
+		包含：尺寸，边框，外边距 和 内边距
+
+		当框模型属性介入到元素时，元素的整体占地尺寸会发生改变，计算方式如下：
+		占地宽度=左右外边距+左右边框+左右内边距+宽
+		占地高度=上下外边距+上下边框+上下内边距+高
+	2、外边距
+		1、什么是外边距
+			围绕在元素边缘之外的空白距离就是外边距
+			外边距是不允许被其他元素占据的
+		2、语法
+			1、属性
+				1、margin
+					最多能够设置四个方向的外边距值
+				2、margin-top
+					上外边距的值
+				3、margin-right
+					右外边距的值
+				4、margin-bottom
+					下外边距的值
+				5、margin-left
+					左外边距的值
+			2、取值
+				1、以 px 为单位的数字
+					ex：做外边距的值为20px
+						margin-left:20px;
+				2、以 % 为单位的数值
+					以父元素尺寸的占比作为外边距的值
+				3、取值为 负数
+					目的是为了移动元素
+					元素设置上外边距为正数，元素下移
+					元素设置上外边距为负数，元素上移
+
+					元素设置左外边距为正数，元素右移
+					元素设置左外边距为负数，元素左移
+				4、取值为 auto
+					自动：自动计算左右外边距的值
+					注意：
+						1、auto只能应用在左右外边距上，上下无效
+						2、只能为设置宽度的块级元素设置左右外边距为auto，目的是为了让块级元素水平居中
+			3、margin的简介写法
+				1、margin:value;
+					value表示的是上下左右四个方向的外边距值
+					ex:
+						margin:10px;
+				2、margin:v1 v2;
+					v1 : 表示上下外边距的值
+					v2 : 表示左右外边距的值
+					ex:
+						margin:0px auto;
+				3、margin:v1 v2 v3;
+					v1 : 表示上外边距的值
+					v2 : 表示左右外边距的值
+					v3 : 表示下外边距的值
+					ex:
+						margin:5px auto 3px;
+				4、margin:v1 v2 v3 v4;
+					v1 : 上外边距
+					v2 : 右外边距
+					v3 : 下外边距
+					v4 : 左外边距
+		3、页面中具备外边距的元素		
+			body,p,h1~h6,ul,ol
+			以上元素都具备默认的外边距
+			CSS重写：通过元素选择器将标记的默认样式改掉
+	3、内边距
+		1、什么是内边距
+			内容与元素边缘之间的距离
+			注意：内边距会扩大元素边框的所占区域
+		2、语法
+			属性：
+				padding:四个方向的内边距值
+				padding-top/right/bottom/left:值;
+			取值：
+				1、以 px 为单位的数值
+				2、以 % 为单位的数值
+			简洁写法：同margin
+				padding:value; 上下左右
+				padding:v1 v2; 上下  左右
+				padding:v1 v2 v3;上  左右  下
+				padding:v1 v2 v3 v4;上 右 下 左
+		3、页面中具备默认内边距的元素
+			1、ul,ol
+			2、文本框，密码框，按钮
+	4、box-sizing
+		1、作用
+			指定框模型(尺寸，边框，内边距)的计算方式
+		2、语法
+			属性：box-sizing
+			取值：
+				1、content-box
+					默认值，元素的width和height，只规定到元素的内容区域的宽和高。内边距和边框的尺寸是需要额外计算再附加到当前元素上的。
+					div{
+						width:300px;
+						height:40px;
+						border:1px solid #000;
+						padding:1px 12px;
+						box-sizing:content-box;
+					}
+					内容宽度：300px
+					内容高度：40px
+					左右边框：各1px
+					上下边框：各1px
+					左右内边距：各12px
+					上下内边距：各1px
+					整体宽度：326px
+					整体高度：44px
+				2、border-box
+					元素的width 和 height，能够规定到元素的边框，内边距 以及 内容尺寸的。
+					width=边框宽度+内边距+实际内容宽度
+					height=边框宽度+内边距+实际内容高度
+					div{
+						width:300px;
+						height:40px;
+						border:1px solid #000;
+						padding:1px 12px;
+						box-sizing:border-box;
+					}
+					整体宽度：300px
+					整体高度：40px
+					左右边框：各1px
+					上下边框：各1px
+					左右内边距：各12px
+					上下内边距：各1px
+					实际内容宽度：274px
+					实际内容高度：36px
+3、背景属性
+	1、背景颜色
+		属性：background-color
+		取值：合法的颜色值
+		注意：背景颜色是从边框的位置处就开始绘制
+	2、背景图像
+		属性：background-image
+		取值：url("图片路径")
+	3、背景平铺
+		属性：background-repeat
+		取值：
+			1、repeat
+				默认值，横纵都平铺
+			2、no-repeat
+				不平铺
+			3、repeat-x
+				横向平铺
+			4、repeat-y
+				纵向平铺
+	4、背景图片尺寸
+		属性：background-size
+		取值：
+			1、width height
+				以px为单位的数值
+			2、width% height%
+				采用当前元素的尺寸占比作为背景图尺寸
+	5、背景图片位置
+		1、作用
+			改变背景图在元素中的默认位置
+		2、属性
+			属性：background-position
+			取值：
+				1、x y
+					以 px 为单位的数值，用空格隔开
+					x ：背景图像水平偏移距离
+						取值为正，背景图向右偏移
+						取值为负，背景图向左偏移
+					y ：背景图像垂直偏移距离
+						取值为正，背景图向下偏移
+						取值为负，背景图向上偏移
+				2、x% y%
+					1、0% 0%
+						背景图在左上角
+					2、100% 100%
+						背景图在右下角
+					3、50% 50%
+						背景图在中间
+					4、95% 0%
+						偏右，靠上
+				3、关键字
+					x ：left / center / right
+					y ：top / center / bottom
+	6、背景属性 - 简写方式
+		属性：background
+		取值：color url() repeat position;
+		ex:
+			background:red;
+			background:url(a.jpg) no-repeat 95% center;
+
+
+
+
+
+

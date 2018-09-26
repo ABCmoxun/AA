@@ -1,0 +1,250 @@
+1、图像 和 超链接
+	1、URL
+		Uniform Resource Locator
+		统一资源定位器，用于标识网络中资源的位置，俗称路径
+		
+		URL分类：
+			1、绝对路径
+				访问网络资源时，使用绝对路径
+				ex：
+					http://www.baidu.com
+					http://www.baidu.com/img/bd_logo1.png
+			2、相对路径
+				从当前文件所在的位置处去开始查找资源文件所经过的路径
+
+			3、根相对路径
+				从WEB程序所在的根目录处开始查找资源文件
+			
+			注意：
+				1、url中不能出现中文
+				2、url是严格区分大小写
+	2、图像
+		1、标记
+			<img>
+		2、属性
+			1、src
+				指定要显示的图片的路径
+			2、width
+				宽度，以px为单位的数值(允许省略px)
+				px : pixel,像素
+			3、height
+				高度，以px为单位的数值(允许省略px)
+
+			注意：
+				如果宽度 和 高度只设定一个值的话，那么另外一个值也跟着等比缩放
+	3、超链接
+		1、什么是超链接
+			用户可以通过点击的操作来完成页面的跳转的行为的
+		2、语法
+			标记：<a>内容</a>
+			属性：
+				1、href
+					表示是链接地址
+				2、target
+					指定要打开的新网页的方式
+					取值：
+						1、_self
+							默认值，在自身标签页中打开新网页
+						2、_blank
+							在新标签页中打开新网页
+2、表格
+	1、表格的语法
+		1、标记
+			表格：<table></table>
+			表行：<tr></tr>  --- Table Row
+			单元格(列)：<td></td> --- Table Data
+
+			ex: 创建一个 4(行)*4(列)的表格
+		2、属性
+			1、table属性
+				1、width
+					指定表格的宽度，以px为单位数值(px可以省略)
+				2、height
+					指定表格的高度，以px为单位数值(px可以省略)
+				3、border
+					指定边框宽度，以px为单位数值(px可以省略)
+				4、align
+					指定表格在其父元素中的水平对齐方式
+					取值：left / center / right
+				5、cellpadding
+					指定单元格内边距
+					指定单元格边框与内容之间的距离
+				6、cellspacing
+					指定单元格外边距
+					指定单元格之间的距离(单元格与表格之间的距离)
+			2、tr属性
+				1、align
+					控制当前行内容的水平对齐方式
+					取值：left / center / right
+				2、valign
+					控制当前行内容的垂直对齐方式
+					取值：top / middle / bottom
+				3、bgcolor
+					控制当前行内容的背景颜色
+					取值：表示颜色的英文单词
+			3、td属性
+				1、width
+				2、height
+				3、align
+				4、valign
+				5、bgcolor
+				6、colspan ：跨列 / 合并列
+				7、rowspan ：跨行 / 合并行
+	2、不规则表格
+		1、单元格的跨列
+			从指定单元格的位置处开始，横向向右合并几个单元格(包含自己)，被合并掉的单元格要删除出去
+			语法：colspan="n"
+		2、单元格的跨行
+			从指定单元格的位置处开始，纵向向下合并几个单元格(包含自己)，被合并掉的单元格要删除出去
+			语法：rowspan="n"
+	3、行分组
+		1、什么是行分组
+			允许将表格中的若干行划分到一组中，方便管理
+		2、语法
+			1、表头行分组
+				允许将表格中最上方的若干行划分到一组中
+				<thead></thead>
+			2、表尾行分组
+				允许将表格中最下方的若干行划分到一组中
+				<tfoot></tfoot>
+			3、表主体行分组
+				表格中除了最上方和最下方之外的行们进行分组的话允许放在表主体行分组中
+				<tbody></tbody>
+3、表单
+	1、作用
+		用于接收用户的数据并提交给服务器
+		表单二要素：
+			1、form元素 
+				表单，用于收集用户信息并提交给服务器
+			2、表单控件
+				提供了能够与用户交互的可视化组件
+	2、form 元素
+		1、作用
+			用于收集用户信息并提交给服务器
+			form元素在网页中是不可见的，但功能不能忽略
+		2、语法
+			1、标记
+				<form></form>
+			2、属性
+				1、action
+					指定处理程序的地址
+					默认提交给本页
+				2、method
+					提交方式 / 方法
+					共提供了 7-8 个值，但是有用的只有两个
+					1、get(默认值)
+						通常是在向服务器要数据时使用
+						特点：
+							1、提交的数据会显示在地址栏上
+							2、安全性较低
+							3、提交数据最大为2KB
+					2、post
+						要将数据提交给服务器处理时使用
+						特点：
+							1、隐式提交，看不到提交数据
+							2、安全性较高
+							3、无提交数据的大小限制
+	3、表单控件(重难点)
+		1、作用 & 注意
+			作用：提供了能够与用户交互的可视化组件
+			注意：
+				只有放在表单中的表单控件才允许被提交
+				表单控件都是"行内块"元素
+		2、表单控件详解(难点)
+			1、文本框 & 密码框
+				文本框：<input type="text">
+				密码框：<input type="password">
+
+				属性：
+					1、name ：定义控件名称
+						提交给服务器使用，如果没有name的话则无法提交
+					2、value ：值
+						要提交给服务器的值，同时也是默认能够显示在控件上的值
+					3、maxlength 
+						限制输入的最大字符数
+					4、placeholder
+						占位符
+						用户在未输入任何数据时所显示的内容
+			2、按钮
+				1、提交按钮：<input type="submit">
+					将表单数据提交给服务器
+				2、重置按钮：<input type="reset">
+					将表单内容恢复到初始化的状态
+				3、普通按钮：<input type="button">
+					允许通过JS自定义功能
+				属性：
+					value ：按钮上显示的文本
+
+				4、<button>内容</button>
+					属性：type
+					取值：submit / reset / button
+			3、单选框 和 复选框
+				单选按钮：<input type="radio">
+				复选框：<input type="checkbox">
+
+				属性：
+					1、name
+						定义控件名称，除了定义名称之外，还起到分组的作用
+						一组中的单选按钮 或 复选框 名称必须一致
+					2、value
+						值，尽量提前声明
+					3、checked
+						设置预选中，该属性无值
+			4、隐藏域 和 文件选择框
+				1、隐藏域
+					作用：想提交给服务器但不想给用户看的数据可以放在隐藏域中
+					语法：
+						<input type="hidden">
+					属性：
+						name：定义控件的名称
+						value：定义控件的值
+				2、文件选择框
+					作用：文件上传时使用
+					标记：<input type="file">
+					属性：
+						name ：定义控件的名称
+			5、多行文本域
+				标记：<textarea></textarea>
+				属性：
+					1、name ：控件名称
+					2、cols ：指定文本域默认显示的列数
+						一行能够显示的英文字符量，中文减半
+					3、rows ：指定文本域默认显示的行数
+			6、下拉选择框 (下拉列表)
+				<select name="xxx">
+					<option value="值">显示数据</option>
+				</select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+注意：
+	p标记是不能嵌套块级元素的
+
+
+
+想在 a.html 中 引用 b.jpg
+	a.html ：当前文件
+	b.html ：资源文件
+
+
+
+
+
+	
+file:///D:/%E8%B5%B5%E6%97%AD/01_WEBBasic/Day02/login?uname=sanfeng.zhang&upwd=susu.yin&gender=M&hobby=0&hobby=3
+
+
+file:///D:/%E8%B5%B5%E6%97%AD/01_WEBBasic/Day02/login?uname=zhangwuji&upwd=zhaomin&gender=F&hobby=1&hobby=2&uid=0561213
+
+
+file:///D:/%E8%B5%B5%E6%97%AD/01_WEBBasic/Day02/login?uname=&upwd=&gender=M&uid=0561213&uimg=&intro=kfjlkdsafjlksajfdklsajfkljsklafjdsklafjdlksafjkldsajfkldsajfkdlsafjkldsajfkdlsajfldsafjdlsafjdklsajdlsfdsaloremfdsafdsafdsafdsafkfjlkdsafjlksajfdklsajfkljsklafjdsklafjdlksafjkldsajfkldsajfkdlsafjkldsajfkdlsajfldsafjdlsafjdklsajdlsfdsaloremfdsafdsafdsafdsafkfjlkdsafjlksajfdklsajfkljsklafjdsklafjdlksafjkldsajfkldsajfkdlsafjkldsajfkdlsajfldsafjdlsafjdklsajdlsfdsaloremfdsafdsafdsafdsafkfjlkdsafjlksajfdklsajfkljsklafjdsklafjdlksafjkldsajfkldsajfkdlsafjkldsajfkdlsajfldsafjdlsafjdklsajdlsfdsaloremfdsafdsafdsafdsaf

@@ -1,0 +1,226 @@
+什么是项目
+项目注意事项
+项目文档说明
+软件工具推荐
+电子词典项目布置
+
+完成框架 ----》 完成代码
+
+协程内容 
+pdb调试
+
+布置 httpserver 的第三版
+完成框架 ----》 完成代码
+
+给予httpserver模块的使用
+
+
+什么是项目 
+
+软件项目开发流程
+
+需求分析 ----》 概要设计  ---》 项目计划 ----》详细设计---》编码测试 -----》 项目测试 ----》 调试修改 ---》项目发布----》后期维护
+
+需求分析 ： 确定用户的真实需求 
+1. 反复确认，使用用户能理解的表述进行表达
+2. 完成需求文档，用户确认
+
+概要设计：对项目进行初步分析和整体设计
+1. 确定功能模块
+2. 进行可行性分析 搭建整体架构图
+3. 确定技术思路和使用框架
+4. 形成概要文档指导开发流程
+
+项目计划 ： 确定项目开发的时间轴和流程
+1. 确定开发工作的先后顺序
+2. 确定时间轴  ，事件里程碑
+3. 人员分工 
+4. 形成甘特图和思维导图等辅助内容
+
+详细设计 ： 项目的具体实现手册
+1.形成详细设计文档 ： 思路，逻辑流程，功能说明，技术点说明，数据结构说明，代码说明
+
+编码测试 ： 按照预定计划实现代码编写，并且做基本监测
+1. 写代码
+2. 写测试程序
+3. 技术攻关
+
+项目测试 ： 对项目按照公进行测试
+1.  跨平台测试 ，使用测试
+2. 完成测试报告
+
+调试修改完善代码 
+1.根据测试报告进行代码修改
+
+项目发布
+1.项目交付用户进行发布
+2.编写项目说明文档
+
+项目注意事项
+* 按时完成项目工作 和 项目时间不足之间的冲突
+* 项目实施人员之间的冲突
+
+项目工具的使用
+编写文档： word  ppt  Excel  markdown   LaTex
+项目流程图 ： Mindmanager  visio
+项目管理 ： project
+代码管理 ： Svn   git
+
+
+电子词典
+功能说明 ： 
+
+1.用户能够登录注册 
+  登录凭借用户名和密码即可
+  注册 要求用户名和密码 要求用户名不能重复
+2. 用户信息需要长期保存
+   使用mysql 或者 mongo
+3. 要求能够满足多用户同时登录操作的情况
+4. 用户开启客户端即进入 登录 注册  退出 界面
+5. 用户登录后即进入用户的 查词  查看历史记录  退出界面
+   查词 ： 英英词典  可以循环查询  查一个词会反馈给客         户端词义
+   历史记录 ： 查看自己曾经的查词记录  返回给用户查过哪些词 ，用户名， 什么时间差的 
+   退出 ： 退到上一级界面
+6. 单词词义从单词本获取
+ * 每个单词占一行
+ * 单词和解释之间有空格
+ * 单词按顺序排列
+
+提示 ： 
+
+socket   pymysql   pymongo
+
+服务器 :  注册  登录  查词  历史记录
+
+客户端 ： 图形界面打印 ，提出请求，接受反馈，反馈展示
+
+技术点 ： 并发   数据库操作，数据表建立
+
+
+1. 确定用什么技术
+2. 建立数据表
+3. 框架搭建 
+4. 实现具体功能
+
+socket  --》 tcp 
+并发  --》 多进程
+数据库 --》 mysql
+
+数据库表   user   hist  words
+dict
+
+user ： id     name   passwd
+hist ： id  word   time  user_id
+        id   name  word  time
+words : id   word  interpret
+
+create table user (id int auto_increment primary key,name varchar(32) not null,passwd varchar(16) not null);
+
+create table hist (id int auto_increment primary key,name varchar(32) not null,word varchar(32),time varchar(64) not null);
+
+
+服务端：
+main()   : 创建套接字 ---》 父子进程 ---》子进程等待客户端请求recv ---》 父进程等待其他客户端链接accept
+
+child() : 接受请求 根据请求调用功能函数 quit()
+login() : 操作数据库比对用户密码 回复结果
+register() ： 插入数据库 
+query() ： 查询数据库将结果给客户端  插入历史记录
+history() ： 查询数据库 将结果给客户端
+
+客户端 ： 
+main（） ： 创建套接字 发送链接请求 ---》一级界面
+            input ---》发送请求
+
+login（） 登录   ---》进入二级界面
+register（） 注册
+
+query（） 发送请求 接受反馈  打印
+history（） 发送请求 接受反馈  打印
+
+cookie :
+
+import getpass 
+passwd = getpass.getpass() 
+功能 ： 在输入时会自动有密码输入提示 而且加密输入
+
+pip  ---- Python的标准第三方库管理工具
+
+安装软件
+pip3  install  Package
+
+升级
+pip3 install --upgrade  Package
+
+卸载
+pip3 uninstall  Package
+
+查看软件包清单
+pip3 list
+
+查找软件包
+pip3 search Package
+
+查看软件包信息
+pip3 show  Package
+
+记录软件环境
+pip3 freeze > requirements.txt
+
+根据环境文件进行环境安装
+pip3 install -r  requirements.txt
+
+
+协程  
+
+并发变成  ： 多进程   多线程  IO多路复用
+
+定义 ：纤程 微线程，协程本质实际只有一个线程在运行
+功能原理 ： 通过应用层记录程序的上下文栈区，实现程序运行中的跳跃。进而实现选择代码段执行
+
+优点 ： 
+无需多线程切换的开销
+资源消耗非常少
+无需进行同步互斥操作
+对IO并发性极好
+
+缺点：
+无法利用计算机多核资源
+如果程序阻塞会阻塞整个进程运行
+
+yield ---》实现Python协程的基本原理
+
+greenlet
+sudo pip3 install greenlet
+
+gevent
+
+gevent.spawn（func，argv）
+功能 ： 将func变为协程事件并启动
+参数 ： func  事件函数
+        argv  多项， 为func的参数
+返回值 ： 协程对象
+
+gevent.join()
+功能 ： 回收协程
+参数 ： 要回收的协程对象
+
+gevent.joinall()
+功能 ： 回收协程
+参数 ： 列表，里面可有多个协程对象
+
+gevent.sleep()
+功能: 模拟IO阻塞的情况
+参数 ： n  睡眠几秒
+
+from  gevent  import monkey
+monkey.patch_all()  
+功能 : 在导入 socket模块前使用 可将将socket模块IO设置为非阻塞
+
+
+作业 ： 能够描述什么是协程
+        了解gevnet模块的基本使用
+	总结电子词典的编程思路
+	复习 http 协议
+	总结下并发模型的思路和呈现
+

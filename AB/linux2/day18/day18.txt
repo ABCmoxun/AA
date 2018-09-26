@@ -1,0 +1,222 @@
+da17回顾:
+三个标准文件
+    sys.stdin   # 标准输入文件 
+    sys.stdout  # 标准输出文件 
+    sys.stderr  # 标准错误输出
+
+面向对象
+   类          对象(实例)
+ class       object(instance)
+
+class Dog:  # 作用：创建一个类
+    def eat(self, food):
+        self.food = food
+
+
+dog1 = Dog()     # 创建一个实例
+dog1.color = "白色"
+
+dog2 = Dog()     # 又创建了一个实例
+dog2.color = '棕色'
+   BA.clear() 
+
+类
+  class 类名(继承列表):
+      语句块
+  作用：
+    创建类,用于描述对象
+    用于创建对象
+
+创建对象
+  类名(实际参数传递列表)
+
+初始化方法:
+  class 类名:
+     def __init__(self, 形参列表):
+         ....
+
+class Dog:  # 作用：创建一个类
+    def __init__(self, c):
+        self.color = c  # 颜色
+    def eat(self, food):
+        print(self.color, "的小狗正在吃", foold)
+
+dog1 = Dog("白色")
+
+析构方法:
+  class Xxx:
+     def __del__(self):
+        ...
+
+__dict__属性
+__class__属性
+
+day18笔记:
+类变量
+  类变量是类的属性，此属性属于类，不属于此类创建的实例
+
+说明：
+　　类变量,可以通过该类直接访问
+　　类变量可以通过该类的实例直接访问
+　　类变量可以通过此类的对象的 '__class__'属性间接访问
+
+示例:
+  class Human:
+      total_count = 0  # 类变量，用于记录对象的个数
+
+  print(Human.total_count)
+  h1 = Human()
+  print(h1.total_count)  # 0  # 不会出错
+  Human.total_count = 1  # 修改类变量
+  h1.total_count = 2  #添加了自己的实例属性total_count
+  h1.__class__.total_count = 3  # 间接修改类变量
+见class_varible.py
+
+
+类的 __slots__ 属性
+  作用：
+  　　限定一个类创建的实例只能有固定的属性(实例变量)
+  说明:
+    __slots__ 属性是一个列表，字表的值是字符串
+    含有__slots__属性的类所创建的对象没有__dict__字典
+  示例见：
+    slots.py
+
+类方法 @classmethod
+  类方法是操作类的方法，类方法属于类，不属于该类创建的对象
+
+  说明:
+    类方法需要使用@classmethod装饰器定义
+    类方法的第一个参数用来绑定类，约定写为cls
+    类和对象实例都可以调用类方法
+    类方法不能访问此类创建的对象的属性
+
+  示例:
+  　　以下详见: classmethod.py
+    class A:
+        v = 0  # 类变量
+
+        @classmethod
+        def get_v(cls):  #此方法不是实例方法，是类方法
+            return cls.v
+
+
+静态方法　＠staticmathod
+  静态方法是定义在类的内部的函数，此函数作用域是类的内部
+  说明:
+    静态方法需要使用@staticmethod装饰器定义　
+    静态方法与普通函数的定义相同，不需要传入self和cls
+    静态方法只能凭借该类和实例来调用
+    静态方法不能访问类变量和实例变量
+
+  示例：
+  　　class A:
+        @staticmethod
+        def myadd(a, b):
+            return a + b
+
+    print(A.myadd(100, 200))
+    a = A()
+    print(a.myadd(300, 400))
+
+练习：
+　　修改之前的Human类 让此类能够记录此类生成的对象的个数，
+用创建一个类方法get_human_count 来获取'人对象'的个数
+
+继承 inheritance 和 派生 derived
+  什么是继承 / 派生
+    继承是从已有类中派生出新类，新类具有原类的数据属性和行为,并能扩展新的能力
+    派生就是从一个已有的类衍生出新类，在新的类上添加新的属性和行为
+  作用：
+  　　1.　用继承派生机制，可以将一些共有功能加在基类中，实现代码的共享
+    2. 在不改变超类的代码的基础上，改变原有的功能
+  名词:
+    基类(base class) / 超类(super class) / 父类(father class)
+    派生类(derived class) / 子类(child class)
+
+单继承:
+  语法:
+    class 类名(超类名):
+        语句块
+  示例:
+    见: inherit.py
+    class Human:  # 人
+    　　　 def say(self, what):  # 说话的行为
+            print("说: ", what)
+        def walk(self, distance):  # 走路的行为
+            print("走了", distance, "公里")
+
+
+练习：
+　　list类里只有append向末尾添加一个元素的方法，但没有向列表部添加元素的方法，试想能否为列表在不改变原有功能的基础上添加一个insert_head(n)的方法,在列表的头部添加元素
+
+    class MyList(list):
+        def insert_head(self, element):
+            ....
+    myl = MyList(range(3, 6)):
+    print(myl)  # [3, 4, 5]
+    myl.insert_head(2)
+    print(myl)  # [2, 3, 4, 5]
+        
+继承说明:
+  任何类都直接或间接的继承自object类
+  object类是一切类的超类
+
+类内的　__base__属性
+　　此属性用来记录此类的基类
+
+见: >>> help(__builtins__)
+
+
+覆盖: override
+  什么是覆盖
+  　　覆盖是指在有继承派生关系的类中，子类中实现了与基类(超类)同名的方法，在子类实例调用方法时，实际调用的是子类中的覆盖版本，这种现象叫做覆盖
+
+示例见:
+   override.py
+
+问题　：
+　　当覆盖发生时，子类对象能否调用父类中的方法？
+
+super函数
+  super(type, obj)  返回绑定超类的实例（要求obj必须为type类型的实例)
+  super()  返回绑定超类的实例，等同于super(__class__, 实例的第一个参数), 且必须在方法内调用
+
+作用：
+　　返回超类的实例，用超类实例来调用其自身的方法
+
+示例见:
+   super.py
+
+显式调用基类的初始化方法：
+　　见: super_init.py
+
+说明：
+　　当子类实现了__init__方法后，父类的__init__方法将被覆盖，即不再会主动调用父类的__init__方法，会引起父类的属性得不到初始化,此时需要显式调用父类的初始化方法
+
+练习:
+  1. 看懂学生管理系统划分模块的依据
+  2. 添加保存文件和读取文件的代码
+  3. 把字典改为对象来存储数据
+     (最好把学生对象的实例变量都封装在类内，让类外的函数最好不要操作这些实例变量)
+
+  4. 练习：
+  　　写一个Bicycle(自行车)类,有run(骑行)方法，调用时显示骑行里程km
+    class Bycycle:
+        def run(self, km):
+            print("自行车骑行了", km, "公里")
+   再写一个电动自行车类EBicycle继承自Bicycle,添加电池电量valume属性，同时属有两个方法：
+   　　1. fill_charge(vol)  用来充电，vol 为电量(度)
+     2. run(km) 方法用于骑行,每骑行10km消耗电量1度,当电量消耗尽时调用Bicycle的run方法骑行
+     并显示骑行结果
+    主程序：
+    　　b = EBicycle(5)  # 创建一个电动自行车,默认电量5度
+      b.run(10)　  # 骑行10km
+      b.run(100)　 # 骑行100km
+      b.fill_charge(6)  # 充电6度
+      b.run(70)   # 又骑行70km
+
+
+
+
+

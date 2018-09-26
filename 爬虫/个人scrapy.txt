@@ -1,15 +1,18 @@
 
 
 
-
+视频:慕课网python最火scrapy入门和实践-大壮老师
 
 scrapy爬虫提取信息的方法：
 BeautifullSoup;lxml;re;xpath;css selector
+
+
 <html>.css('a::attr(href)').extract()  #生成列表
 .get('src')
 [attribute=value]
 获取文本：css('title::text').extract()
 后去属性：css('base::attr(href)').extract()
+
 
 1.创建项目：
 	scrapy startproject tencentSpider
@@ -20,15 +23,22 @@ BeautifullSoup;lxml;re;xpath;css selector
 	scrapy genspider tencent hr.tencent.com
 	ex:scrapy genspider demo   python123.io
 	#demo 爬虫名字  Python123.io是网址http://python123.io
+#信息输出(不用设置pipeline)
+保存json格式:scra py crawl 爬虫名 -o test.json
+保存csv格式: scra py crawl 爬虫名 -o test.csv
 
 
 settings.py
 #scrapy爬虫的配置文件
 setttings.py 设置
-   1、注释掉Robots协议；
-   2、打开Headers选项，添加UA；
-   3、打开PIPELINES，准备保存数据；(分保存在数据和文件中)
+   1、改Robots协议；Flase(22行左右)
+也可以打开DEFAULT_REQUEST_HEADERS = {}(43行)可以在里面设置一些信心user_Agent
+   2、打开Headers选项，添加UA；(19行左右)
+   3、打开PIPELINES，准备保存数据；(分保存在数据和文件中)(67行左右)
    4、有时候也配置数据库相关信息
+#爬取后需要登录后的信息需要打开：#COOKIES_ENABLED = False(36行)
+
+
 
 items.py
 设置索引需要要字段名：
@@ -38,21 +48,114 @@ positionLink = scrapy.Field() #详情链接
 positionType = scrapy.Field()#类别
 #positionName,positionLink,positionType 字段名
 与爬虫文件.py中所需要字段名相同
-ex:demo.py
+
+
+
+爬虫文件demo.py
+含有一个爬虫文件类
+from scrapy.selector import Selector
+from scrapy.http import Request
+from tencentSpider.items import TencentspiderItem
+
+parse解析方法
+可以答应 response.text或response.body
+也可能返回json格式
+result=json.loads(response.text)
+创建实例对象
+item = TencentspiderItem()
+for field in item.filds:
+	if field in restult.keys():
+		item[field]=result.get(filed)
+	yield item
+
+
 	from tencentSpider.items import TencentspiderItem
 	item = TencentspiderItem()
     item['positionName'] = each.xpath('./td[1]/a/text()').extract()[0]
     item['positionLink'] = each.xpath('./td[1]/a/@href').extract()[0]
     item['positionType'] = each.xpath('./td[2]/text()').extract()[0]
 
+通过xpath解析
+	list1=response.xpath('')
+#需要导入获取的信息
+from tencentSpider.items import TencentspiderItem
+#创建实例对象
+xpath 返回列表
+ex: douban_item=DoubanItem()
+详细解析
+	for i in list1:
+		i.xpath('').extract_first()
+		yield douban_item
+
+在for循环外
+yield scrapy.request(url,callback=self.parse)
+
+
+在运行爬虫时,保存在文件中: 
+	scrapy crawl ABC -o test.json
+	scrapy crawl ABC -o test.csv
+
+
 pipelines.py文件
  保存文件，保存在文件或数据库中
 from twisted.enterprise import adbapi
+def process_item(self, item, spider):
+        """保存到Json中"""
+        with open("tencent.json", "ab") as f:
+            text = json.dumps(dict(item), ensure_ascii=False)+'\n'
+            f.write(text.encode('utf-8'))
+        return item
+
+
 #第三方库异步插入
 数据库连接
+保存在mongodb中在settings里设置
+mong_host='127.0.0.0'
+mongo_port=27017
+mongo_db_name='douban'
+mongo_db-collection='douban_movie'
+在pipelines.py
+在settings.py中打开pipelines模块
+from douban.settings import mong_host,mongo_port,mongo_db_name,mongo_db-collection
+在类中创建
+ def __init__(self):
+		host=mong_host
+		port=mongo_port
+		....
+		tablename=mongo_db_name
+		client=pymongo.MongoClient(host=host,port=port)
+		mydb=client[dbname]
+		self.post=mydb[tablename]
+def process_item(self): 	#有这个函数
+	data=dict(item)
+	self.post.insert(data)
+	return item
 
-middlewares.py ---里面有class XXSpiderMiddleware(object)和class XXDownloaderMiddleware(object)
-#？？不知道怎么配置的;好像暂时没有修改
+
+
+
+在middlewares.py中设置
+创建代理ip和user-angent两个类
+import bs64
+class my_proxy(object):
+	def process_request(self,request,spider):
+		request.meta['proxy']='host:port'
+		proxy_name_pass=b'name:password' #转换字节流
+		encode_name_pass=base64.b64encode(proxy_name_pass)
+		request.headers['proxy-Authorization']='Basic '+encode_name_pass.decode()  #Basic后有个空格
+在setings中
+打开DOWNER_MIDDLEWARE={'douban.middlewares.my_prox':543       #优先级值越小优先极越高,优先级不能相同
+					'douban.middlewares.my_useragent':544 }
+user-agent设置
+import random
+class my_useragent(object):
+	def process_request(self,request,spider):
+		list=[user-agent]
+		agent=random.choice(l)
+		request.headers['User_Agent']=agent
+		
+
+
 
 !!!demo.py    #最重要
 class Demospider(scrapy.spider):
@@ -83,10 +186,147 @@ Scrapy-Redis能够很方便的实现Scrapy的分布式爬虫框架；
 可以在Downloadermiddler中对process_request方法
 做扩充：
         # 如果想要添加代理服务器的功能，可以在这里来扩充
-        # proxy = random.choice(proyPool) #proyPool可以从setting.py中取出来
+        # proxy = random.choice(proyPool)   #proyPool可以从setting.py中取出来
         # if proxy["user_passord"] is not None:
         #     proxy["user_passord"]=base64.baseEncode(proxy["user_passord"])
         # 在这里参见我们使用代理服务器的代码去调用代理服务器的方法去完成请求
+
 注意： 别忘了打开setting.py中downloader中间件的设置：
 DOWNLOADER_MIDDLEWARES = {
     'tencentSpider.middlewares.TencentspiderDownloaderMiddleware': 543,}
+
+
+
+
+
+分布式爬虫
+链接：http://github.com/rolando/scrapy-redis
+视频:B站-极客发烧友-零基础入门python3爬虫;
+B站-中路杀神豪--python爬虫从入门到精通(scrapyd)
+
+需要安装scrapy-redis,mongodb库,安装redis库
+修改mongodb配置文件;注释掉: bing:127.0.0.0
+在setting中重新设置
+设置调度器
+SCHEDULER = "scrapy_redis.scheduler.Scheduler"
+去重
+DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
+
+设置
+ITEM_PIPELINES={
+	#添加redis,最后可以注释掉
+	'scrapy_redis.pipelines.RedusPipeline':302
+}
+
+REDIS_HOST='127.0.0.0'
+REDIS_PORT=6379
+
+有一种方法:
+在爬虫文件demo.py中修改
+from scrapy_redis.spiders import RedisSpider
+calss DemoSpider(RedisSpider):
+让类继承RedisSpider
+
+
+
+#设置主机的redis
+REDIS_URL = 'redis://user:pass@hostname:9001'
+
+#在启动是否redis队列是否清空;可以设置也可以不设置一般度设置
+SCHEDULER_FLUSH_ON_START : boolean (default: False)
+设置为ture则清空
+
+在爬虫文件demo.py中把start_url添加到raeis库中
+在类中添加方法
+def start_url(self):
+	yield scrapy.Request(self.start_url[0])
+
+
+方法2(scrapyd)
+链接: http://pypi.python.org
+github搜索:scrapyd
+官网:http://scrapyd.readthedocs.org/
+安装scrapyd:
+pip3 install scrapyd'==1.2.0a1'
+
+scrapyd -h
+部署在http://scrapyd.readthedocs.org/--->Deploying your project-->(点击)scrapyd-client
+-->看文档
+
+修改爬虫的scrapy.cfg
+添加：http://localhost:6800/addversion.json
+还可以添加用户名和密码
+安装组件
+pip3 install scrapyd_client
+部署输入： scrapyd_deploy
+
+远程(不会)
+看scrapy官方文档
+在终端上运行
+远程启动
+curl http://localhost:6800/schedule.json -d project=myproject -d spider=somespider
+远程取消
+curl http://localhost:6800/cancel.json -d project=myproject -d job=6487ec79947edab326d6db28a2d86511e8247444
+
+#job=id
+查看启动情况
+curl http://localhost:6800/listversions.json?project=myproject
+
+#localhost,myproject需要改为自己
+
+
+
+
+
+一个封装scrapyd_api(一个分装方法)在github搜索scrapyd_api
+可以用上面方法，不用接口
+安装pip3 install python_scrapyd_api
+在一个python.py文件中
+from scrapyd_api import ScrapydAPI
+scrapyd = ScrapydAPI('http://127.0.0.0:6800')
+
+
+重写start_url方法
+
+middlewares
+在middleware中使用selenium
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

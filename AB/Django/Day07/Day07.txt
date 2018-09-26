@@ -1,0 +1,117 @@
+
+
+1、HttpRequest
+	1、CSRF 跨站点攻击
+		解决方案：
+			1、在 settings.py中
+				删除CsrfViewMiddleWare中间件
+			2、在视图的处理函数上 @csrf_protect
+			3、在模板中<form>下的第一行增加：
+				{% csrf_token %}
+	2、地址栏拼参数
+		手动拼写参数(Query String)到提交地址的后面
+		http://地址/?名称1=值1&名称2=值2/
+			浏览器在最后会添加'/'(若没有添加的话,所以若要截取最后一位:必定是'/')
+
+	练习：
+		1、完成天天果园项目中 注册操作
+			1、用户点击注册按钮时，将信息提交给后台
+				访问注册页面的视图和处理注册操作的视图是同一个视图
+			2、先判断手机号，是否存在，如果存在，给出提示(不能注册)
+			3、如果手机号没问题的话，则允许注册到数据库
+		2、完成天天果园项目中 登录操作
+			1、手机号 和 密码不能为空，否则不能提交
+			2、在后台验证手机号或密码是否正确并给出相应的提示
+
+2、使用 forms 模块处理表单
+	1、forms 模块的作用
+		通过 forms 模块，允许将表单与class相结合，可以自动的生成表单控件
+	2、使用 forms 模块
+		1、创建 forms.py 文件(在app文件夹下创建)
+		2、导入 forms
+			from django import forms
+		3、创建 class，一个class对应一个表单
+			必须继承自 forms.Form类
+		4、在class中创建属性
+			一个属性对应着一个表单控件
+			(参考文档)
+	3、在模板中解析 form 对象
+		1、注意
+			1、需要自定义<form>
+			2、需要自定义 提交按钮
+		2、解析方式
+			1、手动解析
+				在视图(views)中创建 xxForm() 并发送到模板中
+				ex:
+					form = RemarkForm()
+					return render(request,'xx.html',locals())
+				手动解析：
+					模板中：
+					{% for field in form %}
+						{{field.label}} : 控件前的文本
+						{{field}} : 表示控件
+					{% endfor %}
+				
+			2、自动解析
+				1、{{form.as_p}}
+					将表单中的每个属性都解析成一个p标记，再显示标签以及控件
+				2、{{form.as_ul}}
+					将表单中的每个属性都解析成一个li标记，再显示标签以及控件
+					注意：需要自定义<ul></ul> 或 <ol></ol>
+				3、{{form.as_table}}
+					将表单中的每个属性都解析成一个tr标记，再显示标签以及控件
+					注意：需要自定义<table>
+	4、使用 forms.Form 获取表单数据
+		1、通过 forms.Form 子类的构造函数，接受post数据(在views里写)
+			form = xxxForm(request.POST)
+		2、需要让 form 通过验证后再取值
+			form.is_valid()
+			返回true:提交的数据已经通过所有验证，允许获取表单数据
+			返回false:提交的数据有暂时未通过验证的
+		3、获取表单提交的数据
+			通过 form.cleaned_data(字典)接收提交的数据
+			cd = form.cleaned_data(可以通过disc['key']的方式提取值)
+
+			print(cd['subject']) #获取提交数据中subject对应的数据
+
+		练习：
+			1、在 forms.py 中追加一个 RegisterForm 类
+			2、增加以下属性，并生成到 06_register.html显示成表单控件
+				1、uname ：文本框
+				2、upwd ：密码框
+				3、uemail ：邮件框
+				4、uage ：文本框
+			3、在 06_register.html中追加 form 和 submit
+			4、点击提交按钮时，将数据插入到数据库中
+				创建库 day6 ，创建Models - Users
+	5、forms 的高级处理
+		将 Models 和 Forms 结合到一起使用
+		1、在 forms.py中，创建class，继承自 forms.ModelForm
+		2、创建内部类 ：Meta，关联Form 和 Models
+			1、model : 指定要关联的Model类是谁
+			2、fields :从models中取哪些字段要生成控件(列表，要选取的字段)
+				1、取值 "__all__",取出全部字段生成控件
+				2、指定一个列表，声明允许生成控件的字段名
+			3、labels : 指定每个属性关联的label，取值为字典
+				labels = {
+					'属性名1':'label文本1',
+					'属性名2':'label文本2',
+				}
+
+http://localhost:8000/03_get/?uname=zsf&upwd=123456
+http://localhost:8000/04_query/?id=52&name=zsf
+http://localhost:8000/04_query/52
+
+
+http://localhost:8000/04_query/?id=52
+http://localhost:8000/04_query/?id=52&name=zsf
+
+<select>
+	<option value="1">北京<option>
+	<option value="2">上海<option>
+</select>
+
+
+
+
+

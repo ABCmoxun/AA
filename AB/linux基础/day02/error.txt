@@ -1,0 +1,8 @@
+find: `/etc/vmware-tools/GuestProxyData/trusted': 权限不够
+find: `/etc/cups/ssl': 权限不够
+find: `/etc/polkit-1/localauthority': 权限不够
+find: `/etc/ssl/private': 权限不够
+find: `/etc/vmware-tools/GuestProxyData/trusted': 权限不够
+find: `/etc/cups/ssl': 权限不够
+find: `/etc/polkit-1/localauthority': 权限不够
+find: `/etc/ssl/private': 权限不够

@@ -1,0 +1,10 @@
+/*
+ * 颜色为红色
+ * 背景颜色为黄色
+ * 文字大小为36px
+ */
+div{
+	color:red;
+	background-color:yellow;
+	font-size:36px;
+}

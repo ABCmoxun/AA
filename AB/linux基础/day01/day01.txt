@@ -1,0 +1,197 @@
+day01
+自我介绍:
+  魏明择
+  Email: weimz@tedu.cn
+  QQ: 88126169
+    项目经理加入方法:
+      AID1803 + 姓名(所在地)
+      我是 AID1803魏明择(北京)
+
+  01年 哈电集团 (6个月国企) 工资800元
+  02年3月  黑龙江电力集团 PLC(可编程逻辑控制器)
+      工资 1560
+  04年 文曲星（电子辞典) 《英雄坛说》
+  05年 诺亚舟(网络学习机)
+  08年 医疗电子(电子血压，心电监护仪)
+  12年 IT教育
+
+精通语言:
+  C/C++/Python
+熟悉的语言:
+  Java/Objective-C/Fortran77-90/Basic/Pascal
+
+三大操作系统:
+  UNIX
+     AIX(IBM)
+     Solaris(SUN/Oracle)
+     MAC OS X(Apple)
+     IOS (Apple)
+  Linux(当前教学)
+    Ubuntu:
+       用户名: tarena, 密码: tarena
+    Redhat
+    CentOS
+    Android(安卓)
+  Windows
+    win10, win7 winxp, win98, win95, win3.2
+
+计算机的组成:
+  硬件
+    处理器(CPU)
+    运行内存 RAM
+    主板(总线设备)
+    外部存储设备（硬盘,U盘等)
+    输入输出设备
+  软件：
+    操作系统软件
+    标准库软件
+    应用软件
+
+vmware
+  开启BIOS里的虚拟机支持功能:
+     Virtual Tech  [Disable/Enable]
+
+打开终端和退出终端:
+  1. 点击图标
+  2. 搜索命令:gnome-terminal 或"终端"
+退出终端命令:
+  $ exit
+
+Linux命令的格式：
+  命令名 [选项] [参数]
+
+例如：
+  $ pwd
+  $ ls -l
+  $ cd /
+  $ ls /usr/bin -l
+说明：
+  有些命令没有选项和参数
+
+目录树和根
+  根: root
+    Linux: /
+    Windows:
+        C:
+        D:
+    例：
+      /usr/bin/python3  (Linux下的文件)
+      C:\Windows\System32\calc.exe(Window下的文件)
+路径：
+  路径是用来记录一个文件或文件夹的字符串
+
+路径分为两种：
+  绝对路径 和 相对路径
+
+绝对路径：
+  以'/'字符开头的路径为绝对路径
+  绝对路径通常能标识一个唯一的文件或文件夹
+
+相对路径:
+  不以'/'开头的路径为相对路径
+  开始符号:
+    以文件名/文件夹名开头
+    . 开头当前文件夹
+    .. 开头(上一级文件夹)
+    ~ 用户主目录(家目录)
+示例：
+  cd /usr/bin  # 进入/usr/bin目录
+  ls -l ./python3  查看当前python3文件的信息
+  cd ..
+  ls -l
+
+pwd 命令：
+  作用：
+    用于显示当前操作的路径位置（当前工作路径）
+
+cd 命令：
+  作用：
+    改变当前的工作路径(进入某个目录)
+  格式:
+    cd [目录名]
+  示例：
+    cd /home/tarena
+    cd /  # 进入根目录
+    cd    # 默认进入用户主目录
+    cd .. 进入上一层目录
+    cd -  # 进入到进入此目录前的那个目录
+
+
+ls命令:
+  作用：
+    用来显示文件或文件夹的信息
+  格式:
+    ls [选项] [文件夹名/文件名]
+  常用选项:
+    -l 列表显示文件的详细信息
+    -a 显示全部文件/文件夹信息
+  示例：
+    ls -l /usr/bin/python3
+    ls ~
+    ls -a /home/tarena
+
+mkdir 命令：
+  作用：
+    创建一个或多个文件夹(也叫目录)
+  格式:
+    mkdir 文件夹名1 文件夹名2 ...
+  示例
+    mkdir a b c d
+  常用选项：
+    -p 如果中间文件夹不存在，则逐级创建所有文件夹
+
+  示例：
+    mkdir -p a/b/c/d
+
+rmdir 命令：
+  删除一个或多个文件夹（文件夹内必须没有文件）
+
+  格式:
+    同 mkdir
+  选项:
+    -p 如果中间的文件也为空，则逐级删除中间的空文件夹
+  示例：
+    rmdir a b c d
+    rmdir -p code/a/b/c/d
+
+tree 命令：
+  作用：
+    显示目录树
+  安装方法：
+    $ sudo apt install tree <回车>
+    输入密码:tarena
+
+  示例：
+    $ tree  # 等同于 $ tree .
+    $ tree /home/tarena/aid1803
+  
+touch命令：
+  作用：
+    1.如果文件不存在，则创建一个空文件
+    2.如果文件或目录存在，则用系统时间更新它的修改时间
+  例:
+    touch abcd.txt
+    touch abcd.txt dcba.txt
+
+rm 命令：
+  作用：
+    删除文件或者文件夹
+  格式:
+    rm [选项] 文件/文件夹
+  常用选项:
+    -r 递归删除文件夹内部的全部文件或文件夹
+    -i 删除前给出提示(y代表yes,n代表no)
+    -f 强制删除，不给出任何提示
+
+练习:
+  1. 进入到/usr/bin 目录下，查看是否有python3 和 ls 这两个文件
+  2. 再进入到/etc 目录下，查看 passwd这个文件的大小是多少字节?
+  3. 回到用户主目录下
+  4. 查看当前目录下都有哪儿些隐藏文件
+  5. 创建一个文件夹"aid1803"
+  6. 在aid1803下创建一个文件夹Linux
+  7. 在aid1803/Linux下创建 三个文件夹:
+      day01 day02 day03
+  8. 在day01下创建day01.txt,在day02 下创建day02.txt, 在day03下创建 day03.txt
+  9. 删除 aid1803/Linux/day03文件夹
+

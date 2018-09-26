@@ -1,0 +1,82 @@
+
+《python基础》
+python的延生:
+   创建人: Guido van Rossum(荷兰人)
+   时间:1989年对诞节期间
+
+计算机语言发展:
+  1. 二进制机器指令
+  2. 汇编语言:
+       ADD R0 R1
+       ST  R2
+  3. 编译型语言
+    C / C++ / PASCAL / go / Fortran
+  4. 解释执行语言:
+     python / java / basic / C# / Swift
+
+python的应用领域:
+  系统自动化运维
+  网络编程(搜索引擎，爬虫, 服务器编程等)
+  科学计算
+  人工智能，机器人
+  web开发
+  云计算
+  大数据及数据库编程
+  教育
+  游戏
+  ...
+
+python的优点 ：
+  面向对象(Java, C++, Python, C#, Swift)
+  免费
+  可移植
+  可混合编程（C/C++/Java/.net)
+  简单易学易用
+  开发效率高
+  应用领域广泛
+  开源
+缺点:
+  与C/C++相比，执行速度不够快
+  不能封闭源代码
+  不能写操作系统内核和驱动程序
+
+python的官网:
+  www.python.org
+
+python的版本
+  V2.7(2020年结束维护)
+  V3.5(当前教学)
+  V3.8(最新)
+
+Python的解释执行器类型:
+  CPython    (C语言开发)  /usr/bin/python3
+  Jython     (Java语言开发)
+  IronPython (.net开发)
+
+第一个python程序:
+  编写:hello.py
+    写入:
+    print("hello world!")  # 左侧不要留空格
+  执行python程序：
+    1. 用python3解释执行
+      $ /usr/bin/python3 hello.py
+    2. 直接执行:
+      1) 在hello.py 的第一行加入:
+      #!/usr/bin/python3
+      2) 添加执行权限
+      $ chmod a+x hello.py
+      3) 执行:
+      $ ./hello.py
+
+练习:
+  写一个test.py文件，此文本写入python三条打印语句，
+  打印如下：
+     这是我的python第一条语句
+     我现在开始学python了
+     这是最后一条语句
+  要求:
+    1. 用两种方式执行上述程序打印这三条语句
+      1)  $ python3 test.py
+      2)  $ ./test.py
+    2. 将这三句语输出重定向到 myprint.txt中
+    

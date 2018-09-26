@@ -1,0 +1,276 @@
+day16回顾
+字节数组的方法
+
+汉字编码:
+  'gb18030'
+  'gbk'
+  'gb2312'
+  'utf-8'
+  'ascii'
+      encode(编码)
+  str ------>  bytes()
+      decode(解码)
+      <------
+
+文件
+  打开文件 open
+  读 / 写 
+     (read / readline / readlines)
+     (write / writelines)
+  关闭文件 　close方法
+
+
+文本文件方式
+  字符串(读入后的换行符是'\n',写入换行符,依平台不同而不同)
+     Windows       '\r\n'
+     Linux/Mac OS  '\n'
+二进制文件方式
+  字节串
+
+
+f.flush()  清空缓冲区
+------ 以下两个方法通常只对二进制文件进行操作----
+f.tell()  获取当前的读写位置
+f.seek(offset, whence)  设置当前的读写位置
+
+day17笔记：
+标准输入输出文件
+  sys.stdin
+  sys.stdout
+  sys.stderr
+  模块名: sys
+
+说明:
+  每一个python程序启动后都会有以上三个文件已经打开供我们使用
+示例见:
+  stdout.py
+  stdin.py
+
+  Linux下　Ctrl + D输入文件结束符
+
+面向对象编程
+  类 class 和 对象 object
+
+什么是对象:
+  对象是指现实中的物体或实例
+
+什么是面向对象:
+  把一切看成对象（实例),对象和对象之间用方法（行为）建立关联关系
+
+什么是类:
+  拥有相同属性和行为的对象分为一组，即为一个类
+  类是用来描述对象的工具
+
+面向对象示意
+  车(类)  ----->> BYD E6(京A.88888) 对象(实例)
+         \
+          \--->> BMW X5(京B.00000) 对象(实例)
+
+  狗(类)  ----->> 小京巴(户籍号: 00001)
+         \
+          \--->> 导盲犬(户籍号:00002)
+
+  int(类)  --->> 100(对象)
+          \
+           \-->> 200(对象,实例)
+
+类的创建语法:
+  class 类名(继承列表):
+      """类文档字符串"""
+      实例方法(类内的函数methd) 的定义
+      类变量(class variable) 定义
+      类方法(@classmethod)定义
+      静态方法(@staticmethod)定义
+
+类的作用：
+　　可以用类创建一个或多个此类的对象（实例)
+  类内的变量和方法能被此类所创建的所有实例所共同拥有
+
+说明:
+  类名必须是标识符(与变量名命名规则相同，建议首字母大写)
+  类名实质上就是变量，它绑定一个类实例
+  类的定义最后面要加两个空格以告诉解释执行器，类的定义已经结束
+
+示例:
+  class Dog:
+      pass
+
+术语
+ 类         对象     　实例
+class     object    instance
+
+构造函数:
+  构造函数的调用表达式　
+  　　类名([创建传参列表])
+    [] 里的内容代表可省略
+
+  作用：
+  　　创建这个类的实例对象，并返回此实例对象的引用关系
+
+示例:
+  class Dog:  # 定义一个类
+      pass
+  dog1 = Dog()  　　　# 用类来创建一个对象用dog1绑定
+  print(id(dog1))  # 打印dog1所在的内存地址
+  dog2 = Dog()  #  创建第二个对象 用dog2绑定
+  print(id(dog2))
+  print(dog1 is dog2)  # 判断两只狗是不是同一条狗
+
+实例说明:
+  实例有自己的作用域或名字空间，可以为该实例添加实例变量(也叫属性)
+  实例可以调用类的方法
+  实例可以访问类中的类变量
+
+实例变量(属性 attribute)
+  每个实例可以有自己的变量，称为实例变量(属性)
+
+属性的使用语法:
+  实例.属性名
+
+属性的赋值规则：
+　　(同变量规则相同)
+  1. 首次为属性赋值则创建此属性
+  2. 再次为属性赋值则改变属性的绑定关系
+
+示例:
+  class Dog:
+      pass
+  dog1 = Dog()
+  dog1.kinds = "京巴"  #为dog1绑定的实例添加kinds属性
+  dog1.color = "白色"  # 添加属性
+  print(dog1.kinds, dog1.color)  #　访问属性
+  dog1.color = '黄色' # 修改dog1.color 的绑定关系
+  print(dog1.color)
+
+
+练习：
+　　自己写一个Student类,此类的对象有属性name, age, score, 用来保存学生的姓名，年龄，成绩
+　　　1) 写一个函数 input_student读入n个学生的信息，用对象来存储这些信息（不用字典), 并返回对象的列表
+   2) 写一个函数output_student 打印这些学生信息(格式不限)
+  示意:
+    class Student:
+       pass
+　　　　def input_student():
+        ...　　# 获取学生信息，形成列表返回
+    def output_student(lst):
+        # 打印学生信息
+    def main():
+        L = input_student()
+        output_student(L)
+    main()
+
+
+删除属性
+  del 语句
+
+  语法:
+    del 对象.属性名
+示例:
+  class Student:
+      pass
+
+  stu = Student()
+  stu.name = 'xiaozhang'  # 创建属性
+  print(stu.name)
+  del stu.name  # 删除此属性
+  print(stu.name)  # 属性错误,因为属性已经不存在了
+
+
+实例方法 method
+  语法:
+    class 类名(继承列表):
+        def 实例方法名(self, 参数1, 参数2, ....):
+           语句块 
+  作用：
+    用于描述一个对象的行为,让此类型的全部对象都拥有相同的行为
+  说明
+    实例方法的实质是函数，是定义在类内的函数
+    实例方法的第一个参数代表调用这个方法的实例，一般命名为'self'
+实例方法的调用语法:
+  实例.实例方法名(调用参数)
+  或
+  类名.实例方法名(实例, 调用参数)
+
+
+初始化方法
+  作用：
+    对新创建的对象添加属性等必须的资源
+  语法形式:
+    class 类名:
+        def __init__(self[,参数列表]):
+            语句块
+        [] 代表其中内容可省略
+  说明:
+    初始化方法名必须为__init__不可改变
+    初始化方法会在构造函数创建实例后自动调用，且将实例自身通过第一个参数self传入__init__方法
+    构造函数的实参将通过__init__方法的参数列表传到__init__方法中
+    初始化方法内如果需要return语句返回，则必须返回None
+
+示例见:
+   init_method.py
+
+
+练习：
+  修改之前练习的Student类，为该类添加初始化方法，实现在创建对象时自动添加name,age,score属性
+
+
+析构方法:
+  语法形式:
+    class 类名:
+        def __del__(self):
+            语句块
+  作用：
+    在对象被销毁之前被调用,主要负责清理对象所占用的资源
+  说明:
+    python建议尽可能少的在析构方法内做事情，因为销毁时间难以确定
+
+示例见:
+  del_method.py
+
+预置的实例属性:
+  __dict__属性:
+    用于绑定一个存储此实例自身变量的字典
+  
+  __class__属性
+    用于绑定创建此实例的类
+
+  示例:
+    class Dog:
+        pass
+    dog1 = Dog()
+    print(dog1.__dict__)
+    dog1.color = "白色"
+    print(dog1.__dict__)
+    print(dog1.__class__)  
+
+用于类的函数:
+  isintance(obj, class_or_tuple) 返回这个对象obj是否是某个类的对象，或者某些类中的一个类的对象，如果是则返回True, 否则返回False
+  type(obj)  返回对象的类
+
+对象:
+  属性(对象拥有的名词)  用实例变量存储
+  行为(对象拥有的动作)  用方法表示
+
+
+练习：
+  1. 定义一个类Huamn(人类)
+    有三个属性:
+       姓名: name
+       年龄: age
+       家庭住址: address (可以省略没有)
+    有如下方法：
+       show_info(self) 用来显示人的信息
+       update_age(self) 方法用来让这个人的年龄增加一岁
+  
+    def input_human():
+        输入下此人的信息，姓名为空结束
+
+    def main():
+        docs = input_human()
+        for h in docs:
+            h.show_info()  # 列出所有人的信息
+        for h in docs:
+            h.update_age()  # 让所有人都长一岁
+        for h in docs:
+            h.show_info()  # 再次列表所有人的信息
+    main()  # 调用主函数运行

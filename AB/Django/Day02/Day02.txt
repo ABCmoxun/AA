@@ -1,0 +1,263 @@
+1、urls.py
+	1、url函数
+		url函数的语法：
+		url(regex,views,kwargs=None,name=None)
+		1、regex
+			正则表达式，匹配请求的url
+		2、views
+			视图处理函数或其他的urls.py
+		3、kwargs
+			字典，用来向views传参，没有参数则可以省略
+		4、name
+			字符串，给url()起别名，主要在模板中使用
+		ex:
+			urlpatterns = [
+				url(r'^run/$',run_views),
+			]
+	2、通过 url 向 views 传参
+		1、使用正则表达式传参
+			使用子组传参，一个子组是一个参数，想要多个参数的话，可以使用多个子组
+			子组 - ()
+			urlpatterns = [
+				#访问路径是run/的时候，交个run_views去处理
+				url(r'^run/$',run_views),
+				#访问路径是run/任意两位数字，交给run_args_views去处理
+				url(r'^run/(\d{2})',run_args_views),
+				#访问路径是run/四位数字/两位数字/，交给run1_views处理
+				url(r'^run/(\d{4})/(\d{2})/$',run1_views),
+			]
+			注意：
+				1、在url()中，一个子组()表示一个参数
+				2、在views.py中，对应的处理函数要根据url()中子组的个数，相应的定义参数，定义的参数要位于request之后
+				ex:
+					1、
+						url(r'^run/(\d{2})',run1_views),
+
+						def run1_views(request,num)
+					2、
+						url(r'^run/(\d{2})/(\d{4})',run2_views)
+
+						def run2_views(request,num1,num2)
+		2、使用url()第三个参数，字典传参
+			url(r'^show/$',show_views,{'name':'laoshe','age':'89'})
+
+			def show_views(request,name,age):
+				name:表示的就是字典name参数的值
+				age:表示的就是字典age参数的值
+			注意：
+				1、视图处理函数中，必须声明参数
+				2、参数的名称和位置，必须要与字典中的名称和位置保持一致
+2、Django中的应用
+	1、什么是应用
+		应用就是网站中的一个独立的程序模块
+		在Django中，主目录一般不处理用户的具体请求，主目录主要做的是项目的初始化和设置，以及请求的分发
+	2、创建应用
+		1、命令
+			./manage.py startapp 应用名称
+			ex:
+				./manage.py startapp news
+		2、在 settings.py 中进行注册
+			在 INSTALLED_APPS中进行注册
+			INSTALLED_APPS = [
+				'django.contrib.admin',
+				... ...,
+				'news',
+			]
+		3、应用的结构组成
+			1、migrations 目录
+				存放数据库中间文件(日志文件)
+			2、__init__.py
+				应用的初始化文件
+			3、admin.py
+				应用的后台管理配置文件
+			4、apps.py
+				应用的属性配置文件
+			5、models.py
+				模型文件，与数据库有关
+			6、tests.py
+				测试模块
+			7、views.py
+				定义视图的文件
+		练习：
+			1、创建 index 应用 ，并注册
+			2、创建 sport 应用 ，并注册
+			3、创建 music 应用 ，并注册
+
+		练习：
+			1、访问路径是
+				http://localhost:8000/sport/index
+				则交给 sport 应用中 index_views 视图处理
+			2、访问路径是
+				http://localhost:8000/music/index
+				则交个 music 应用中 index_views 视图处理
+			3、访问路径是
+				http://localhost:8000/index/index
+				则交给 index 应用中 index_views 视图处理
+			4、访问路径是
+				http://localhost:8000
+				则交给 index 应用中 index_views 视图处理
+			5、访问路径是
+				http://localhost:8000/login
+				则交给 index 应用中 login_views 视图处理
+
+3、Django 的模板(Templates)
+	1、什么是模板
+		模板就是要动态的给用户呈现的网页内容
+		其实就是一个网页 - 前后端结合的一个网页
+	2、模板的设置
+		在 settings.py中 TEMPALTES 变量
+		TEMPLATES = [
+			{
+				'BACKEND':'... ...',
+				'DIRS':[... ...],
+			}
+		]
+		1、BACKEND：指定模板的搜索引擎，不用动
+		2、DIRS：指定模板所存放目录们
+			DIRS=['index.temp','music.temp']
+			但是，如果DIRS中为空的话，那么Django会自动到每个应用中去搜索一个叫 templates 的目录来作为模板的管理目录
+			推荐：
+				1、DIRS内容保持为空
+				2、在每个应用中，都创建一个 templates 目录
+		3、APP_DIRS
+			True：首先从DIRS中指定的目录中查找模板，如果没找到的话，再搜索templates目录
+	3、模板的加载方式
+		1、使用 loader 获取模板，并通过 HttpResponse进行响应
+			from django.template import loader
+
+			1、通过 loader 加载模板
+				t = loader.get_template('模板名称')
+			2、通过t对象，将模板渲染成字符串
+				html = t.render()
+			3、通过 HttpResponse 将 html 响应给 客户端
+				return HttpResponse(html)
+		2、使用 render 直接加载模板并返回
+			from django.shortcuts import render
+			return render(request,"模板名称")
+
+
+	4、模板的语法
+		1、变量
+			1、作用：允许将后端的数据传递给模板，在模板中，会根据变量的值进行显示
+			2、在Django中允许传递给模板做变量的数据类型
+				数字，字符串，列表，元组，字典，函数，对象
+			3、变量的语法
+				1、loader
+					dic = {
+						'变量名1':'值1',
+						'变量名2':'值2',
+					}
+
+					t = loader.get_template('xxx.html')
+					html = t.render(dic)
+					return HttpResponse(html)
+
+					在模板中显示变量：{{变量名}}
+				2、render
+					dic = {
+						'变量名1':'值1',
+						'变量名2':'值2',
+					}
+
+					return render(request,'xxx.html',dic)
+					或者:return render(request,'xxx.html',locals())
+				练习：
+					访问 http://localhost:8000/news/05_exer
+					在模板中显示以下内容：
+					书名：《背影》
+					作者：朱自清
+					出版社：北京大学出版社
+					出版时间：1995-10-12
+		2、标签
+			1、什么是标签
+				允许将服务器端的一些功能嵌入到模板中
+			2、语法
+				{% 标签内容 %}
+			3、常用标签
+				1、for
+					{% for 变量 in 列表|元组|字典 %}
+					{% endfor %}
+					允许使用 for 提供的内置变量 - forloop
+					1、forloop.counter 
+						记录当前循环的次数，从1开始
+					2、forloop.first
+						是否是第一次循环(第一项)
+					3、forloop.last
+						是否是最后一次循环(最后一项)
+				2、if
+					1、
+						{% if 条件 %}
+							满足条件运行的内容
+						{% endif %}
+
+						条件中允许使用 比较运算符(>,<,>=,<=,==,!=)，逻辑运算符(not,and,or)
+						注意：and 和 or 不能同时出现
+					2、
+						{% if 条件 %}
+							满足条件运行的内容
+						{% else %}
+							不满足条件运行的内容
+						{% endif %}
+					3、
+						{% if 条件1 %}
+							满足条件1运行的内容
+						{% elif 条件2 %}
+							满足条件2运行的内容
+						{% elif 条件3 %}
+							满足条件3运行的内容
+						{% else %}
+							以上条件都不满足的时候运行的内容
+						{% endif %}
+
+		3、过滤器
+			1、作用
+				过滤数据
+				在显示变量的数据之前，允许对数据进行筛选或改变
+			2、语法
+				{{变量|过滤器:参数}}
+			3、简单的过滤器
+				1、{{value|upper}}
+					将value变为大写字符
+				2、{{value|lower}}
+					将value编写小写字符
+				3、{{value|add:num}}
+					将num累加到value之后
+				4、{{value|floatformat:n}}
+					将value四舍五入到n位小数
+				5、{{value|truncatechars:n}}
+					将字符串截取到n位(包含...)
+
+		作业：
+			1、创建项目 - fruitday
+			2、创建应用 - index
+			3、配置 路由配置模块
+			4、将 login.html 移植到 fruitday 中，以模板的方式呈现给用户
+
+
+
+http://localhost:8000/news/*** 
+一律交给news的urls去处理
+
+http://localhost:8000/news/index
+交个news应用中的index_views去处理
+
+http://localhost:8000/news/
+交给news应用中的index_views去处理
+
+
+
+任意两位数字：(\d{2})
+
+
+http://localhost:8000/goods/2058
+http://localhost:8000/goods/3079
+
+urlpatterns = [
+	url(r'^run/$',run1_views),
+	url(r'run',run2_views),
+]
+http://localhost:8000/run/
+
+
+
+

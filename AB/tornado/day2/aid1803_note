@@ -1,0 +1,178 @@
+Tornado龙卷风
+Flask
+
+孙伟  bjsunwei@tedu.cn 工作
+     piglite@vip.sina.com　私人
+     blog.csdn.net/piglite 博客
+
+day1
+程序开发工具：PyCharm
+1. 基本九行代码实现Tornado服务器程序：
+class IndexHandler(RequestHandler):
+    def get(self, *args, **kwargs):
+        self.write('Hello Tornado')
+    def post(self, *args, **kwargs):
+        pass
+app = Application(handlers=[('/',IndexHandler)])
+server = HTTPServer(app)
+server.listen(8888)
+IOLoop.current().start()
+
+２．将端口号写到配置文件中
+将端口号写入配置文件需要３步：
+２.１．定义端口号在配置文件中的名称，类型，默认值
+define('名称',type=int,default=8888)
+2.２．解析配置文件
+parse_config_file('配置文件路径')
+2.３．读取配置文件中的内容
+options.名称
+
+3.　利用路径的变化请求不同的资源．
+　　　/java/day3/css
+   /java/day4
+   服务器利用正则表达式获取不同路径的内容
+   生成不同的响应内容
+   /java/(day[0-9]+)
+   /java/(day[0-9]+)/([a-z0-9]+)
+
+４．利用参数的变化请求不同的资源．
+    以GET方式提交参数
+    /python?day=day3&subject=css
+    /python?day=day4
+    服务器会调用RequestHandler中的相关方法获取请求参数，再根据不同的请求参数进行不同的响应．
+    self.get_query_argument('参数名称',默认值)
+    提供默认值防止用户没有提供该参数时，产生４００错误．
+    self.get_query_arguments('参数名称')
+    以列表的形式返回参数值（们），即使用户没有提供该参数，
+    也不会产生４００错误，只会得到一个空列表．
+
+    以POST方式提交参数
+    用表单进行提交．
+    服务器会调用RequestHandler中的相关方法获取请求参数，再根据不同的请求参数进行不同的响应．
+    self.get_body_argument('参数名称',默认值)
+    提供默认值防止用户没有提供该参数时，产生４００错误．
+    self.get_body_arguments('参数名称')
+    以列表的形式返回参数值（们），即使用户没有提供该参数，
+    也不会产生４００错误，只会得到一个空列表．
+
+    RequestHandler中还有一个
+    get_argument()
+    get_arguments()
+    函数使用效果就是
+    get_query_argument()+get_body_argument()
+    get_query_arguments()+get_body_arguments()
+
+5. 课堂练习题：
+利用目前所学的知识，在首页面呈现一个登录表单收集用户名和密码．如果用户输入的用户名为＂abc＂，密码为"123"，在控制台上打印"用户信息正确"，否则打印"用户名或密码错误"
+
+６．从一个页面跳转到另一个页面：
+　　　self.redirect('/路径')
+   redirect跳转时采用的是get方式发起访问
+
+７．处理上传文件
+    HttpServerRequest,它封装了与请求相关的所有内容
+    利用HttpServerRequest对象的files属性处理上传的文件
+    {'avatar':[{'content_type':＇image/jpeg＇,
+    'body':文件的二进制格式,
+    'filename':上传者本地图像名称},
+    {},{}]}
+
+day2
+1. 框架作者会使用钩子方法将框架代码与使用者的代码结合在一起．
+　　　钩子方法属于让使用者选择性重写的内容．
+　　　如果重写，就调用重写的内容．
+　　　如果不重写，也不会影响代码的整体执行效果．
+
+２．Tornado的RequestHandler中常用的钩子方法：
+　　　　
+　　　　set_default_headers:用来设置自定义响应头
+    
+    initialize:在get/post方法执行前进行初始化操作(比如获取一些资源)
+    
+    get/post:生成真正的响应内容
+    
+    on_finish:在get/post方法执行后，进行资源的释放
+
+３．服务器的响应内容最常见的两种：
+　　　
+　　　　一种是ＪＳＯＮ字符串
+
+　　　　另外一种是ＨＴＭＬ页面
+
+４．Ｔｏｒｎａｄｏ如何以ＪＳＯＮ字符串作为响应内容
+　　
+第一种方式： 构建一个字典，直接把字典写入缓冲区
+　　　　　　　　　　　　finish方法会帮助我们把字典转为正确ＪＳＯＮ字符串
+　　　　　　　　　　　　推回到客户端/浏览器
+
+第二种方式： 构建一个字典
+　　　　　　　　　　　利用json.dumps将字典转为一个纯字符串
+　　　　　　　　　　　手动设置响应头
+　　　　　　　　　　　self.set_header('Content-Type',
+                'application/json;charset=UTF-8')
+            设置完毕后把纯字符串写入到缓冲区
+
+５．Tornado如何以真正的ＨＴＭＬ页面作为响应内容
+第一步：创建一个存放模板/页面的文件夹．
+
+第二步:　在第一步创建的文件夹中，创建作为响应的HTML文件
+
+第三步：配置第一步所创建的文件夹．
+　　　　　　　找到Application，传入第二个参数:
+       template_path='第一步创建的文件夹名称'
+
+第四步:　使用第二步创建的ＨＴＭＬ文件作为响应
+       self.render(＇文件名称.html＇)
+       render文法实际就是根据第三步配置的路径找到HTML文件，
+       将ＨＴＭＬ文件内容转为一个纯的字符串，写入缓冲区
+       等待finish方法将缓冲区中的字符串推回客户端/浏览器
+
+6. 在模板中使用变量，算术表达式，函数表达式
+
+6.1 变量的使用方式：{{变量名}}，例如{{a}} {{b}}
+
+6.2 算术表达式：{{表达式}}，例如：{{a+b}} {{a-b}}
+
+6.3 函数表达式：{{函数名(参数列表)}}
+　　　　
+　　　　例如：内置函数表达式{{len('abc')}}
+　　　　　　　　　
+　　　　　　　　　自定义函数表达式{{myfunc(a,b)}}
+    
+如果在模板使用了上述的变量，算术表达式或函数表达式，必须提前告知render方法，变量的值以及自定义函数所对应的具体函数
+
+例如：self.render('模板',a=100,b=150,myfunc=self.xxx)
+
+7. 在模板中使用语句．
+
+7.1 循环语句 {%for 变量　in 可迭代内容%}．．．{%end%}
+
+7.2 分支语句　{%if 条件%}...{%else%}...{%end%}
+
+如果在模板使用了for语句，必须提前告知render方法，可迭代内容的值．
+
+８．静态资源的使用
+8.1 常见的静态资源包括：图片，ｊｓ，ｃｓｓ
+8.2 使用静态资源的步骤：
+第一步，新建存放静态资源的文件夹．静态资源文件夹下可以继续新建子文件夹，把不同类型的静态资源文件存入不同的子文件夹中．
+
+第二步，进行静态资源的配置．给Application继续添加参数
+       static_path='静态资源文件夹的名称'
+
+第三步，需要使用静态资源时，要遵照如下格式：
+　　　　　　　static/子文件夹名称/具体静态资源文件的名称
+    　　　例如：static/images/default_avatar.png
+
+9. 如何学习网络框架
+学习３个核心知识：
+１．路由的配置　
+２．模板的使用　
+３．静态资源的使用
+
+晚上自习：
+1.　自学flask ,bottle
+2. 回忆一下数据库的相关知识
+3．　预习urllib.request，requests
+
+
+

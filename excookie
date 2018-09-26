@@ -74,14 +74,62 @@ session：
 
 
 
+夏令时时间与UTC时间差(秒为单位)
+time.altzone
+本地区时间与UTC时间差(秒为单位)
+time.timezone
+ex: time.altzone=time.timezone
+
+CST为中国标准时间
+time.sleep(secs) 	让程序按给定秒数的浮点数睡眠一段时间
+
+time.time() 	返回从计算机元年至当前时间的秒数的浮点数(UTC时间为准)
+time.mktime(tuple) 	将本地日期时间元组转换为新纪元秒数时间(UTC为准)
+t = time.mktime((y, m, d, 0, 0, 0, 0, 0, 0))
+
+
+time.asctime([tuple]) 	将时间元组转换为日期时间字符串
+ex:t.asctime()			#'Thu Aug 30 00:08:48 2018'
+
+time.gmtime([secs]) 	将给秒数转换为用UTC表达的时间元组
+ex:   type(t.gmtime())		#<class 'time.struct_time'>
+t.gmtime()
+#time.struct_time(tm_year=2018, tm_mon=8, tm_mday=29, tm_hour=16, tm_min=53, tm_sec=9, tm_wday=2, tm_yday=241, tm_isdst=0)
+
+也可截取片段t[0]
+
+time.localtime([secs]) 	将UTC秒数时间转换为日期元组（以本地时间为准)
+ex:t.localtime() 
+#time.struct_time(tm_year=2018, tm_mon=8, tm_mday=30, tm_hour=0, tm_min=10, tm_sec=31, tm_wday=3, tm_yday=242, tm_isdst=0)
+可以截取片段:
+ex: t[3:6];  t[3], t[4], t[5]
+
+type(t.localtime())
+#<class 'time.struct_time'>
+
+
+等于变量后,可以切片,索引
 
 
 
 
+随机数
 
+R.random() 	返回一个[0, 1) 之间的随机实数
+R.uniform(a,b) 	返回[a,b) 区间内的随机实数
+random.randint(a,b)			用于生成一个指定范围内的整数
+R.randrange([start,] stop[, step]) 	返回range(start,stop,step)中的随机整数
 
+#seq:  字符串，列表，元组
+R.choice(sql) 	从序列中返回随意一个元素
+R.sample(seq,n) 	从序列中选择n个随机且不重复的元素 返回list
 
+#seq：列表
+洗牌:list1=R.shuffle(seq [, random]) 	随机指定序列的顺序(乱序序列）
 
+p = ['A' , 'B', 'C', 'D', 'E' ]
+random.shuffle(p)  
+print (p)  
 
 
 

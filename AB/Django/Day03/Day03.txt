@@ -1,0 +1,172 @@
+1、模板
+	1、静态文件
+		1、什么是静态文件
+			不需要嵌入服务器端内容的文件，一律都是静态文件，如：图片，css，js，html  都是静态文件
+		2、Django中静态文件的处理
+			需要在settings.py 中设置静态文件的访问路径和存储路径
+			1、指定静态文件的访问路径
+				STATIC_URL=/static/
+
+				http://localhost:8000/static/***
+				作用：
+					当访问路径是 http://localhost:8000/static/*** 一律到静态文件存储路径中去搜索静态文件
+			2、定义静态文件的存储路径
+				STATICFILES_DIRS
+
+				STATICFILES_DIRS=(BASE_DIR,目录名)
+				允许在项目中以及所有的应用中都创建对应名称得到目录
+
+				STATICIFILES_DIRS=(BASE_DIR,static)(元组或列表)
+				在项目的 static 目录中以及所有应用中的 static 目录中 存放的都是静态文件
+		3、访问静态文件
+			1、直接使用 localhost:8000/static/***/***
+				<img src="/static/****/***">
+			2、使用  {% static %} 访问静态资源
+				1、在模板的最顶层增加
+					{% load static %}
+				2、在使用静态文件时
+					{%static%}表示的就是静态文件的访问路径
+					<img src="{% static 'img/huiyuan.jpg'%}">
+	2、模板的继承
+		1、什么是模板的继承
+			当多个模板(网页)具备大部分相同的内容时，就可以使用继承的方式，将相同的东西继承过来，再增加/修改属于自己的内容即可
+		2、模板继承的语法
+			1、在 父模板 中
+				必须要标识出来哪些内容是允许被修改的
+				标签：
+					{% block 名称 %}
+						父模板中正常显示的东西
+					{% endblock %}
+				block 的作用：
+					定义 在字模板中 允许被修改的地方
+					1、在父模板中，正常显示
+					2、在子模板中，如果不修改block内容的话则按照父模板中的内容正常显示
+			2、在子模板中 
+				1、在最顶层增加一句话
+					{% extends '父模板的名称' %}
+				2、增加 block 标签，改写属于自己的内容
+					{% block 名称%}
+						子模板中的内容
+					{% endblock %}
+
+					子模板中的block会覆盖父模板中同名的block内容
+	3、url() 的 name 参数
+		url(regex,views,kwargs=None,name=None)
+		name:允许为当前的url设置别名，在Template中允许使用别名找到对应的 url
+		语法：
+			url(regex,views,name="别名")
+			在 模板中 使用 url 的别名
+			{% url '别名'%}
+			
+			url(r'^admin_login/$',login_views,name="login")
+
+			<a href="{% url 'login' %}">管理员登录</a>
+2、模型 - Model
+	1、什么是模型
+		模型，是根据数据库中数据表的结构来创建出来的class。每一张表到编程语言中就是一个class，表中的每一个列，
+      到编程语言中就是class的一个属性。并且在模型中还可以完成对数据的CRUD操作
+	2、创建和使用模型 - ORM
+		1、什么是ORM
+			ORM:Object Relational Mapping
+			中文：对象关系映射
+			简称：ORM，O/RM，O/R Mapping
+
+			三大特征：
+				1、数据表 到 类(class)的映射
+					将数据表 自动 生成一个 class 类
+					同时也允许将一个class类 自动生成数据库中的一张表
+				2、数据类型的映射
+					允许将表中的字段的数据类型 自动 映射成编程语言中对应的数据类型
+
+					也允许将编程语言的数据类型 自动 映射成 表中的字段的数据类型
+
+				3、关系映射
+					在编程语言中允许将表与表之间的关系映射出来
+
+					表与表之间的关系也可以自动映射到编程语言的class 中
+
+					数据库表中的关联关系：
+					一对一，一对多，多对多
+		2、ORM的优点
+			1、提高了开发的效率，能够自动完成表到对象的映射
+			2、不用SQL编码，也能够完成对数据的CRUD操作，可以省略庞大的数据访问层
+	3、创建 和 配置数据库
+		1、创建数据库(支持中文)
+			create database 数据库名 default charset utf8 collate utf8_general_ci;
+
+			创建数据库：webdb
+		2、配置数据库(Django)
+			在 settings.py 中配置数据库的信息
+			DATABASES = {
+				'default':{
+					'ENGINE':'... ...',
+					'NAME':'...',
+				}
+			}
+			连接MySQL的配置如下：
+				1、ENGINE : 引擎
+					django.db.backends.mysql
+				2、NAME : 要连接到的数据库名
+				3、USER:登录到数据库的用户名，一般为root
+				4、PASSWORD:登录到数据库的密码
+				5、HOST:要连接的主机，本机的话 localhost 或 127.0.0.1
+				6、PORT:指定端口，MYSQL的是 3306
+			注意：
+				Django中连接mysql的话依赖 pymysql
+				安装：sudo pip3 install pymysql==0.7.11
+
+				在主目录中 __init__.py
+					import pymysql
+					pymysql.install_as_MySQLdb()
+	4、数据库的同步操作
+		1、./manage.py makemigrations
+			作用：将每个应用下的 models.py 文件生成一个数据库的中间文件，并保存在migrations目录中
+		2、./manage.py migrate
+			作用：将每个应用下的 migrations 目录中的中间文件同步到数据库中
+	5、编写Models
+		1、注意
+			1、Models中的每个class都称为 模型类(Model类)，实体类(Entry/Entity)
+			2、Models中的每个模型类，必须继承自 models.Model
+		2、编写模型类
+			from django.db import models
+
+			class Entry(models.Model):
+				属性1 = models.字段类型(字段选项)
+
+			举个例子：
+				#创建一个 Publisher 模型类
+				#表示出版社信息，并包含以下属性
+				#1. name:表示出版社名称
+				#2.address:表示出版社地址
+				#3.city:表示出版社所在城市
+				#4.country:表示出版社所在国家
+				#5.website:表示出版社的网址
+				
+				class Publisher(models.Model):
+					name = models.CharField(max_length=30)
+					address=models.CharField(max_length=50)
+					... ...
+					website=models.URLField()
+		
+			1、字段类型(Field Type)
+			2、字段选项(Field Options)
+
+			练习：
+				在models.py 中追加2个class
+					1、Author - 作者
+						1、name - 姓名
+						2、age - 年龄
+						3、email - 邮箱(允许为空)
+					2、Book - 图书
+						1、title - 书名
+						2、publicate_date - 出版时间
+
+
+
+
+
+
+
+
+
+

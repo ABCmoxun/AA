@@ -1,0 +1,296 @@
+day01回顾:
+目录树
+  文件
+  文件夹
+
+Unix/Linux根 
+  /
+路径:
+  绝对路径
+    '/' 开头
+  相对路径
+    文件名(a.txt)
+    . 开头当前文件夹 (./a.txt 或 ls .)
+    .. 开头上一级文件夹
+    ~ 用户主目录(家目录)
+命令:
+   ls 查看文件或文件夹内的文件
+      ls -la /home/tarena
+   pwd 查看当前工作目录的位置
+   cd  切换当前工作路径
+   mkdir 创建文件夹
+   rmdir 删除空的文件夹
+   touch 创建文件和修改文件的修改时间
+   rm  删除文件或文件夹
+      常用选项:
+         -r
+         -f
+         -i
+
+day02笔记:
+
+help帮助选项
+  选项:
+    --help
+  作用：
+    查看一个命令有哪儿些选项,这些选项都是做什么的
+  示例：
+    ls --help
+
+man 命令帮助
+  格式
+    man linux/UNIX命令名
+  作用:
+    查看命令所对应的帮助文档(手册)
+  示例:
+    man ls
+    man mkdir
+  说明：
+    退出键: q
+
+Tab 键
+  作用：
+    自动补全命令或文件路径
+
+history 命令
+  作用：
+    把以前键入的历史命令都列出来
+  注:
+    在终端$提示符下,用上下键可以翻出历史命令
+
+通配符
+  * 代表0个，1个或多个任意字符
+  ? 代表1个任意字符
+  示例：
+    有如下文件:
+      a ab ac abc aabb bc cd
+    a* 代表所有以a开头的文件
+    a*b 代表所有以a开头，以b结尾的概念
+    a?  代表 ab ac
+    ?c  代表 ac bc
+    ...  
+
+练习：
+  1. 创建文件夹myfiles
+  2. 在myfiles文件夹内创建文件：
+    a.mp3 ab.txt ac.mp3 abc.txt aabb.mp3 bc.txt cd.mp3
+  3. 列出所有以.mp3结尾的文件
+  4. 删除.之前只有一个字符的文件
+  5. 列出含有c这个字符的文件
+  6. 删除myfiles文件内所有的mp3文件
+
+
+文本编辑器
+  sublime text 3
+  记事本
+  vi
+  notepad++
+
+sublime text 文本编辑器
+启动命令:
+  subl<回车>
+  subl 文件名或文件夹名<回车>
+
+sublime 的快捷操作:
+  1. 打开和隐藏 侧边栏
+    view->Side Bar -> show/Hide Side Bar  
+    快捷键:
+       ctrl + k  b
+    注： 只有打开文件夹时才有侧边栏
+  2. 字体的放大缩小:
+     ctrl + 鼠标滑轮
+     快捷键:
+        ctrl + '+'/'-'
+  3. 创建和取消多个光标
+    ctrl + 鼠标左键点击 创建多个光标
+    ESC 键取消多个光标
+  4. 比量多选相同的选择块
+     ctrl + d
+  5. 注释：
+     ctrl + /
+  6. 剪切 ctrl + x
+     复制 ctrl + c
+     粘帖 ctrl + v
+  7. 交替换行
+     ctrl + shift + 上下键
+  8. 撤销undo/重做redo
+    ctrl + z
+    ctrl + y
+  9. 保存文件(重载)：
+    ctrl + s
+
+cat 命令:
+  作用：
+    将文本文件的内容作为标准输出显示
+  格式:
+    cat 文件名1 文件名2 ...
+  示例:
+    cat day02.txt
+
+cp 命令:
+  作用：
+    复制文件或文件夹
+  格式:
+    cp [选项] 源文件或文件夹 目标文件或文件夹
+  常用选项:
+    -a 复制文件夹及其内部的内容
+
+mv 命令(move):
+  作用：
+    文件搬移或者更名
+  格式:
+    mv 源文件或文件夹 目的文件或文件夹
+
+find 命令:
+  作用：
+    根据文件名称等信息查找指定的文件
+  常用格式:
+    find 路径 -name "文件名"
+  示例：
+    find / -name "day01.txt"
+    find ~ -name "day01.txt"
+    find /home/tarena/aid1803 -name "*.txt"
+
+grep 命令:
+  作用：
+    查找文件中相应的内容及文本信息
+  格式:
+    grep "内容" [选项] 文件名或文件夹
+  常用选项:
+    -n     显示行号
+    -r     递归搜索文件夹内的文件
+
+
+终止程序(让程序终止运行)：
+  ctrl + c 
+
+练习：
+  1. 查找 gzip 和 tar 这两个文件在什么位置
+     find / -name "gzip"
+      find / -name "tar"
+  2. 查找 /etc 文件夹下的哪儿些文件里含有'tarena' 这个内容
+      grep "tarena" -nr /etc
+  3. 将 /etc/group 文件复制到 当前文件夹
+      cp /etc/group .
+  4. 将 /etc/passwd 文件复制到当前文件夹并改名为:
+       "系统帐户管理配置文件.txt"
+      cp /etc/passwd 系统帐户 管理配置文件.txt
+
+gzip命令:
+  作用：
+    用zip无损数据压缩算法对文件进行压缩，生成压缩后的文件
+  格式:
+    gzip 文件名
+  示例:
+      gzip testgzip.txt
+      ls -l testgzip.txt.gz
+  注： .gz文件是用gzip压缩后的文件    
+
+gunzip 命令
+  作用：
+    解压缩 .gz 文件
+  格式
+    gunzip 文件名(.gz文件)
+  示例:
+    gunzip testgzip.txt.gz
+
+tar 命令:
+  作用：
+    对文件或文件夹进行打包和解包的操作
+  格式:
+    tar [选项] 文件名或路径
+
+  常用选项:
+    -c         创建包(打包)
+    -x         解包
+    -f 文件名   操作的文件名
+    -v         显示操作的文件细节
+    -z         用gzip/gunzip对包进行压缩和解压缩（注意顺序）
+  注： tar打包的文件后缀是 .tar
+  示例：
+    # 将day02打包为 day02.tar文件但不压缩
+      tar -cvf day02.tar day02
+    # 解包 day02.tar
+      tar -xvf day02.tar
+    # 以下将打包和压缩的工作一起进行
+      tar -czvf day02.tar.gz day02
+    # 解压缩一个.tar.gz 结尾的tar包
+      tar -xzvf day02.tar.gz(z指令不能放在f指令后面) 可以直接使用：tar -xvf day02.tar.gz
+
+
+文件的权限管理及命令
+# 查看文件权限
+  ls -l
+
+文件的权限类型:
+  r 读权限
+     - 具有读取文件内容的权限
+  w 写权限
+     - 具有新增，修改，删除文件内容的权限
+  x 执行权限
+     - 具有执行文件的权限
+  - 无权限
+
+权限的分组:
+  用户权限(user)  组权限(group)  其它(other)
+    rw-              r--         ---
+
+最高权限:
+  rwxrwxrwx
+最低权限:
+  ---------
+
+
+chmod 命令
+  作用：
+    用来修改文件权限
+  格式:
+    chmod 权限 文件名/文件夹名
+  权限:
+    u 用户(user)
+    g 同组用户(group)
+    o 其它用户(other)
+    a 所有用户(all)
+    + 加权限
+    - 去除权限
+  示例：
+    chmod u+r   a.txt
+    chmod o-rwx a.txt
+
+输出重定向
+  输出分两种:
+    1. 标准输出
+    2. 标准错误输出
+
+  标准输出重定向
+    >   将一个命令的标准输出重定向到指定文件
+    >>  将一个命令的标准输出追加到指定文件末尾
+  例:
+    find /etc -name "group" > output.txt
+
+标准错误输出重定向:
+  2>   将一个命令的错误信息重定向到指定文件
+  2>>  将一个命令的错误信息追加到指定文件
+
+重定向所有输出:
+  &>
+  &>>
+  作用：
+    将所有输出重定向到一个文件中
+
+
+/dev/null 文件:
+  写入到此文件的内容全部被丢掉
+  示例:
+    find / -name "gzip" 2> /dev/null
+
+
+clear 命令:
+  作用:
+    清屏
+  快捷键:
+    ctrl + l
+
+
+
+

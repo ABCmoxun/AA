@@ -1,0 +1,144 @@
+
+
+day4--pm
+
+selenium
+安装在linux中
+sudo pip3 install selenium
+在anacoda中安装
+conda install selenium
+还需安装浏览器的selenium 驱动
+搜索: selenium Chrome 驱动;selenium FireFox 驱动
+下载文件，文件与解释器文件在同一个目录下 
+
+form selenium import webdriver
+brower1=webdriver.Chrome()
+brower2=webdriver.FireFox()
+
+访问网页
+brower1.get(url)
+
+查找标签
+通过id，class，xpath，name
+driver.find_elment_by_id('').send_keys('')
+# driver.find_elment_by_classname('').send_keys('')
+# driver.find_elment_by_name('').send_keys('')
+# driver.find_elment_by_xpath('').send_keys('')
+点击事件
+driver.find_elment_by_id('').click()
+
+滚动屏幕
+execute.script()
+ex: driver.execute.script('window.scrript(0,1500)')  #x移动0，y移动1500像素
+移动到屏幕底端
+	driver.execute.script('window.scrript(0,document.body.scrollHeight)')
+注意加载时间
+
+获取网页信息(string)
+  driver.page_source
+current_url 获取当前的url
+get_cookie() 获取cookie信息
+save_sreenshot()截屏
+
+
+在selenium中得到属性和文本
+browser
+get_attribute(name)
+该元素name属性的值
+text
+
+inputID.clear()清空框格
+html=driver.page_source
+
+
+
+
+
+
+
+退出并关闭浏览器
+driver.quit()
+driver.close()
+
+模拟登录
+使用cookie登录
+修改headers的字典参数
+使用cookieJar来管理
+使用cookieJar有两个网址转换
+
+使用cookie信息只有一个网页
+
+
+
+日志
+import logging
+import sys
+创建日志实例对象
+
+logger=logging.getLogger('name1')
+#定制日志格式
+formatter=logging.Formatter('%(asctime)s%(levelname)\
+            s%(message)s')
+
+	#日志的输出方式:文本日志，终端日志
+file_handler=logging.FileHandler('日志保存名路径文件')
+#绑定日志输出格式
+file_handler.setFormatter(formatter)
+
+console_handler=logging.StreamHandler(sys.stdout)
+console_handler.setFormatter(formatter)
+
+#日志的级别，比它高的输出
+logger.setLevel(logging.DEBUG)
+
+#上升日志错误
+logger.critical('重大错误')
+
+#把文件日志和终端日志添加到日志处理器中
+logger.addHandler(file_handler)
+logger.addHandler(console_handler)
+
+#当不在使用这个日志handler时，记得remove
+logger.removeHandler(file_handler)
+logger.removeHandler(console_handler)
+
+
+----------
+日志级别
+设置日志级别，级别低于日志级别不显示
+CRITICAL 重大错误
+ERROR	错误
+WARNING	警告错误
+INFO	输入错误	#一般用
+DEBUG	bug错误  #调用
+NOTSET 没有设置
+
+上升日志错误
+obj.critical('错误信息')
+obj.error('错误信息')
+obj.warning('错误信息')
+obj.debug('错误信息')
+
+一般搭配try...except使用
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

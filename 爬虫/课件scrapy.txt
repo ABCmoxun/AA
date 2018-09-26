@@ -1,3 +1,5 @@
+
+
 去重的操作：
 	已爬队列，当前这个页面处理时需要在已爬队列中
 做一次去重；
@@ -135,7 +137,8 @@ Scrapy-Redis能够很方便的实现Scrapy的分布式爬虫框架；
 1）作业：完善tencentSpider，把六种数据全部获取到；
 
 
-
+ with open("xx.txt", 'a', encoding="utf-8") as f:
+        f.write(json.dumps(item, ensure_ascii=False)+'\n')
 
 
 

@@ -52,3 +52,7 @@ responsemyRenren = opener.open("http://i.baidu.com/")
 # with open("myRenrenFromCookieJar.html","wb") as f:
 #     f.write(responsemyRenren.read())
 print(responsemyRenren.read().decode('utf-8'))
+
+
+
+

@@ -1,0 +1,270 @@
+day13回顾:
+模块
+  time
+  math
+  sys
+    sys.path  # 模块的搜索路径的列表
+    sys.version
+    sys.version_info
+    sys.exit()
+  random
+自定义模块
+  .py结尾
+
+模块的搜索顺序
+  1. 当前路径
+  2. sys.path
+  3. 内建模块
+
+    编程       执行
+.py ---> .pyc --->  python3
+
+模块的文档字符串
+   __doc__ 属性
+
+__name__属性
+作用：
+  1.　记录模块名
+　　2.　用来判断是否是主模块
+
+__all__ 列表:
+  作用:
+    from xxxx import * 时，只导入__all__列表里的属性
+
+隐藏属性:
+  指以 '_'开头的属性是隐藏属性，在用from xxxx import * 不被导入
+
+
+包 package
+  命名包：文件夹需要 __init__.py
+
+import xxxx.yyyy   # 导入包
+import 模块名  # 导入模块
+
+day14 笔记:
+包(模块包) package
+　　包是将模块以文件夹的组织形式进行分组管理的方法
+  作用:
+    1. 将一系列模块进行分类管理，有利于防止命名冲突
+    2. 可以在需要时加载一个或部分模块而不是全部模块
+  包示例:
+    mypack/
+        __init__.py
+        menu.py
+        games/
+            __init__.py
+            contra.py      # 魂斗罗
+            supermario.py  # 超级玛丽
+            tanks.py       # 坦克大战
+        office/
+            __init__.py
+            excel.py
+            word.py
+            powerpoint.py
+　　包的导入语法:
+    import 包名 [as 包别名]
+    import 包名.模块名 [as 模块新名]
+    import 包名.子包名.模块名 [as　模块新名]
+
+    from 包名 import 模块名 as 模块新名
+    from 包名.子包名 import 模块名 [as 模块新名]
+    from 包名.子包名.模块名 import 属性名[as 属性新名]
+
+    from 包名 import *
+    from 包名.模块名 import *
+
+__init__.py 文件 
+  是常规包内必须存在的文件,__init__.py会在导入包时被自动调用
+  作用：
+    1. 编写此包的内容
+    2. 在内部添加包的文档字符串
+    3. 在__init__.py 文件内可以加载此包所依懒的其它模块
+
+示例见:
+  code/mypack/__init__.py
+
+包的__all__列表
+  作用：
+    用来记录此包中有哪儿些子包或模块需要导入
+    当用from 包 import * 语句导入时，只查 找__all__中的模块或子包
+  说明:
+    __all__列表只在from xxx import *语句时起作用
+
+说明：
+  当子包或子包内的模块被导入时，上一层的包也会被先导入
+  例如:
+  import mypack.games.contra
+    # 实质会先导入mypack,再导入games,再导入contra
+
+包的相对导入:
+  包的相对导入是指包内的模块的相互导入
+
+语法:
+  from 相对路径包或模块 import 属性或模块名
+  或 
+  from 相对路径包或模块 import *
+
+相对路径:
+  在 from xxxx import 语句中，xxxx 部分可以使用相对路径
+  . 代表当前目录
+  .. 代表上一级目录
+  ... 代表上二级目录
+  .... 以此类推
+  注： 
+    1. 相对导入时不能超出包的外部
+    2. 相的导入要避免循环导入
+
+
+异常(基础)  exception
+什么是错误
+  错误是指由于逻辑或语法等导致一个程序无法正常执行的问题
+
+错误的特点：
+  有些错误无法预知
+
+什么是异常
+  异常是程序出错时标识的一种状态
+  当异常发生时，程序不会再向下执行，而转去调用此函数的地方待处理此错误并恢复为正常状态
+
+异常的作用：
+  通知上层调用者有错误产生需要处理
+  用作信号
+
+try语句的两种语法:
+  try-except 语句
+  try-finally 语句
+
+try-except语句的语法
+  try:
+      可能触发异常的语句
+  except 错误类型1 [as 变量1]:
+      异常处理语句1
+  except 错误类型2 [as 变量2]:
+      异常处理语句2
+  except (错误类型3, 错误类型4,...):
+      异常处理语句3
+  ...
+  except:
+      异常处理语句other
+  else:
+      末发生异常的语句
+  finally:
+      最终语句
+作用：
+  偿试捕获异常,将程序转为正常状态并继续执行
+
+示例见:
+  try_except1.py
+  try_except2.py
+  try_except3.py
+  try_except4.py
+  try_except_else.py
+  try_except_else_finally.py
+
+练习：
+  写一个函数 get_score() 来获取用户输入的学生成绩(0~100的整数),如果输入出现错误，则此函数返回0,如果用户输入的数是0~100之间的数，返回这个数
+
+  def get_score():
+      ...
+
+  score = get_score()
+  print('学生的成绩是:', score)
+
+try-except语句语法说明：
+  1. as 子句是用于绑定错误对象的变量，可以省略
+  2. except 子句可以有一个或多个，但至少要有一个
+  3. else子句最多只能有一个,也可以省略
+  4. finally子句最多只能有一个，也可以省略
+
+
+
+try-finally 语句
+语法:
+  try:
+      可能触发异常的语句
+  finally:
+      最终语句
+
+语法说明：
+  finally 子句不可以省略
+  一定不存在except 子句
+
+作用：
+  通常用try-finally 语句来做触发异常时必须要处理的事件，无论异常是否发生，finally 子句都会被执行
+  注：
+    try-finally 语句不会改变程序的(正常/异常)状态
+
+
+raise 语句:
+  作用：
+    触发一个错误，让程序进入异常状态
+  语法:
+    raise 异常类型
+    或
+    raise 异常对象
+
+示例见：
+　　raise.py
+　　raise2.py
+
+assert 语句(断言语句)
+  语法
+    assert 真值表达式, 错误数据(通常是字符串)
+  作用:
+    当真值表达式为False时，用错误数据创建一个AssertionError类型的错误，并进入异常状态
+  等同于:
+    if 真值表达式 == False:
+        raise AssertionError(错误数据)
+
+示例见:
+  assert.py
+
+为什么要用异常处理机制:
+  在程序调用层数较深时，向主调函数传递错误信息需要层层的 return 返回比较麻烦，所以用异常处理机制
+
+示例:
+  以下代码见:
+    except1.py
+    except2.py
+
+def f1():
+    print("开始盖房子打地基...")
+    print("地基完工")
+
+def f2():
+    print("开始盖房子地面以上部分")
+    print("房子完工")
+
+def f3():
+    """第二承包商打人干活"""
+    f1()
+    f2()
+
+def build_house():
+    f3()
+
+build_house()
+
+
+练习：
+  1. 一个球从100米高度落下，每次落地后反弹高度为原高度的一半，再落下，
+    1) 写程序算出皮球从第10次落地后反弹高度是多少？
+    2) 球共经过多少米路径?
+
+  2. 打印九九乘法表:
+     1x1=1
+     1x2=2 2x2=4
+     1x3=3 2x3=6 3x3=9
+     .....
+     1x9=9 2x9=18 ........ 9x9=81
+
+  3. 分解质因数:
+     输入一个正整数，分解质因数:
+     如输入: 90 则打印:
+         90 = 2*3*3*5
+      (质因数是指最小能被原数整除的素数(不包含1))
+
+
+
+
+

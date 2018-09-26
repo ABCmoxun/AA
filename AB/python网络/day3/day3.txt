@@ -1,0 +1,123 @@
+前情回顾
+
+缓冲区
+粘包  tcp
+udp通信  recvfrom   sendto 
+广播
+http协议
+
+文件传输
+***********************************************
+
+tcp应用  http服务器
+
+1.接收http请求
+2.给出一定的响应
+
+
+IO  input  output
+在内存中存在数据交换的操作
+内存和磁盘交换  文件读写  打印
+内存和网络交换  recv  send
+
+IO密集型程序 ： 程序执行中执行大量的IO操作，而较少需要cpu运算 消耗cpu资源少，运行周期往往较长
+
+cpu密集型程序： 程序执行中需要大量的cpu运算，IO操作较少。占用cpu多
+
+
+IO分类 
+
+阻塞IO ：默认形态 是效率最低的一种IO
+
+阻塞 ： 因为等待某种条件达成再继续运行  
+				例如 accept recv input
+
+				处理IO事件的时候耗时较长也会产生阻塞
+				例如 文件的读写过程，网络数据的传输过程
+
+非阻塞IO ： 通过修改IO对象使其变为非阻塞状态（改变第一种阻塞形态）
+
+通常用循环不断判断阻塞条件，需要消耗更多cpu但是一定程度上提高了IO效率
+
+
+s.setblocking()
+功能 ： 将套接字设置的阻塞状态
+参数 ： bool 默认为True  设置为False则为非阻塞
+
+超时等待（检测）
+
+cookie
+
+更专业的打印异常信息
+import  traceback
+trancback.print_exc()
+
+s.settimeout()
+功能 ： 设置套接字的超时监测
+参数 ： 超时时间
+
+所谓超时监测即 对原本阻塞的函数进行设置，使其不再始终阻塞，而是阻塞等待一定时间后自动返回。在规定时间中如果正常结束阻塞则继续执行否则产生timeout异常
+select   join（）   wait
+
+IO多路复用
+
+定义 ： 同时监控多个IO事件，当哪个IO事件准备就绪就执行哪个IO事件，形成并发的效果
+
+import  select
+
+select ------> win   linux  unix
+poll  -----> linux、unix
+epoll
+
+r,w,x = select(rlist,wlist,xlist,[timeout])
+功能 ：监控IO事件，阻塞等待IO事件发生
+参数 ：rlist   列表  存放我们要监控等待处理的IO
+       wlist   列表  存放我们希望主动处理的IO
+	  xlist   列表  存放如果发生异常需要我们处理的		 
+	  timeout  数字  超时监测 默认一直阻塞
+
+
+返回值:  r  列表  rlist当中准备就绪的IO
+		 w  列表  wlist当中准备就绪的IO
+		 x  列表  xlist当中准备就绪的IO
+
+IO多路复用注意点：
+1. 在处理io过程中不应发生死循环（某个IO单独占有服务器）
+2. io多路复用是单进程程序，是一个并发程序
+3. io多路复用有较高的IO 执行效率
+
+
+poll
+1. 创建poll对象
+p = select.poll()
+
+2. 加入关注的IO
+p.register(s)
+p.unregister(s)  从关注IO中删除
+
+3. 使用poll函数监控
+events = p.poll()
+功能 ： 阻塞等待register的事件只要有任意准备就绪即返回
+返回值：events   [(fileno,event),(),()]
+
+4. 处理发生的IO事件
+poll io事件
+POLLIN  POLLOUT POLLUP   POLLERR POLLPRI  POLLVAL
+rlist   wlist   断开连接  xlist  紧急处理 无效数据
+
+s & POLLIN
+
+
+epoll
+
+* 效率上比poll和select稍微高
+* 只能用于linux  unix
+* 支持边缘触发  select  poll只支持水平触发
+
+
+作业 ： 
+复习tcp   udp  select三个代码能够自己完成
+
+
+
+

@@ -1,0 +1,60 @@
+threading并发服务器
+
+
+相比多进程服务器的优缺点：
+缺点： 1. 需要用到同步互斥
+       2. 可能受到GIL的影响，但是网络IO线程并发还是可以的
+优点： 资源消耗比较少
+
+
+使用模块 ： threading   socket 
+
+步骤
+1. 创建套接字  绑定  监听
+2. 接收客户端连接请求  创建新的线程
+3. 主线程继续接收下一个客户端连接请求，分支线程处理客户端事件
+4. 处理事件结束，退出线程，关闭套接字
+
+
+基于并发的HttpServer
+
+1.使用并发方案，有助于建立长连接
+2.用线程完成并发消耗更小资源
+3.将服务器功能封装为类
+4.静态网页放在一个专门的文件夹中管理
+5.使用不同的模块处理客户端请求，这些放在一个文件夹中
+
+技术实现 ：
+并发 ： 多线程
+server 类的设计 ：
+初始化 ： 将socket返回值变为属性 并且增加一系列其他属性
+
+服务器启动方法 ： 接受客户端连接请求，创建新的线程
+
+客户端处理函数 ： handleRrequest
+
+cookie：
+sys.path : 是一个列表，可以添加路径。该列表中的路径，对python下的所有环境可见
+__import__() : 参数为一个目录， 等同于import 导入
+
+
+使用集成模块完成网络并发
+
+python3 ---》 socketserver 模块
+
+进程tcp并发 'ForkingMixIn','TCPServer','StreamRequestHandler'
+
+进程udp并发
+'ForkingMixIn' 'UDPServer','DatagramRequestHandler',
+
+线程tcp并发
+'ThreadingMixIn' 'TCPServer','StreamRequestHandler'
+
+线程udp并发
+'ThreadingMixIn', 'UDPServer','DatagramRequestHandler',
+
+'ForkingTCPServer',
+ 'ForkingUDPServer',
+ 'ThreadingTCPServer',
+ 'ThreadingUDPServer',
+

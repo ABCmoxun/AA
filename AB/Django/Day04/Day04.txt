@@ -1,0 +1,209 @@
+
+1、模型
+	1、字段类型  和  字段选项
+		1、字段类型(Field Type)
+			1、BooleanField()
+			2、CharField()
+			3、DateField()
+			4、DateTimeField()
+			5、DecimalField()
+			6、EmailField() #存电子邮件 - varchar
+			7、FloatField()
+			8、ImageField() #存图片路径 - varchar
+				ImageField(upload_to='static/***/***')
+			9、IntergerField()
+			10、URLField()
+			11、TextField() #存大量文本数据 - text
+		2、字段选项(Field Option)
+			1、max_length
+				指定数据的最大长度
+				在CharField()必须要设置的选项
+			2、default
+				为当前字段指定默认值
+			3、null
+				指定当前字段是否允许为空，默认值是 false(不为空),
+	练习：
+		完善 FruitDay中的部分Models
+		1、Models ：商品类型，商品，用户
+		2、商品类型 - GoodsType
+			1、类型名称 - title
+			2、类型图片 - picture
+				默认上传至: static/upload/goodstype
+			3、类型描述 - desc
+		3、商品实体 - Goods
+			1、商品名称 - title
+			2、商品价格 - price(DecimalField)
+			3、商品规格 - spec
+			4、商品图片 - picture
+				默认上传至：static/upload/goods
+			5、销售状态 - isActive(默认值为True)
+		4、用户实体 - Users
+			1、电话号码 - uphone
+			2、密码 - upwd
+			3、电子邮件 - uemail
+			4、用户名 - uname
+			5、用户状态 - isActive，默认为True
+	2、数据的版本切换
+		1、./manage.py migrate
+			执行所有应用中最新版本的数据库中间文件
+		2、./manage.py migrate 应用名称 版本号
+			执行 应用中 版本号 对应的中间文件
+	3、通过数据库自动导出Models
+		./manage.py inspectdb > 文件名.py
+
+
+2、模型中的 CRUD
+	1、通过 ORM 向 DB 中增加数据
+		1、Entry.objects.create(属性=值,属性=值)
+			Entry：具体要操作的Model类
+
+			ex:
+				Author.objects.create(name='zsf',age=85)
+		2、创建一个 Models 对象，通过对象的 save() 完成增加
+			obj = Author(names='laoshe',age=65)
+			obj.save()
+
+			ex:obj.name='xxx',obj.phone='';
+			   obj.save()
+
+		3、使用字典构建对象，通过 save() 完成增加
+			dic = {
+				'属性1':'值1',
+				'属性2':'值2',
+			}
+			obj = Entry(**dic)
+			ex:obj = Book(**dic)
+			obj.save()
+		
+		
+		练习：
+			使用三种方式，分别向 Book,Publisher 中各增加三条数据
+	2、查询操作(重难点)
+		通过 Entry.objects 调用查询接口
+		1、基本查询操作
+			语法：all()
+			用法：Entry.objects.all()
+			返回：QuerySet(查询集类型数据,列表含字典类型)
+
+			ex:
+			Author.objects.all()
+			等同于：select * from index_author 
+			
+			返回结果：
+			<QuerySet [<Author: Author object>, <Author: Author object>, <Author: Author object>]>
+		
+		2、查询指定列
+			语法：values('列1','列2',...)
+			用法：Entry.objects.values('列1','列2',...)
+			返回：QuerySet
+
+			ex:
+				Author.objects.values('names','age')
+				等同于：select name,age from index_author
+			注意：
+				values()可以用在所有的返回查询结果集的方法的后面 
+
+				Author.objects.all().values('names','age')
+
+			<QuerySet [{'age': 65, 'names': 'ZhuZiqing'}, {'age': 68, 'names': 'laoshe'}, {'age': 59, 'names': 'MoYan'}]>
+		3、排序函数
+			语法：order_by('列1','列2')
+			用法：Entry.objects.order_by('-列1','列2')
+				默认的排序规则是升序
+				如果需要降序，则在列前添加一个 "-"
+			ex:
+				1、Author.objects.order_by('age')
+				2、Author.objects.all().order_by('-age');
+		4、对条件取反
+			语法：exclude()
+			用法：Entry.objects.exclude(条件)
+			ex:
+				1、Author.objects.exclude(id=3)
+					select * from author where not (id=3)
+				2、Author.objects.exclude(id=3,age=85)
+					select * from author where not (id=3 and age=85)
+		5、根据条件查询部分行数据(重难点)
+			方法：filter(参数)
+			用法：Entry.objects.filter(参数)
+			1、使用 Entry 中的属性作为查询参数
+				多个参数的话，使用 , 隔开，映射到sql语句上，是使用 and 来进行关联的
+				ex:
+					1、Author.objects.filter(id=1)
+						select * from author where id=1
+					2、Author.objects.filter(id=1,name='莫言')
+						select * from author where id=1 and name='莫言'
+			2、通过 Field Lookup(查询表达式)完成复杂条件的构建
+				查询表达式：每个查询表达式都是一个独立的查询条件，可以用在所有的有查询条件的位置处
+				1、__exact
+					作用：精确查询，等值判断
+					用法：Entry.objects.filter(属性__exact=值)
+					ex:
+						Author.objects.filter(id__exact=1)
+						select * from author where id=1
+				2、__contains
+					作用：筛选出属性中包含指定关键字的记录(模糊查询)
+					ex:
+						Author.objects.filter(names__contains='ao')
+						select * from author where names like '%ao%'
+				3、__lt
+					作用：筛选出属性值小于指定值的记录
+				4、__lte
+					作用：筛选出属性值小于等于指定值的记录
+				5、__gt
+					作用：筛选出属性值大于指定值的记录
+				6、__gte
+					作用：筛选出属性值大于等于指定值的记录
+				7、__startswith
+					作用：筛选出以指定关键字开始的记录
+				8、__endswith
+					作用：筛选出以指定关键结尾的记录
+		6、查询只返回一条数据
+			语法：get(条件)
+			用法：Entry.objects.get(查询条件/表达式)
+			注意：
+				该函数只适用于 返回一条记录时使用
+	3、修改数据
+		1、修改单个数据
+			1、通过 get() 得到要修改的实体对象(get方法只能获取一个数据)
+			2、通过实体对象的属性修改属性值
+			3、再通过实体对象的save()保存回数据库
+			ex:
+				au = Author.objects.get(id=1)
+				au.names = "老舍"
+				au.age = 45
+				au.save()
+
+		2、批量修改数据
+			调用查询结果集的 update() 完成批量修改
+			Entry.objects.all().update(属性=值,属性=值)
+
+			ex:
+				Author.objects.all().update(age=75)
+	4、删除数据
+		调用实体对象/查询结果集的 delete() 即可
+		1、删除单个对象
+			obj = Author.objects.get(id=1)
+			obj.delete()
+		2、删除多个对象
+			Author.objects.all().delete()
+		
+		练习：
+			完成删除操作
+			1、点击删除链接时，删除对应的数据
+				http://localhost:8000/04_delete/ID
+			2、在对应的视图中接收参数，并将对应的author删除
+
+		作业：
+			1、在查询列表的基础上完成下列操作
+				1、点击修改的时候，将该用户的信息显示在05_au.html上
+				2、每个数据都用文本框显示
+
+			2、改版删除操作
+				1、在 Author 实体中增加一个属性 isActive，默认值为 True
+				2、在查询列表中，点击删除时，将要删除的用户的isActive更改为False
+				3、查询所有数据的时候，只查询isActive为True的用户并显示在模板上
+
+
+
+
+
