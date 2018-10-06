@@ -1,1 +1,45 @@
+分布式爬虫
+安装
+pip install scrapy_redis
+已使用要求
+Python 2.7, 3.4 or 3.5
+Redis >= 2.8
+Scrapy >= 1.1
+redis-py >= 2.10
+
+
+在settings里的设置
+SCHEDULER = "scrapy_redis.scheduler.Scheduler"               #更改调度器
+DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"   #过滤已爬url
+SCHEDULER_PERSIST = True                                      #是否可以暂停
+
+
+保存url（一般不存）
+ITEM_PIPELINES = {
+    'scrapy_redis.pipelines.RedisPipeline': 300
+}
+
+
+
+REDIS_URL = 'redis://user:pass@hostname:9001'    #REDIS_URL = 'redis://root:passwd@127.0.0.1:6379' 
+或者
+#REDIS_HOST = 'localhost'      #REDIS_HOST = '127.0.0.1'
+#REDIS_PORT = 6379
+
+在demo.py文件中
+可以继承这类
+from scrapy_redis.spiders import RedisSpider
+class MySpider(RedisSpider)
+
+from scrapy.spiders import CrawlSpider     #建立项目使用    scrapy genspider pachongname  -t crawl  url
+class DmozSpider(CrawlSpider)
+
+
+from scrapy_redis.spiders import RedisCrawlSpider
+class MyCrawler(RedisCrawlSpider):
+
+
+
+
+
 
