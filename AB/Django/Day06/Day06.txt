@@ -49,7 +49,7 @@
 				结合 Publisher 和 Book 之间关系 ：
 					在 Publisher 中 增加了一个 book_set 属性
 
-				ex:
+				ex:(这里的book是指表名，不是字段名)
 					publisher=Publisher.objects.get(id=1)
 					books = publisher.book_set.all()
 	3、多对多(M:N)
