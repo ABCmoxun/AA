@@ -1,4 +1,11 @@
 
+将s='{'a':'1','b':'2'}'转化成字典
+三种方法
+1.eval(s)
+2.import json
+d=json.loads(s)
+3.import ast
+d=ast.literal_eval(s)
 
 exception(例外，异常)和BaseException(所有异常的基类)
 
@@ -130,12 +137,4 @@ R.sample(seq,n) 	从序列中选择n个随机且不重复的元素 返回list
 p = ['A' , 'B', 'C', 'D', 'E' ]
 random.shuffle(p)  
 print (p)  
-
-
-
-
-
-
-
-
 
