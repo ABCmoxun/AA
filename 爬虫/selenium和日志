@@ -11,13 +11,17 @@ conda install selenium
 还需安装浏览器的selenium 驱动
 搜索: selenium Chrome 驱动;selenium FireFox 驱动
 下载文件，文件与解释器文件在同一个目录下 
+
+搜索：chromediver版本
+在里面找可以找到的
+谷歌插件需要解压到//python/Scripts文件下。
+火狐需要解压到python_idle同目录
+
+
 谷歌无头浏览器：
 # options = webdriver.ChromeOptions()
 # options.adds_argument('--headless')
 # driver = webdriver.Chrome(chrome_options=options)
-搜索：chromediver版本
-在里面找可以找到的
-
 
 
 form selenium import webdriver
