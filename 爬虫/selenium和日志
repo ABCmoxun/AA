@@ -16,7 +16,8 @@ conda install selenium
 在里面找可以找到的
 谷歌插件需要解压到//python/Scripts文件下。
 火狐需要解压到python_idle同目录
-
+或者：path=r'xxx/chromedriver.exe'
+brower=webdriver.Chrome(executable_path=path)
 
 谷歌无头浏览器：
 # options = webdriver.ChromeOptions()
