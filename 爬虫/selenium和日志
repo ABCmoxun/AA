@@ -51,10 +51,9 @@ inputID.clear()清空框格
 html=driver.page_source
 
 
-
-
-
-
+可以得到cookie
+text=driver.page_source
+cookie = driver.get_cookies()
 
 退出并关闭浏览器
 driver.quit()
