@@ -3,6 +3,7 @@
 day4--pm
 
 selenium
+参考文档：https://selenium-python.readthedocs.io/index.html
 安装在linux中
 sudo pip3 install selenium
 在anacoda中安装
@@ -10,6 +11,14 @@ conda install selenium
 还需安装浏览器的selenium 驱动
 搜索: selenium Chrome 驱动;selenium FireFox 驱动
 下载文件，文件与解释器文件在同一个目录下 
+谷歌无头浏览器：
+# options = webdriver.ChromeOptions()
+# options.adds_argument('--headless')
+# driver = webdriver.Chrome(chrome_options=options)
+搜索：chromediver版本
+在里面找可以找到的
+
+
 
 form selenium import webdriver
 brower1=webdriver.Chrome()
