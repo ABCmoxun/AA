@@ -22,7 +22,7 @@ brower=webdriver.Chrome(executable_path=path)
 
 谷歌无头浏览器：
 # options = webdriver.ChromeOptions()
-# options.adds_argument('--headless')
+# options.add_argument('--headless')
 # driver = webdriver.Chrome(chrome_options=options)
 
 
