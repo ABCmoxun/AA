@@ -14,6 +14,7 @@ conda install selenium
 
 搜索：chromediver版本
 在里面找可以找到的
+下载网址：http://chromedriver.storage.googleapis.com/index.html
 谷歌插件需要解压到//python/Scripts文件下。
 火狐需要解压到python_idle同目录
 或者：path=r'xxx/chromedriver.exe'
@@ -67,6 +68,7 @@ html=driver.page_source
 
 可以得到cookie
 text=driver.page_source
+type(text)=str
 cookie = driver.get_cookies()
 
 退出并关闭浏览器
