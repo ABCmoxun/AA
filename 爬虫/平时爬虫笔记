@@ -99,7 +99,7 @@ root = etree.fromstring(xmlstr)
 -------------------------------
 
 html=etree.HTML(resp.text)
-tags=html.xpath('//*[@id="app"]/div/div/div')    #??多个为列表，一个为对象
+tags=html.xpath('//*[@id="app"]/div/div/div')    #列表，直接上[0].
 
 ！！！！！！
 查询信息
@@ -110,6 +110,7 @@ tags=html.xpath('//*[@id="app"]/div/div/div')    #??多个为列表，一个为�
 
 
 获取信息
+访问网址：http:httpbin.org/get网址
 tag/text()   #标签文本信息        #??可以list
 tag/@attr1   #得到标签属性信息 	#??可以list含元组
 ex:tag/@class		 tag/@id; tag/@href
@@ -241,7 +242,7 @@ headers = {}
 req= request.Request(url,headers=headers)
 response=request.urlopen(req,context=context)
 
-
+#------------------SSL
 requests---ssl
 r=requests.get(url,verify=False)
 代理设置
@@ -323,4 +324,4 @@ queue.popleft() 				# 队尾元素出队
 
 
 
-访问网址：http:httpbin.org/get网址
+
