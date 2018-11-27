@@ -131,10 +131,8 @@ ex:
   extract后会把selector对象转换成list类型了
   item['name'] = name[0]
 
-
 --------------------------------------------
 SOUP
-
 demo=resp.text      #响应是文本文件
 demo=resp.content   #响应是图片或视屏
 soup=BeautifulSoup(demo,'html.parser')
@@ -175,7 +173,6 @@ soup.find_all("a", attrs={"class": "class1"})
 soup.find_all("a", attrs={"class": "class1",'id':'id1'})
 soup.find_all("a", text="Elsie")
 soup.find_all(text=["Tillie", "Elsie", "Lacie"])
-
 
 --------------------------------------
 re模块
