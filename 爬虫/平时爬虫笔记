@@ -93,9 +93,15 @@ xpath
 
 from lxml import etree
 -------------------------
-!!!???不是很准确可以好好学下
-tag=etree.tostring(xmlstr)
-root = etree.fromstring(xmlstr)
+xpath('//div[contains(@class,'xx')]')
+！#主要用：html=etree.HTML(x),x可以使response对象的text（），和含标签的字符串（可以补全成html格式）
+xml=etree.XML(x)
+tag=etree.tostring(xx) xx可以为html和xml格式的字符串
+astr=etree.tostring(html,encoding=str,pretty_print=True)
+print(astr)
+
+root = etree.fromstring(xmlstr), fromstring不支持补全
+经xpath匹配得到为列表，列表元素为字符串，若想得到字典需要转换
 -------------------------------
 
 html=etree.HTML(resp.text)
@@ -285,7 +291,7 @@ kw={}
 kw=parse.urlencode(kw)
 fullurl = url+wd
 request.open(fullurl)
-请求头设置params(get),data(post),cookie()
+请求头设置  @!11  params(get),data(post),cookie()
 
 
 requests库的session
