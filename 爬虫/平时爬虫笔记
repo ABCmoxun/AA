@@ -130,6 +130,17 @@ ex:
   info = node.xpath('./p/text()').extract()
   extract后会把selector对象转换成list类型了
   item['name'] = name[0]
+ xpath('div[position()<3]')
+ 
+chrome插件：xpath helper
+firefox插件：xpath checker
+r=redis.Redis(host='127.0.0.1',port=6379,decode_responses=True)
+https://doc.scrapy.org/en/latest/topics/downloader-middleware.html#cookies-mw 
+保持cookie
+from scrapy.http.cookies import CookieJar 
+cookiejar = CookieJar()
+cookiejar.extract_cookies(response, response.request)
+meta={'cookiejar': cookiejar}
 
 --------------------------------------------
 SOUP
