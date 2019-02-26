@@ -60,6 +60,8 @@ import requests
 url='http://'
 resp=resquests.get(url,params,header)
 r=requests.post(url,data,headers)
+get提交数据：params=
+post提交数据：data=
 
 r.headers
 返回5个重要的
@@ -125,12 +127,17 @@ ex:tag/@class		 tag/@id; tag/@href
 for x in range(len(list)):
 
 ex:
-  name = node.xpath('./h3/text()').extract()
-  title = node.xpath('./h4/text()').extract()
-  info = node.xpath('./p/text()').extract()
+  name = node.xpath('./h3/text()')[0]
+  title = node.xpath('./h4/text()')[0]
+  info = node.xpath('./p/text()')[0]
   extract后会把selector对象转换成list类型了
   item['name'] = name[0]
  xpath('div[position()<3]')
+ 提取一个标签下的所有字符串
+ tags=html.xpth('//xx')
+ for atag in tags:
+ 	cont_str=atag.xpath('string(.)')
+ 
  
 chrome插件：xpath helper
 firefox插件：xpath checker
@@ -141,7 +148,6 @@ from scrapy.http.cookies import CookieJar
 cookiejar = CookieJar()
 cookiejar.extract_cookies(response, response.request)
 meta={'cookiejar': cookiejar}
-
 --------------------------------------------
 SOUP
 demo=resp.text      #响应是文本文件
@@ -214,6 +220,8 @@ f.write(json.dumps(dict1, ensure_ascii=False)+'\n')
 
 ------------------------
 网页不存在，是我们搜寻的内容
+
+
 kw={'wd':'python'}
 r=requests.get(url+'/s',params=kv)
 from  urllib  import parse
@@ -222,9 +230,6 @@ wd=parse.urlencode(wd)  #url encode 编码
 fullurl = url+wd
 网页已存在，我们查找的内容：
 url = url+str
-
-
-
 --------------------
 有道爬去内容
 from urllib import parse
@@ -317,8 +322,6 @@ pool=ThreadPool()
 pool.map(fun,list1)
 pool.join()
 pool.close()
-
-
 
 
 
