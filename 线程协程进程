@@ -1,5 +1,5 @@
 
-安装软件:		pip3  install  Package
+安装软件:  pip3  install  Package
 升级:	pip3 install --upgrade  Package
 卸载:	pip3 uninstall  Package
 
@@ -64,34 +64,50 @@ gr1.switch()
 t.daemon 属性
 默认 为False 主线程执行完毕不会影响分支线程的执行
     如果设置为True 则主线执行完毕其他线程也会终止
-t.isDaemon() : 判断 daemon属性是True or False 
+t.isDaemon(): 判断 daemon属性是True or False 
 设置方法：
-t.daemon = True 	或   	t.setDaemon(True)
+t.daemon = True 或 t.setDaemon(True)
 		
 函数
 import threading 
-obj=threading.Thread( target = fun,args = ())
+obj=threading.Thread(target = fun,args = ())
 t.start()  		#启动线程
 t.join(timeout)   #回收线程
 
 
 
+#------------
+进程池
+from multiprocessing import Pool 
+pool=Pool(n)	#进程数
+方法1： pool.apply_async( func，*args，**kwds) 
+功能： 异步方式将事件放入进程池执行
+参数： func ： 要执行的事件函数
+      args ： 同Process中args 给函数传参
+	  kwds ： 同Process中kwargs 给函数传参
+返回值 ： 返回一个对象 该对象可以通过get()方法得到func函数的返回值
+
+方法2：pool.apply() 
+用法和apply_async一样，只是需要顺序执行，一个事件结束在执行另一个事件
+
+方法3：pool.map(func,iter)
+功能 ： 类似于内建函数map 将第二个参数的迭代数传递个第一个参数的函数执行。同时兼容了使用进程池执行
+返回值： 返回func的返回值列表
+pool.close（） 
+功能 ： 关闭进程池，使其无法加入新的事件
+pool.join（）
+功能 ： 阻塞等待进程池退出 （当所有事件处理完毕后）
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+线程池：
+from multiprocessing.dummy import Pool as pl
+pool = pl(n)	#线程数
+# url列表收集
+all_url = []
+pool.map(func, all_url)
+pool.close()
+pool.join()
 
 
 
