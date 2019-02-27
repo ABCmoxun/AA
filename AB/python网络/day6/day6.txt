@@ -1,87 +1,86 @@
-ǰ��عˣ�
+前情回顾：
 waitpid 
-���������ӽ���
+创建二级子进程
 
-ע�����
-�ȸ��ݹ��ܼƻ�ģ�飬ȷ��������
-��������ܹ������
-ģ��ı�д ----�� ģ��Ĳ���
-����bug���߽����Ż�
-���۵��Ծ���
+注意事项：
+先根据功能计划模块，确定技术点
+做好整体架构的设计
+模块的编写 ----》 模块的测试
+发现bug或者进行优化
+积累调试经验
 
 multiprocessing 
-
-Process(name,target,args,kwargs) ---�� ���̶���p
+Process(name,target,args,kwargs) ---》 进程对象p
 p.pid  p.name  p.start()  p.join()  p.is_alive()
 p.daemon
 
-�ļ�����
+文件拷贝
 
-cookie ��
+cookie ：
 size = os.path.getsize('file')
-���ܣ���ȡһ���ļ��Ĵ�С
+功能：获取一个文件的大小
 
 ************************************************
-�����Լ��Ľ�����
+创建自己的进程类
 
 class Parent(object):
-    #�̶�������ϣ�������ʵ�ֺ�
-		def __call__():
-				run(1,2,3)
+    #固定方法，希望父类给实现好
+	def __call__():
+		run(1,2,3)
 		
-		def run(a,b,c):
-				pass 
+	def run(a,b,c):
+		pass 
 			
 class Child(Parent):
-		def __call__():
-				run(1,2,3)
+	def __call__():
+		run(1,2,3)
 
-		def run(a,b,c):
-		    ....
-				....
+	def run(a,b,c):
+		....
+		....
 
-����� 
-�ŵ� �� ���ж�������������Ч��
-        �ռ���������ݰ�ȫ����������
+多进程 
+优点 ： 并行多个任务，提高运行效率
+        空间独立，数据安全，创建方便
 
-ȱ�� �� ���̴������ٵĹ��������Ľ϶�ļ������Դ
+缺点 ： 进程创建销毁的过程中消耗较多的计算机资源
 
 
-���̳�
+进程池
 
-����ҪƵ���Ĵ���ɾ���϶���̵�����£����¼������Դ���Ĺ���
+在需要频繁的创建删除较多进程的情况下，导致计算机资源消耗过多
 
-���̳���δ��� 
-1. �������̳أ��ڳ��ڷ��������Ľ���
-2. ���¼�������̳صȴ�����
-3. ʹ�ý��̳��еĽ��̲��ϴ����¼�
-4. �����¼������󣬻��չرս��̳�
+进程池如何处理 
+1. 创建进程池，在池内放入适量的进程
+2. 将事件加入进程池等待队列
+3. 使用进程池中的进程不断处理事件
+4. 所有事件处理后，回收关闭进程池
 
 from multiprocessing import Pool 
 
 obj=Pool()
-����: �������̳�
-����:  processes: ָ�����̳��н�������
-����:  �õ����̳ض���
+功能: 创建进程池
+参数:  processes: 指定进程池中进程数量
+返回:  得到进程池对象
 
 pool.apply_async() 
-���� �� �첽��ʽ���¼�������̳�ִ��
-���� �� func �� Ҫִ�е��¼�����
-        args �� ͬProcess��args ����������
-				kwds �� ͬProcess��kwargs ����������
-����ֵ �� ����һ������ �ö������ͨ��get()�����õ�           func�����ķ���ֵ
+功能 ： 异步方式将事件放入进程池执行
+参数 ： func ： 要执行的事件函数
+        args ： 同Process中args 给函数传参
+		kwds ： 同Process中kwargs 给函数传参
+返回值 ： 返回一个对象 该对象可以通过get()方法得到func函数的返回值
 
-pool.close���� 
-���� �� �رս��̳أ�ʹ���޷������µ��¼�
-pool.join����
-���� �� �����ȴ����̳��˳� ���������¼�������Ϻ�
+pool.close（） 
+功能 ： 关闭进程池，使其无法加入新的事件
+pool.join（）
+功能 ： 阻塞等待进程池退出 （当所有事件处理完毕后）
 
 pool.apply() 
-�÷���apply_asyncһ����ֻ����Ҫ˳��ִ�У�һ���¼�������ִ����һ���¼�
+用法和apply_async一样，只是需要顺序执行，一个事件结束在执行另一个事件
 
 pool.map(func,iter)
-���� �� �������ڽ�����map ���ڶ��������ĵ��������ݸ���һ�������ĺ���ִ�С�ͬʱ������ʹ�ý��̳�ִ��
-����ֵ�� ����func�ķ���ֵ�б�
+功能 ： 类似于内建函数map 将第二个参数的迭代数传递个第一个参数的函数执行。同时兼容了使用进程池执行
+返回值： 返回func的返回值列表
 
 r = pool.map(fun,test)===>
 
@@ -91,147 +90,144 @@ for i in test:
 	r.append(res.get())
 
 
-���̼�ͨ��
+进程间通信
+磁盘交互： 1. 速度慢
+          2. 不安全
 
-���̽��� �� 1. �ٶ���
-            2. ����ȫ
+socket    本地套接字
+管道  消息队列  共享内存  信号   信号量  套接字
 
-socket    �����׽���
-�ܵ�  ��Ϣ����  �����ڴ�  �ź�   �ź���  �׽���
+管道通信  pipe
+在内存中开辟一块空间，对多个进程可见，通过管道，多进程进行通信
 
-�ܵ�ͨ��  pipe
-
-���ڴ��п���һ��ռ䣬�Զ�����̿ɼ���ͨ���ܵ�������̽���ͨ��
 
 multiprocessing --- > Pipe
-
-fd1,fd2 = Pipe��duplex = True��
-���� �� ����һ���ܵ�
-���� �� duplex Ĭ��ΪTrue  ��ʾ˫��ܵ�
-        ����ΪFalse ���ʾ����ܵ�
-����ֵ �� ���������ܵ������󣬱�ʾ�ܵ�������
-         �����˫��ܵ����������ɶ�д
-##���Ϊ����ܵ���fd1ֻ�ܶ���fd2ֻ��д
+fd1,fd2 = Pipe（duplex = True）
+功能 ： 创建一个管道
+参数 ： duplex 默认为True  表示双向管道
+        设置为False 则表示单向管道
+返回值 ： 返回两个管道流对象，表示管道的两端
+         如果是双向管道则连个均可读写
+##如果为单向管道则，fd1只能读，fd2只能写
 
 fd1.recv()
-���� �� ������Ϣ ��ÿ�ν���һ����
-���� �� ��
-����ֵ�� ���յ�����Ϣ
+功能 ： 接收消息 （每次接收一条）
+参数 ： 无
+返回值： 接收到的消息
 
-* ����ܵ�û����Ϣ������
+* 如果管道没有消息会阻塞
 
 fd2.send(data) 
-���� �� ������Ϣ  �������ַ������������� 
-������Ҫ���͵�����
+功能 ： 发送消息  可以是字符串或其他类型 
+参数：要发送的内容
 
-* ���û�н��ն���ܵ�����
+* 如果没有接收端则管道破裂
 
-��Ϣ���� 
-���� : �Ƚ��ȳ�
-���ڴ��п��ٶ���ģ�ͣ����������Ϣ���Ͽ�ӵ�ж��еĽ��̶����Դ�ȡ��Ϣ
+消息队列 
+队列 : 先进先出
+在内存中开辟队列模型，用来存放消息。认可拥有队列的进程都可以存取消息
 
-�������� 
-q = Queue��maxsize = 0��
-���� �� ����һ����Ϣ����
-���� �� maxsize Ĭ��Ϊ0 ��ʾ���пɴ����Ϣ���ڴ����
-				         > 0  ��ʾ��������Ŷ�������Ϣ
-����ֵ �� ������Ϣ���ж���
+创建队列 
+q = Queue（maxsize = 0）
+功能 ： 创建一个消息队列
+参数 ： maxsize 默认为0 表示队列可存放消息由内存而定
+				         > 0  表示队列最多存放多少条消息
+返回值 ： 返回消息队列对象
 
 q.put()  
-���� �� ������д����Ϣ 
-���� �� Ҫ�����Ϣ ���ַ��� ���� �б���
-* ��������ʱ������ 
+功能 ： 向队列中存放消息 
+参数 ： 要存的消息 （字符串 整数 列表）
+* 当队列满时会阻塞 
 
 q.full()
-�ж϶����Ƿ�Ϊ��  ������True
+判断队列是否为满  满返回True
 
 q.get()
-���� �� �������ȡ����Ϣ 
-����ֵ ��ȡ������Ϣ
-* �����п�ʱ������
+功能 ： 向队列中取出消息 
+返回值 ：取出的消息
+* 当队列空时会阻塞
 
 q.empty()
-�ж϶����Ƿ�Ϊ��  �շ���True
+判断队列是否为空  空返回True
 
 q.qsize()
-�õ���ǰ��������Ϣ�ĸ���
+得到当前队列中消息的个数
 
-q.close() �رն���
+q.close() 关闭队列
 
-* put  get�о��п�ѡ���� block ��timeout
-block Ĭ��ΪTrue ��ʾ�������� �������ΪFalse������
-timeout  block ΪTrue ʱ ���ó�ʱʱ��
+* put  get中均有可选参数 block 和timeout
+block 默认为True 表示阻塞函数 如果设置为False则不阻塞
+timeout  block 为True 时 设置超时时间
 
-�����ڴ� 
-���ڴ��п���һ�οռ䣬�洢���ݣ��Զ�����̿ɼ���ÿ��д�빲���ڴ�����ݻḲ��֮ǰ�����ݡ�
-���ڶ��ڴ��ʽ�����٣����Դ�ȡ�ٶȿ�
+共享内存 
+在内存中开辟一段空间，存储数据，对多个进程可见。每次写入共享内存的数据会覆盖之前的内容。
+由于对内存格式化较少，所以存取速度快
 
-from multiprocessing import  Value��Array
-obj = Value��ctype��obj��
-���� �� ���ٹ����ڴ�ռ�
-���� �� ctype  str  Ҫת���c���� ������ctype����
-        obj  д�빲���ڴ�ĳ�ʼֵ
-����ֵ �� ����һ�������ڴ����
+from multiprocessing import  Value，Array
+obj = Value（ctype，obj）
+功能 ： 开辟共享内存空间
+参数 ： ctype  str  要转变的c类型 （对照ctype表）
+        obj  写入共享内存的初始值
+返回值 ： 返回一个共享内存对象
 
-obj.value ���ɵõ������ڴ��е�ֵ
+obj.value 即可得到共享内存中的值
 
 obj = Array(ctype,obj)
-���� �� ���ٹ����ڴ�ռ�
-���� �� ctype  Ҫת��������
-        obj    ���뵽�����ڴ��е�����
-				       ��һ���б���Ҫ���б���������һ��
-               �����������ʾ����һ���������пռ�
+功能 ： 开辟共享内存空间
+参数 ： ctype  要转换的类型
+        obj    存入到共享内存中的数据
+				       是一个列表，要求列表中数类型一致
+               正整数，则表示开辟一个多大的序列空间
 
-����ֵ�� ����һ�������ڴ����
+返回值： 返回一个共享内存对象
 
-           �ܵ�        ��Ϣ����       �����ڴ�
-���ٿռ�   �ڴ�          �ڴ�          �ڴ�
+           管道        消息队列       共享内存
+开辟空间   内存          内存          内存
 
-��д��ʽ  ˫��/����    �Ƚ��ȳ�      ���������ڴ�
+读写方式  双向/单向    先进先出      操作覆盖内存
 
-Ч��      һ��         һ��            ��
+效率      一般         一般            快
 
-Ӧ��     ��������      �������       �ϸ���
-          Ե����        �㷺
+应用     多用于亲      方便灵活       较复杂
+          缘进程        广泛
 
-�Ƿ���Ҫ   ��           ��            ��Ҫ
-�������
+是否需要   否           否            需要
+互斥机制
 
-�ź� 
-һ����������һ������ͨ���źŴ���ĳ��ѶϢ
+信号 
+一个进程向另一个进程通过信号传递某种讯息
 
-kill  -l  �鿴�ź�
-kill   -signame  PID   ��PID�Ľ��̷���һ���ź�
+kill  -l  查看信号
+kill   -signame  PID   给PID的进程发送一个信号
 
-�����źţ�
-�ź����� �� ϵͳ���壬�źŵ�����  
-�źŵĺ���  �� ϵͳ���� ���źŵ����� 
-�źŵ�Ĭ�ϴ������� �� ϵͳ���壬�źŸ����ս��̴�������Ϊ һ����  ��ֹ  ��ͣ  ����
+关于信号：
+信号名称 ： 系统定义，信号的名字  
+信号的含义  ： 系统定义 ，信号的作用 
+信号的默认处理方法 ： 系统定义，信号给接收进程带来的行为 一般有  终止  暂停  忽略
 
-python ��β����ź� 
+python 如何操作信号 
 
-����
+发送
 os.kill(pid,sig)
-���ܣ���һ�����̷���һ���ź�
-���� �� pid �� Ҫ�����źŵĽ���PID
-        sig �� Ҫ���͵��ź�
+功能：向一个进程发送一个信号
+参数 ： pid ： 要发送信号的进程PID
+        sig ： 要发送的信号
 
 signal.alarm(sec)
-���� �� ����������һ��ʱ���ź� SIGALRM
-���� �� sec ʱ������
+功能 ： 向自身发送一个时钟信号 SIGALRM
+参数 ： sec 时钟秒数
 
-* �ź������첽ͨ�ŷ�ʽ���źŵķ��Ͳ���Ӱ����̵ĳ���ִ��
+* 信号属于异步通信方式，信号的发送不会影响进程的持续执行
 
-*һ��������ֻ��ͬʱ��һ��ʱ�ӣ������ʱ��ʱ��Ḳ��ǰ���
+*一个进程中只能同时有一个时钟，后面的时钟时间会覆盖前面的
 
-���� �� 
-
+处理 ： 
 signal.pause() 
-���ܣ� �����ȴ�һ���źŵķ���
+功能： 阻塞等待一个信号的发生
 
-��ҵ�� 
-1. �Խ��̼�ͨ�ŷ�ʽ������������
-2. ��Ϥ���̼�ͨ�Ŵ���
+作业： 
+1. 对进程间通信方式进行描述连接
+2. 熟悉进程间通信代码
 
 
 
