@@ -117,7 +117,7 @@ requests = makeRequests(func, args_list)
 res=[pool.putRequest(req) for req in requests]  
 pool.wait() 
 
-2、https://www.jianshu.com/p/b9b3d66aa0be
+2、https://www.jianshu.com/p/b9b3d66aa0be、  https://www.cnblogs.com/FG123/p/9704233.html
 from concurrent.futures import ThreadPoolExecutor
  pool=ThreadPoolExecutor(max_workers=2)
 task1 =  pool.submit(func1, (3))
