@@ -1,0 +1,141 @@
+数据分析
+Numpy+Scipy+Matplotlib+Pandas
+基础数值算法
+科学计算
+数据可视化
+序列高级函数
+一、numpy是什么？
+1.Numerical Python，数值的Python，补充了Python语言所欠缺的数值计算能力。
+2.Numpy是其它数据分析及机器学习库的底层库。
+3.Numpy完全标准C语言实现，运行效率充分优化。
+4.Numpy开源免费。
+二、Numpy的历史
+1.1995年，Numeric，Python语言数值计算扩充。
+2.2001年，Scipy->Numarray，多维数组运算。
+3.2005年，Numeric+Numarray->Numpy。
+4.2006年，Numpy脱离Scipy成为独立的项目。
+三、Numpy的核心：多维数组
+1.代码简洁：减少Python代码中的循环。
+2.底层实现：厚内核(C)+薄接口(Python)，保证性能。
+代码：vector.py
+
+四、Numpy基础
+1.数组对象
+1)用np.ndarray类的对象表示n维数组
+实际数据：数组中元素
+元数据：描述数组中的元素
+将实际数据与元数据分开存放，一方面提高了内存空间的使用效率，另一方面减少对实际数据的访问频率，提高性能
+2)Numpy数组是同质数组，即所有元素的数据类型必须相同
+3)Numpy数组的下标从0开始，最后一个元素的下标为数组长度减1
+4)np.ndarray.dtype/shape/size：类型/维度/大小
+5)np.arange(起始值(0),终止值,步长(1))->等差序列
+np.array(任何可被解释为Numpy数组的逻辑结构)
+    ->任意维度和类型的数组对象
+代码：shape.py、type.py、size.py
+6)元素索引(下标)
+数组对象[..., 页号, 行号, 列号]
+数组对象.shape->(..., 页数, 行数, 列数)
+X号：[0, X数-1]
+代码：index.py
+7)Numpy的内部基本数据类型
+布尔型：bool_
+整数型：
+有符号：int8(-128~127)/int16/int32/int64
+无符号：uint8(0~255)/uint16/uint32/uint64
+浮点型：float16/float32/float64
+复数型：complex64/complex128
+字串型：str_，每个字符用32位Unicode编码表示
+8)自定义复合类型
+代码：dtype.py
+9)类型字符码
+np.bool_: ?
+np.int8: b
+np.uint8: B
+np.int8/16/32/64: i1/2/4/8
+np.uint8/16/32/64: u1/2/4/8
+np.float/16/32/64: f2/4/8
+np.complex64/128: c8/16
+np.str_: U<字符数>
+np.datetime64: M8
+字节序前缀，用于多字节整数和字符串：
+</>/[=]分别表示小端/大端/硬件字节序。
+<字节序前缀><维度><类型><字节数或字符数>
+>3i4：大端字节序，3个元素的一维数组，每个元素都是整型，每个整型元素占4个字节。
+<(2,3)u8：小端字节序，6个元素2行3列的二维数组，每个元素都是无符号整型，每个无符号整型元素占8个字节。
+>U7: 包含7个字符的Unicode字符串，每个字符占4个字节，采用大端字节序。
+10)切片
+数组对象[起始位置:终止位置:位置步长, ...]
+缺省起始位置：(位置步长+)首/(位置步长-)尾
+缺省终止位置：(位置步长+)尾后/(位置步长-)首前
+缺省位置步长：1
+代码：slice.py
+11)改变维度
+视图变维 \    reshape/ravel                                / 数据共享
+                 > 返回一个具有新维度的新数组对象 <
+复制变维 /    flatten                                            \ 数据独立
+就地变维 --- 在原数组对象之上，改变其维度，不返回新数组
+xxx.shape = ...
+xxx.resize(...)
+代码：reshape.py
+12)组合与拆分
+垂直：
+np.vstack((上, 下))->组合数组
+np.concatenate((上, 下), axis=0)
+                        / 二维：0-行，垂直，1-列，水平
+axis表示轴向 <
+                        \ 三维：0-页，深度，1-行，垂直，2-列，水平
+np.vsplit(数组, 份数)->上, ..., 下
+np.split(数组, 份数, axis=0)
+水平
+np.hstack((左, 右))->组合数组
+np.concatenate((左, 右), axis=1)
+np.hsplit(数组, 份数)->左, ..., 右
+np.split(数组, 份数, axis=1)
+深度
+np.dstack((前, 后))->组合数组
+np.dsplit(数组, 份数)->前, ..., 后
+行列(可以用一维数组做参数)
+np.row_stack((上, 下))->组合数组
+np.column_stack((左, 右))->组合数组
+代码：stack.py
+13)ndarray类的属性
+shape - 维度
+dtype - 元素类型
+size - 元素数量
+ndim - 维数，len(shape)
+itemsize - 元素字节数
+nbytes - 总字节数 = size x itemsize
+real - 复数数组的实部数组
+imag - 复数数组的虚部数组
+T - 数组对象的转置视图
+flat - 扁平迭代器
+代码：attr.py
+数组对象.tolist()->列表
+五、数据可视化
+Matplotlib
+        |
+  Numpy
+  Matlab
+1.基本绘图
+mp.plot(水平坐标, 垂直坐标)
+代码：plt1.py
+2.线型、线宽和颜色
+mp.plot(
+    ..., linestyle=线型, linewidth=线宽, color=颜色, ...)
+代码：plt2.py
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

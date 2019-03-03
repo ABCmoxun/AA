@@ -1,0 +1,464 @@
+数据分析
+Numpy+Scipy+Matplotlib+Pandas
+基础数值算法
+科学计算
+数据可视化
+序列高级函数
+一、numpy是什么？
+1.Numerical Python，数值的Python，补充了Python语言所欠缺的数值计算能力。
+2.Numpy是其它数据分析及机器学习库的底层库。
+3.Numpy完全标准C语言实现，运行效率充分优化。
+4.Numpy开源免费。
+二、Numpy的历史
+1.1995年，Numeric，Python语言数值计算扩充。
+2.2001年，Scipy->Numarray，多维数组运算。
+3.2005年，Numeric+Numarray->Numpy。
+4.2006年，Numpy脱离Scipy成为独立的项目。
+三、Numpy的核心：多维数组
+1.代码简洁：减少Python代码中的循环。
+2.底层实现：厚内核(C)+薄接口(Python)，保证性能。
+代码：vector.py
+四、Numpy基础
+1.数组对象
+1)用np.ndarray类的对象表示n维数组
+实际数据：数组中元素
+元数据：描述数组中的元素
+将实际数据与元数据分开存放，一方面提高了内存空间的使用效率，另一方面减少对实际数据的访问频率，提高性能
+2)Numpy数组是同质数组，即所有元素的数据类型必须相同
+3)Numpy数组的下标从0开始，最后一个元素的下标为数组长度减1
+4)np.ndarray.dtype/shape/size：类型/维度/大小
+5)np.arange(起始值(0),终止值,步长(1))->等差序列
+np.array(任何可被解释为Numpy数组的逻辑结构)
+    ->任意维度和类型的数组对象
+代码：shape.py、type.py、size.py
+6)元素索引(下标)
+数组对象[..., 页号, 行号, 列号]
+数组对象.shape->(..., 页数, 行数, 列数)
+X号：[0, X数-1]
+代码：index.py
+7)Numpy的内部基本数据类型
+布尔型：bool_
+整数型：
+有符号：int8(-128~127)/int16/int32/int64
+无符号：uint8(0~255)/uint16/uint32/uint64
+浮点型：float16/float32/float64
+复数型：complex64/complex128
+字串型：str_，每个字符用32位Unicode编码表示
+8)自定义复合类型
+代码：dtype.py
+9)类型字符码
+np.bool_: ?
+np.int8: b
+np.uint8: B
+np.int8/16/32/64: i1/2/4/8
+np.uint8/16/32/64: u1/2/4/8
+np.float/16/32/64: f2/4/8
+np.complex64/128: c8/16
+np.str_: U<字符数>
+np.datetime64: M8
+字节序前缀，用于多字节整数和字符串：
+</>/[=]分别表示小端/大端/硬件字节序。
+<字节序前缀><维度><类型><字节数或字符数>
+>3i4：大端字节序，3个元素的一维数组，每个元素都是整型，每个整型元素占4个字节。
+<(2,3)u8：小端字节序，6个元素2行3列的二维数组，每个元素都是无符号整型，每个无符号整型元素占8个字节。
+>U7: 包含7个字符的Unicode字符串，每个字符占4个字节，采用大端字节序。
+10)切片
+数组对象[起始位置:终止位置:位置步长, ...]
+缺省起始位置：(位置步长+)首/(位置步长-)尾
+缺省终止位置：(位置步长+)尾后/(位置步长-)首前
+缺省位置步长：1
+代码：slice.py
+11)改变维度
+视图变维 \    reshape/ravel                                / 数据共享
+                 > 返回一个具有新维度的新数组对象 <
+复制变维 /    flatten                                            \ 数据独立
+就地变维 --- 在原数组对象之上，改变其维度，不返回新数组
+xxx.shape = ...
+xxx.resize(...)
+代码：reshape.py
+12)组合与拆分
+垂直：
+np.vstack((上, 下))->组合数组
+np.concatenate((上, 下), axis=0)
+                        / 二维：0-行，垂直，1-列，水平
+axis表示轴向 <
+                        \ 三维：0-页，深度，1-行，垂直，2-列，水平
+np.vsplit(数组, 份数)->上, ..., 下
+np.split(数组, 份数, axis=0)
+水平
+np.hstack((左, 右))->组合数组
+np.concatenate((左, 右), axis=1)
+np.hsplit(数组, 份数)->左, ..., 右
+np.split(数组, 份数, axis=1)
+深度
+np.dstack((前, 后))->组合数组
+np.dsplit(数组, 份数)->前, ..., 后
+行列(可以用一维数组做参数)
+np.row_stack((上, 下))->组合数组
+np.column_stack((左, 右))->组合数组
+代码：stack.py
+13)ndarray类的属性
+shape - 维度
+dtype - 元素类型
+size - 元素数量
+ndim - 维数，len(shape)
+itemsize - 元素字节数
+nbytes - 总字节数 = size x itemsize
+real - 复数数组的实部数组
+imag - 复数数组的虚部数组
+T - 数组对象的转置视图
+flat - 扁平迭代器
+代码：attr.py
+数组对象.tolist()->列表
+五、数据可视化
+Matplotlib
+        |
+  Numpy
+  Matlab
+1.基本绘图
+mp.plot(水平坐标, 垂直坐标)
+代码：plt1.py
+2.线型、线宽和颜色
+mp.plot(
+    ..., linestyle=线型, linewidth=线宽, color=颜色, ...)
+代码：plt2.py
+3.设置坐标范围
+mp.xlim(水平坐标最小值, 水平坐标最大值)
+mp.ylim(垂直坐标最小值, 垂直坐标最大值)
+代码：plt3.py
+4.设置坐标刻度
+mp.xticks(位置序列[, 标签序列])
+mp.yticks(位置序列[, 标签序列])
+代码：plt4.py
+5.设置坐标轴
+坐标轴名：left/right/bottom/top
+ax = mp.gca() # 获取当前坐标轴
+ax.spines['坐标轴名'].set_position((坐标系, 坐标))
+ax.spines['坐标轴名'].set_color(颜色)
+代码：plt5.py
+6.图例
+mp.plot(..., label=图例标签, ...)
+mp.legend([loc=位置])
+代码：plt6.py
+7.特殊点
+mp.scatter(水平坐标, 垂直坐标, marker=点型, s=大小,
+    color=颜色, edgecolor=边缘色, facecolor=填充色,
+    zorder=图层序号)
+代码：plt7.py
+8.备注
+mp.annotate(
+    备注文本,
+    xy=目标坐标,
+    xycoords=目标坐标系,
+    xytext=文本坐标,
+    textcoords=文本坐标系,
+    fontsize=字体大小,
+    arrowprops=箭头线属性)
+代码：plt8.py
+9.图形对象(图形窗口)
+mp.figure(窗口名称, figsize=窗口大小, dpi=分辨率,
+                   facecolor=颜色)
+如果"窗口名称"是第一次出现，那么就创建一个新窗口，其标题栏显示该名称，如果"窗口名称"已经出现过，那么不再创建新窗口，而只是将与该名称相对应的窗口设置为当前窗口。所谓当前窗口，就是接受后续绘图操作的窗口。
+mp.title(标题文本, fontsize=字体大小)
+mp.xlabel(水平轴标签, fontsize=字体大小)
+mp.ylabel(垂直轴标签, fontsize=字体大小)
+mp.tick_params(..., labelsize=刻度标签字体大小, ...)
+mp.grid(linestyle=网格线型)
+mp.tight_layout() # 紧凑布局
+代码：fig.py
+10.子图
+1)矩阵式布局
+mp.subplot(行数, 列数, 序号)
+1 2 3
+4 5 6
+7 8 9
+mp.subplot(3, 3, 5)
+mp.subplot(335)
+代码：sub1.py
+2)网格式布局
+import matplotlib.gridspec as mg
+gs = mg.GridSpec(行数, 列数)
+mp.subplot(gs[占行, 占列])
+代码：sub2.py
+3)自由式布局
+mp.axes([左, 底, 宽, 高])
+代码：sub3.py
+11.刻度定位器
+刻度定位器对象 = mp.xxxLocator(...)
+ax = mp.gca()
+ax.xaxis.set_major_locator(刻度定位器对象)
+ax.xaxis.set_minor_locator(刻度定位器对象)
+ax.yaxis.set_major_locator(刻度定位器对象)
+ax.yaxis.set_minor_locator(刻度定位器对象)
+代码：tick.py
+12.刻度网格线
+ax = mp.gca()
+ax.grid(which='major'/'minor', axis='x'/'y'/'both',
+    linewidth=线宽, linestyle=线型, color=颜色,
+    alpha=透明度)
+代码：grid.py
+13.半对数坐标
+mp.semilogy(参数同plot函数)
+代码：log.py
+14.散点图
+可以通过每个点的坐标、颜色、大小和形状表示不同的特征值。
+身高  体重  性别  年龄段  种族
+1.8    80    男      中间     亚洲
+1.6    50    女      青少     美洲
+...
+x        y      颜色  大小     形状
+代码：scatter.py
+15.填充
+mp.fill_between(
+    边界曲线上点的水平坐标,
+    下边界曲线上点的垂直坐标,
+    上边界曲线上点的垂直坐标,
+    填充条件, color=颜色, alpha=透明度)
+代码：fill.py
+16.条形图
+mp.bar(水平坐标, 高度, 宽度[, 底坐标], color=颜色,
+    alpha=透明度, label=图例标签)
+代码：bar.py
+17.饼图
+mp.pie(值, 间隙, 标签, 颜色, 格式,
+    shadow=是否带阴影, startangel=起始角度)
+代码：pie.py
+18.等高线图
+mp.contourf(x, y, z, 阶数, cmap=颜色映射)
+mp.contour(x, y, z, 阶数, linewidths=线宽)
+代码：cntr.py
+19.热成像图
+用图形的方式显示矩阵
+1 2 3
+4 5 6
+7 8 9
+mp.imshow(矩阵, cmap=颜色映射, origin=纵轴方向)
+           / hight: 缺省，原点在左上角
+origin \ low: 原点在左下角
+代码：hot.py
+20.极坐标系
+mp.gca(projection='polar')
+水平坐标 -> 极角
+垂直坐标 -> 极径
+mp.plot(水平坐标, 垂直坐标, ...)
+mp.plot(极角, 极径, ...)
+代码：polar.py
+12.三维曲面
+from mpl_toolkits.mplot3d import axes3d
+ax = mp.gca(projection='3d') # class axes3d
+ax.set_xlabel(...)
+...
+ax.plot_surface(x, y, z, rstride=行跨距, cstride=列跨距,
+    cmap=颜色映射)
+ax.plot_wireframe(x, y, z, rstride=行跨距, cstride=列跨距,
+    linewidth=线宽, color=颜色)
+代码：3d.py
+13.简单动画
+import matplotlib.animation as ma
+def 更新回调函数(序列号):
+    更新画面显示
+    ...
+ma.FuncAnimation(图像窗口, 更新回调函数,
+    interval=时间间隔(毫秒))
+每经过一个"时间间隔"，"更新回调函数"会被matplotlib调用一次。
+代码：bub.py
+     位置         大小     生长                颜色
+float float | float | float | float float float float
+ma.FuncAnimation(图像窗口, 更新回调函数, 生成器函数,
+    interval=时间间隔(毫秒))
+每经过一个"时间间隔"，matplotlib先调用"生成器函数"，用"生成器函数"产生(yeild)的值作为参数调用"更新回调函数"。
+matplotlib:
+    ...
+    while True:
+        延时interval毫秒
+        生成值 = 生成器函数()
+        更新回调函数(生成值)
+    ...
+代码：sig.py
+六、numpy的常用函数
+1.读取文件
+逻辑上可被解释为二维数组的文本文件：
+数据项1<分隔符>数据项2<分隔符>...<分隔符>数据项n
+...
+numpy.loadtxt(
+    文件路径,
+    delimiter=分隔符(缺省一个空格),
+    usecols=列序列(缺省所有列),
+    unpack=是否展开列(缺省False),
+    dtype=元素类型(缺省float),
+    converters=转换器字典(缺省不做转换))
+    ->一个二维数组(unpack=False)或
+        多个一维数组(unpack=True)
+代码：k.py
+2.算数平均值
+样本：S = [s1, s2, ..., sn]
+算数平均值：m = (s1+s2+...+sn) / n
+s1 = s+d1
+s2 = s+d2
+...
+sn = s+dn
+m = (s1+s2+...+sn) / n
+=(s+s+...+s) / n + (d1+d2+...+dn)/n
+=s + (d1+d2+...+dn)/n
+n->oo
+算数平均值表示对真值的无偏估计。
+numpy.mean(S)->m
+代码：mean.py
+3.加权平均值
+样本：S = [s1, s2, ..., sn]
+权重：W = [w1, w2, ..., wn]
+加权平均值：
+a = (s1w1+s2w2+...+snwn)/(w1+w2+...+wn)
+numpy.average(S, weights=W)->a
+VWAP - 成交量加权平均价格
+代码：vwap.py
+TWAP - 时间加权平均价格
+代码：twap.py
+4.最值
+1)max/min: 返回一个数组中最大/最小元素
+2)argmax/argmin: 返回一个数组中最大/最小元素的下标
+3)maximum/minimum: 将两个同维数组中对应元素中最大/最小元素构成一个新的数组
+4)ptp: 返回一个数组中最大值和最小值之差
+代码：max.py、range.py
+5.中位数
+将多个样本按照大小排序，取中间位置的元素。
+10 20 30 40 50
+           ^ (a[(5-1)/2]+a[5/2])/2
+10 20 30 40 50 60
+           ^    ^
+            \    /
+            平均 (a[(6-1)/2]+a[6/2])/2
+(a[(s-1)/2]+a[s/2])/2
+np.median(无序样本)->中位数
+代码：med.py
+6.标准差
+样本：S = [s1, s2, ..., sn]
+平均值：m = (s1+s2+...+sn)/n
+离差：D = [d1, d2, ..., dn], di = si-m
+离差方：Q = [q1, q2, ..., qn], qi = di^2
+总体方差：v = (q1+q2+...+qn)/n
+总体标准差：s = sqrt(v)，方均根
+样本方差：v' = (q1+q2+...+qn)/(n-1)
+样本标准差：s' = sqrt(v')，方均根
+10
+2 + 2 + ... + 2 = 20
+10000
+-------
+ 10-8
+numpy.std(S)->s
+numpy.std(S, ddof=1)->s'
+代码：var.py
+7.时间数据处理
+1)按星期取平均值
+代码：week.py
+2)按星期汇总数据
+数组的轴向汇总
+np.apply_along_axis(处理函数, 轴向, 数组)
+沿着数组中所指定的轴向，调用处理函数，并将每次调用的返回值重新组织成数组返回。
+代码：axis.py、sum.py
+8.卷积
+卷积积分
+激励函数：g(t)
+单位激励下的响应函数：f(t)
+                  /
+响应函数：| g(t)f(t)dt
+                 /
+a = [1 2 3 4 5]
+b = [6 7 8]
+c = numpy.convolve(a, b, 卷积类型)
+                       40  61  82            - 有效卷积(valid)
+                 19  40  61  82 67       - 同维卷积(same)
+            6   19  40  61  82 67  40 - 完全卷积(full)
+0    0    1    2    3    4    5    0    0
+8    7    6
+      8    7    6
+            8    7    6
+                  8    7    6
+                        8    7    6
+                              8    7    6
+                                    8     7    6
+代码：conv.py
+9.移动均线
+a b c d e f g h i j [1/5 1/5 1/5 1/5 1/5]
+(a+b+c+d+e)/5
+(b+c+d+e+f)/5
+(c+d+e+f+g)/5
+...
+(f+g+h+i+j)/5
+[A, B, C, D, E]
+S=A+B+C+D+E
+(aA+bB+cC+dD+eE)/S
+aA/S+bB/S+cC/S+dD/S+eE/S
+[A/S, B/S, C/S, D/S, E/S]
+代码：sma.py，ema.py
+10.布林带
+中轨：移动平均线
+上轨：中轨+2x标准差
+下轨：中轨-2x标准差
+代码：ebb.py
+11.线性模型
+1    2   3    4      5
+60 65  70 75 <80>
+1)线性预测
+a b c d e f
+aA+bB+cC=d \
+bA+cB+dC=e  > -> A B C
+cA+dB+eC= f /
+dA+eB+fC -> ?
+/ a b c \     / A \    / d \
+| b c d  | X |  B | = | e  |
+\ c d e /     \ C /     \ f /
+---------     -----     ----
+     a               x          b
+                      = np.linalg.lstsq(a, b)[0]
+
+代码：line.py
+2)线性拟合
+kx + b = y
+kx1 + b = y1
+kx2 + b = y2
+...
+kxn + b = yn
+/ x1 1 \    / k \    / y1 \
+| x2 1  | X | b | = | y2  |
+| ...      |     \    /    | ...   |
+\ xn 1/                 \ yn /
+    a             x           b
+                   = np.linalg.lstsq(a, b)[0]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
