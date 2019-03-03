@@ -109,6 +109,20 @@ pool.map(func, all_url)
 pool.close()
 pool.join()
 
+#-----线程
+https://www.cnblogs.com/xiaozi/p/6182990.html
+pip install threadpool
+pool = ThreadPool(n)  #n=poolsize
+requests = makeRequests(func, args_list)  
+res=[pool.putRequest(req) for req in requests]  
+pool.wait() 
+
+
+
+
+
+
+
 
 
 
